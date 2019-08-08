@@ -1,0 +1,124 @@
+import React, { Component } from 'react'
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { Header, Icon, Tab, Tabs, ScrollableTab, FooterTab, Button, Footer } from 'native-base';
+import MenuButton from '../../components/menuButton';
+import CardKelompokAcara from '../../components/cardKelompokAcara';
+
+export default class acaraSaya extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <View>
+        <Header style={{ backgroundColor: '#A6250F', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Icon name='browsers' style={styles.textColor} size={32} />
+            <Text style={{ color: '#DBA89F', marginLeft: 5, fontSize: 20 }}>Acara</Text>
+          </View>
+          <MenuButton navigation={this.props.navigation} />
+          <Icon name='funnel' style={styles.sorting} size={32} />
+        </Header>
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#A6250F' }}> Acara Saya </Text>
+            <TouchableHighlight onPress={() => this.props.navigation.navigate('Acara')}>
+              <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#A6250F' }}> semua acara </Text>
+            </TouchableHighlight>
+          </View>
+          <Tabs renderTabBar={() => <ScrollableTab />} tabBarUnderlineStyle={{ backgroundColor: '#A6250F' }}>
+            <Tab heading="mengikuti" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
+              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
+                <CardKelompokAcara />
+              </View>
+            </Tab>
+            <Tab heading="semua" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
+              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
+                <CardKelompokAcara />
+              </View>
+            </Tab>
+            <Tab heading="diajukan" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
+              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
+                <CardKelompokAcara />
+              </View>
+            </Tab>
+            <Tab heading="ditolak" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
+              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
+                <CardKelompokAcara />
+              </View>
+            </Tab>
+          </Tabs>
+        </View>
+        <TouchableOpacity
+          style={styles.buttonAdd}
+        >
+          <Icon name="add" size={30} style={{ color: "#DBA89F" }} />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+}
+
+acaraSaya.navigationOptions = {
+  header: null
+};
+
+const { width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#F1F1F1',
+    padding: 5,
+    height: '100%',
+    marginBottom: 60
+  },
+  menuIcon: {
+    zIndex: 9,
+    position: 'absolute',
+    top: 15,
+    left: 20
+  },
+  textColor: {
+    color: '#DBA89F'
+  },
+  sorting: {
+    zIndex: 9,
+    position: 'absolute',
+    top: 15,
+    right: 20,
+    color: '#DBA89F'
+  },
+  title: {
+    marginTop: 10,
+    marginBottom: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: '#F1F1F1',
+  },
+  teksPengumuman: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 15,
+    marginBottom: 5,
+    marginLeft: 5
+  },
+  tab: {
+    backgroundColor: '#F1F1F1'
+  },
+  buttonAdd: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'center',
+    width: 100,
+    position: 'absolute',
+    bottom: 60,
+    right: 1 / 2 * width - 50,
+    height: 100,
+    backgroundColor: '#A6250F',
+    borderRadius: 130,
+    paddingTop: 10
+  }
+})
