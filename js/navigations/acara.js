@@ -1,6 +1,7 @@
 import Acara from '../screens/acara/acara';
 import DetailAcara from '../screens/acara/detailAcara';
 import { createStackNavigator } from 'react-navigation';
+import { defaultTextColor, defaultColor } from '../defaultColor';
 
 export default AcaraNav = createStackNavigator({
   Acara: { screen: Acara },
@@ -8,9 +9,9 @@ export default AcaraNav = createStackNavigator({
     screen: DetailAcara,
     navigationOptions: {
       title: 'Acara',
-      headerTintColor: '#DBA89F',
+      headerTintColor: defaultTextColor,
       headerStyle: {
-        backgroundColor: '#A6250F',
+        backgroundColor: defaultColor,
       },
     }
   },

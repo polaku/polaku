@@ -1,6 +1,7 @@
 import HubungiKami from '../screens/hubungiKami/hubungiKami';
 import HubungiKamiLanjutan from '../screens/hubungiKami/hubungiKamiLanjutan';
 import { createStackNavigator } from 'react-navigation';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../defaultColor';
 
 export default HubungiKamiNav = createStackNavigator({
   HubungiKami: { screen: HubungiKami },
@@ -8,9 +9,9 @@ export default HubungiKamiNav = createStackNavigator({
     screen: HubungiKamiLanjutan,
     navigationOptions: {
       title: 'HUBUNGI KAMI',
-      headerTintColor: '#DBA89F',
+      headerTintColor: defaultTextColor,
       headerStyle: {
-        backgroundColor: '#A6250F',
+        backgroundColor: defaultColor,
       },
     }
   },

@@ -1,9 +1,10 @@
-
-import React, { Component } from 'react'
-import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
-import { Text, Icon, Input, Item } from 'native-base';
+import React, { Component } from 'react';
+import { View, StyleSheet, Image, ScrollView } from 'react-native';
+import { Text, Icon, Input } from 'native-base';
 import CardComment from '../../components/cardComment';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { defaultColor } from '../../defaultColor';
+
 
 export default class detailAnnouncement extends Component {
 
@@ -11,6 +12,8 @@ export default class detailAnnouncement extends Component {
     return (
       <ScrollView>
         <View style={styles.container} >
+
+          {/* UP SECTION */}
           <View style={styles.header}>
             <Image source={require('../../../assest/icon_user.png')} style={styles.iconUser} />
             <View style={styles.headerRight}>
@@ -19,27 +22,22 @@ export default class detailAnnouncement extends Component {
                 <Text style={styles.dateComment}>August 5, 2019</Text>
               </View>
               <View>
-                <Icon name='bookmark' style={styles.bookmark} size={32} />
+                <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
               </View>
             </View>
           </View>
           <Text style={styles.title}>Judul tidak lebih dari sepuluh kata yang akan tampil disini</Text>
-          <View style={{ marginTop: 10, marginBottom: 10 }}>
-            <Image source={require('../../../assest/index.jpeg')} style={{
-              resizeMode: 'cover',
-              height: 200,
-              width: '100%',
-              alignItems: 'center',
-            }} />
+          <View style={styles.imagePlace}>
+            <Image source={require('../../../assest/index.jpeg')} style={styles.image} />
           </View>
-          <View style={{ display: 'flex', flexDirection: 'row', width: '100%', marginTop: 10, marginBottom: 10 }}>
-            <View style={{ width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ color: '#A6250F', fontWeight: 'bold', fontSize: 25 }}>Juli</Text>
-              <Text style={{ fontWeight: 'bold', fontSize: 20 }}>29</Text>
+          <View style={styles.dateMonthButtonPlace}>
+            <View style={styles.dateMonthPlace}>
+              <Text style={styles.month}>Juli</Text>
+              <Text style={styles.date}>29</Text>
             </View>
             <View style={{ width: '79%' }}>
-              <TouchableHighlight style={{ backgroundColor: '#A6250F', width: '100%', height: 55, margin: 5, borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>IKUT</Text>
+              <TouchableHighlight style={styles.buttonIkut}>
+                <Text style={styles.textButtonIkut}>IKUT</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -63,27 +61,27 @@ export default class detailAnnouncement extends Component {
 
           <View style={styles.line}></View>
 
+          {/* BOTTOM SECTION */}
           <View>
-            <Text style={{ fontSize: 17, color: '#A6250F' }}>3 Komentar</Text>
+            <Text style={styles.keteranganKomen}>3 Komentar</Text>
             <View style={styles.userComments}>
               <Image source={require('../../../assest/icon_user.png')} style={styles.iconUserComment} />
               <View style={styles.headerRight}>
-                <View style={{ width: '100%', paddingRight: 15 }}>
-                  <Input placeholder='Tambah komentar ...' style={{ borderWidth: 0.7, borderColor: 'gray' }} />
+                <View style={styles.spaceInputKomen}>
+                  <Input placeholder='Tambah komentar ...' style={styles.columnComment} />
                 </View>
-                <Icon name='send' style={styles.bookmark} size={32} />
+                <Icon name='send' style={{ color: defaultColor }} size={32} />
               </View>
             </View>
             <CardComment />
             <CardComment />
           </View>
+          
         </View>
       </ScrollView>
     )
   }
 }
-
-const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -91,25 +89,19 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    display: 'flex',
     flexDirection: 'row',
   },
   userComments: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 17,
     marginBottom: 17
   },
   headerRight: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
     alignItems: 'center'
-  },
-  bookmark: {
-    color: '#A6250F'
   },
   iconUserComment: {
     height: 40,
@@ -143,20 +135,63 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10
   },
-  footer: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: 5
-  },
-  footerItem: {
-    fontSize: 12,
-    color: '#A6250F',
-    marginRight: 5,
-    alignItems: 'center'
-  },
   isiAcara: {
-    display: 'flex',
     flexDirection: 'row',
     marginBottom: 5
+  },
+  columnComment: {
+    borderWidth: 0.7,
+    borderColor: 'gray'
+  },
+  imagePlace: {
+    marginTop: 10,
+    marginBottom: 10
+  },
+  image: {
+    resizeMode: 'cover',
+    height: 200,
+    width: '100%',
+    alignItems: 'center',
+  },
+  dateMonthButtonPlace: {
+    flexDirection: 'row',
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10
+  },
+  dateMonthPlace: {
+    width: '20%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  month: {
+    color: defaultColor,
+    fontWeight: 'bold',
+    fontSize: 25
+  },
+  date: {
+    fontWeight: 'bold',
+    fontSize: 20
+  },
+  keteranganKomen: {
+    fontSize: 17,
+    color: defaultColor
+  },
+  spaceInputKomen: {
+    width: '100%',
+    paddingRight: 15
+  },
+  buttonIkut: {
+    backgroundColor: defaultColor,
+    width: '100%',
+    height: 55,
+    margin: 5,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textButtonIkut: {
+    color: 'white',
+    fontWeight: 'bold'
   }
 })

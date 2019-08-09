@@ -1,6 +1,7 @@
 import Polanews from '../screens/polanews/polanews';
 import DetailPolanews from '../screens/polanews/detailPolanews';
 import { createStackNavigator } from 'react-navigation';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../defaultColor';
 
 export default PolanewsNav = createStackNavigator({
   Polanews: { screen: Polanews },
@@ -8,9 +9,9 @@ export default PolanewsNav = createStackNavigator({
     screen: DetailPolanews,
     navigationOptions: {
       title: 'Polanews',
-      headerTintColor: '#DBA89F',
+      headerTintColor: defaultTextColor,
       headerStyle: {
-        backgroundColor: '#A6250F',
+        backgroundColor: defaultColor,
       },
     }
   },

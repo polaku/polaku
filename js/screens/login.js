@@ -1,11 +1,15 @@
-import React, { Component } from 'react'
-import { StyleSheet, TouchableHighlight, Image, View } from 'react-native'
-import { Container, Content, Item, Input, Icon, Text } from 'native-base';
+import React, { Component } from 'react';
+import { StyleSheet, TouchableHighlight, Image, View } from 'react-native';
+import { Container, Item, Input, Icon, Text } from 'native-base';
+import { defaultTextColor, defaultColor } from '../defaultColor'
 
 export class login extends Component {
   constructor(props) {
     super(props);
-    this.state = { pressStatus: false };
+    this.state = {
+      pressStatus: false,
+      backgroundColor: defaultColor
+    };
   }
   _onHideUnderlay() {
     this.setState({ pressStatus: false });
@@ -22,22 +26,23 @@ export class login extends Component {
     return (
       <Container style={styles.container}>
         <View style={styles.content}>
+
+          {/* LOGO POLAGROUP */}
           <View style={styles.center}>
-            <View style={{ width: 'auto' }} >
-              <Image source={require('../../assest/logo_polagroup.png')} />
-            </View>
+            <Image source={require('../../assest/logo_polagroup.png')} />
           </View>
 
+          {/* FORM LOGIN */}
           <View style={styles.center} >
             <Item style={{ marginBottom: 25 }}>
               <Icon name='person' style={styles.textColor} />
-              <Input placeholder='Username' placeholderTextColor={styles.textColor.color} style={{ color: '#eee' }} />
+              <Input placeholder='Username' placeholderTextColor={defaultTextColor} style={styles.textColor} />
             </Item>
             <Item style={{ marginBottom: 45 }}>
               <Icon name='lock' style={styles.textColor} />
-              <Input placeholder='Password' placeholderTextColor={styles.textColor.color} secureTextEntry={true} style={{ color: '#eee' }} />
+              <Input placeholder='Password' placeholderTextColor={defaultTextColor} secureTextEntry={true} style={styles.textColor} />
             </Item>
-            <TouchableHighlight activeOpacity={1} onPress={this.login}
+            <TouchableHighlight onPress={() => this.login()}
               style={
                 this.state.pressStatus
                   ? styles.buttonPress
@@ -46,10 +51,12 @@ export class login extends Component {
               onHideUnderlay={this._onHideUnderlay.bind(this)}
               onShowUnderlay={this._onShowUnderlay.bind(this)}
             >
-              <Text style={{ textAlign: 'center', color: styles.textColor.color }}>Login</Text>
+              <Text style={styles.textLogin}>Login</Text>
             </TouchableHighlight>
             <Text style={styles.textColor} >Forget Password?</Text>
           </View>
+
+          {/* HUBUNGI KAMI */}
           <View style={styles.center}>
             <Text style={styles.textColor} >Kesulitan masuk? Hubungi Kami</Text>
           </View>
@@ -64,10 +71,13 @@ login.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
+  textColor: {
+    color: defaultTextColor
+  },
   container: {
     height: '100%',
-    backgroundColor: '#A6250F',
-    display: 'flex',
+    backgroundColor: defaultColor,
+    flex: 1,
     alignItems: 'center',
   },
   content: {
@@ -78,28 +88,28 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
   },
-  textColor: {
-    color: '#DBA89F'
-  },
   button: {
     padding: 15,
     borderWidth: 2,
-    borderColor: '#DBA89F',
+    borderColor: defaultTextColor,
     marginBottom: 30,
     width: '100%'
   },
   buttonPress: {
     padding: 15,
     borderWidth: 2,
-    borderColor: '#DBA89F',
-    backgroundColor: 'white',
+    borderColor: defaultTextColor,
+    backgroundColor: 'red',
     marginBottom: 30,
     width: '100%'
   },
   center: {
-    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  textLogin: {
+    textAlign: 'center',
+    color: defaultTextColor
   }
 });
 

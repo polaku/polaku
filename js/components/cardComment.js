@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet } from 'react-native'
-import { Icon } from 'native-base'
+import React, { Component } from 'react';
+import { Text, View, Image, StyleSheet } from 'react-native';
+import { Icon } from 'native-base';
 
 export default class cardComment extends Component {
   render() {
@@ -52,12 +52,5 @@ const styles = StyleSheet.create({
   datePost: {
     fontSize: 12,
     color: '#C1C1C1'
-  },
-  line: {
-    borderWidth: 1,
-    width: '100%',
-    borderColor: 'gray',
-    marginTop: 10,
-    marginBottom: 10
   },
 })

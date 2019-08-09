@@ -1,6 +1,7 @@
 import Ruangan from '../screens/ruangan/ruangan';
 import DetailRuangan from '../screens/ruangan/detailRuangan';
 import { createStackNavigator } from 'react-navigation';
+import { defaultTextColor, defaultColor } from '../defaultColor';
 
 export default RuanganNav = createStackNavigator({
   Ruangan: { screen: Ruangan },
@@ -8,9 +9,9 @@ export default RuanganNav = createStackNavigator({
     screen: DetailRuangan,
     navigationOptions: {
       title: 'Ruangan',
-      headerTintColor: '#DBA89F',
+      headerTintColor: defaultTextColor,
       headerStyle: {
-        backgroundColor: '#A6250F',
+        backgroundColor: defaultColor,
       },
     }
   },

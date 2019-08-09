@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native'
-import { Header, Icon, Tab, Tabs, ScrollableTab, FooterTab, Button, Footer } from 'native-base';
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardKelompokAcara from '../../components/cardKelompokAcara';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 
 export default class acaraSaya extends Component {
   constructor(props) {
@@ -12,48 +13,71 @@ export default class acaraSaya extends Component {
   render() {
     return (
       <View>
-        <Header style={{ backgroundColor: '#A6250F', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+
+        {/* HEADER - menu button drawer, title, icon sorting */}
+        <Header style={styles.header}>
+          <View style={styles.titleHeader}>
             <Icon name='browsers' style={styles.textColor} size={32} />
-            <Text style={{ color: '#DBA89F', marginLeft: 5, fontSize: 20 }}>Acara</Text>
+            <Text style={styles.textTitleHeader}>Acara</Text>
           </View>
           <MenuButton navigation={this.props.navigation} />
           <Icon name='funnel' style={styles.sorting} size={32} />
         </Header>
+
+        {/* CONTENT */}
         <View style={styles.container}>
+
+          {/* MENU ACARA */}
           <View style={styles.title}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#A6250F' }}> Acara Saya </Text>
             <TouchableHighlight onPress={() => this.props.navigation.navigate('Acara')}>
-              <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#A6250F' }}> semua acara </Text>
+              <Text style={styles.textTitleInactive}> semua acara </Text>
             </TouchableHighlight>
+            <Text style={styles.textTitleActive}> Acara Saya </Text>
           </View>
-          <Tabs renderTabBar={() => <ScrollableTab />} tabBarUnderlineStyle={{ backgroundColor: '#A6250F' }}>
-            <Tab heading="mengikuti" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
-              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
-                <CardKelompokAcara />
+
+          <Tabs renderTabBar={() => <ScrollableTab />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
+            <Tab heading="mengikuti"
+              tabStyle={styles.tab}
+              textStyle={{ color: defaultColor }}
+              activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+              activeTextStyle={styles.activeTextStyle}>
+              <View style={styles.containerInTab}>
+                <CardKelompokAcara navigation={this.props.navigation} />
               </View>
             </Tab>
-            <Tab heading="semua" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
-              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
-                <CardKelompokAcara />
+            <Tab heading="semua"
+              tabStyle={styles.tab}
+              textStyle={{ color: defaultColor }}
+              activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+              activeTextStyle={styles.activeTextStyle}>
+              <View style={styles.containerInTab}>
+                <CardKelompokAcara navigation={this.props.navigation} />
               </View>
             </Tab>
-            <Tab heading="diajukan" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
-              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
-                <CardKelompokAcara />
+            <Tab heading="diajukan"
+              tabStyle={styles.tab}
+              textStyle={{ color: defaultColor }}
+              activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+              activeTextStyle={styles.activeTextStyle}>
+              <View style={styles.containerInTab}>
+                <CardKelompokAcara navigation={this.props.navigation} />
               </View>
             </Tab>
-            <Tab heading="ditolak" tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
-              <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
-                <CardKelompokAcara />
+            <Tab heading="ditolak"
+              tabStyle={styles.tab}
+              textStyle={{ color: defaultColor }}
+              activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+              activeTextStyle={styles.activeTextStyle}>
+              <View style={styles.containerInTab}>
+                <CardKelompokAcara navigation={this.props.navigation} />
               </View>
             </Tab>
           </Tabs>
         </View>
-        <TouchableOpacity
-          style={styles.buttonAdd}
-        >
-          <Icon name="add" size={30} style={{ color: "#DBA89F" }} />
+
+        {/* BUTTON ADD */}
+        <TouchableOpacity style={styles.buttonAdd}>
+          <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>
     )
@@ -68,45 +92,36 @@ const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F1F1F1',
+    backgroundColor: defaultBackgroundColor,
     padding: 5,
     height: '100%',
     marginBottom: 60
   },
-  menuIcon: {
-    zIndex: 9,
-    position: 'absolute',
-    top: 15,
-    left: 20
+  header: {
+    backgroundColor: defaultColor,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   textColor: {
-    color: '#DBA89F'
+    color: defaultTextColor
   },
   sorting: {
     zIndex: 9,
     position: 'absolute',
     top: 15,
     right: 20,
-    color: '#DBA89F'
+    color: defaultTextColor
   },
   title: {
     marginTop: 10,
     marginBottom: 10,
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: '#F1F1F1',
-  },
-  teksPengumuman: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: 15,
-    marginBottom: 5,
-    marginLeft: 5
+    backgroundColor: defaultBackgroundColor,
   },
   tab: {
-    backgroundColor: '#F1F1F1'
+    backgroundColor: defaultBackgroundColor
   },
   buttonAdd: {
     borderWidth: 1,
@@ -117,8 +132,37 @@ const styles = StyleSheet.create({
     bottom: 60,
     right: 1 / 2 * width - 50,
     height: 100,
-    backgroundColor: '#A6250F',
+    backgroundColor: defaultColor,
     borderRadius: 130,
     paddingTop: 10
+  },
+  titleHeader: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  textTitleHeader: {
+    color: defaultTextColor,
+    marginLeft: 5,
+    fontSize: 20
+  },
+  textTitleActive: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: defaultColor
+  },
+  textTitleInactive: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: defaultColor
+  },
+  activeTextStyle: {
+    color: defaultColor,
+    fontWeight: 'normal'
+  },
+  containerInTab: {
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: defaultBackgroundColor
   }
 })

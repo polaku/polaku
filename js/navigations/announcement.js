@@ -1,6 +1,7 @@
 import Announcement from '../screens/announcement/announcement';
 import DetailAnnouncement from '../screens/announcement/detailAnnouncement';
 import { createStackNavigator } from 'react-navigation';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../defaultColor';
 
 export default AnnouncementNav = createStackNavigator({
   Announcement: { screen: Announcement },
@@ -8,9 +9,9 @@ export default AnnouncementNav = createStackNavigator({
     screen: DetailAnnouncement,
     navigationOptions: {
       title: 'Pengumuman',
-      headerTintColor: '#DBA89F',
+      headerTintColor: defaultTextColor,
       headerStyle: {
-        backgroundColor: '#A6250F',
+        backgroundColor: defaultColor,
       },
     }
   },

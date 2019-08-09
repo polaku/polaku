@@ -1,6 +1,7 @@
 import AcaraSaya from '../screens/acara/acaraSaya';
 import DetailAcara from '../screens/acara/detailAcara';
 import { createStackNavigator } from 'react-navigation';
+import { defaultTextColor, defaultColor } from '../defaultColor';
 
 export default AcaraSayaNav = createStackNavigator({
   AcaraSaya: { screen: AcaraSaya },
@@ -8,9 +9,9 @@ export default AcaraSayaNav = createStackNavigator({
     screen: DetailAcara,
     navigationOptions: {
       title: 'Acara',
-      headerTintColor: '#DBA89F',
+      headerTintColor: defaultTextColor,
       headerStyle: {
-        backgroundColor: '#A6250F',
+        backgroundColor: defaultColor,
       }
     }
   },

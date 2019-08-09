@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import React, { Component } from 'react';
+import { StyleSheet } from 'react-native';
 import { Icon } from 'native-base';
+import { defaultTextColor } from '../defaultColor';
 
 export default class menuButton extends Component {
   render() {
@@ -16,6 +17,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 15,
     left: 20,
-    color: '#DBA89F'
+    color: defaultTextColor
   }
 })

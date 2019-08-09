@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, Dimensions, FlatList, TouchableHighlight } from 'react-native'
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, SafeAreaView, FlatList, TouchableHighlight } from 'react-native';
 import { Header, Icon } from 'native-base';
 import MenuButton from '../../components/menuButton';
-import { ScrollView } from 'react-native-gesture-handler';
 import CardPolanews from '../../components/cardPolanews';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 
 export default class polanews extends Component {
   constructor(props) {
@@ -30,35 +30,39 @@ export default class polanews extends Component {
 
   render() {
     return (
-      <View>
-        <Header style={{ backgroundColor: '#A6250F', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Icon name='paper' style={styles.textColor} size={32} />
-            <Text style={{ color: '#DBA89F', marginLeft: 5, fontSize: 20 }}>Berita</Text>
-          </View>
+      <SafeAreaView>
+
+        {/* HEADER - menu button drawer, title, icon sorting */}
+        <Header style={styles.header}>
           <MenuButton navigation={this.props.navigation} />
+          <View style={styles.titleHeader}>
+            <Icon name='paper' style={styles.textColor} size={32} />
+            <Text style={styles.textTitleHeader}>Berita</Text>
+          </View>
           <Icon name='funnel' style={styles.sorting} size={32} />
         </Header>
+
+        {/* CONTENT */}
         <View style={styles.container}>
 
+          {/* MENU BERITA */}
           <View style={styles.title}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#A6250F' }}> Polanews </Text>
             <TouchableHighlight onPress={() => this.props.navigation.navigate('Announcement')}>
-              <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#A6250F' }}>pengumuman</Text>
+              <Text style={styles.textTitleInactive}>pengumuman</Text>
             </TouchableHighlight>
+            <Text style={styles.textTitleActive}> Polanews </Text>
           </View>
+
+          {/* CONTENT POLANEWS  */}
           <FlatList
-            style={{
-              backgroundColor: '#F1F1F1', paddingTop: 10,
-              marginBottom: 120
-            }}
+            style={styles.flatList}
             numColumns={3}
             data={this.state.data}
             renderItem={({ item }) => <CardPolanews data={item} />}
           />
-          {/* </ScrollView> */}
         </View>
-      </View>
+
+      </SafeAreaView>
     )
   }
 }
@@ -67,44 +71,57 @@ polanews.navigationOptions = {
   header: null
 };
 
-const { width } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F1F1F1',
+    backgroundColor: defaultBackgroundColor,
     padding: 5,
     height: '100%'
   },
-  menuIcon: {
-    zIndex: 9,
-    position: 'absolute',
-    top: 15,
-    left: 20
+  header:{
+    backgroundColor: defaultColor,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  titleHeader:{
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  textTitleHeader:{
+    color: defaultTextColor,
+    marginLeft: 5,
+    fontSize: 20
   },
   textColor: {
-    color: '#DBA89F'
+    color: defaultTextColor
   },
   sorting: {
     zIndex: 9,
     position: 'absolute',
     top: 15,
     right: 20,
-    color: '#DBA89F'
+    color: defaultTextColor
   },
   title: {
     marginTop: 10,
     marginBottom: 10,
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: '#F1F1F1',
+    backgroundColor: defaultBackgroundColor,
   },
-  teksPengumuman: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: 15,
-    marginBottom: 5,
-    marginLeft: 5
+  textTitleActive: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: defaultColor
+  },
+  textTitleInactive: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: defaultColor
+  },
+  flatList:{
+    backgroundColor: defaultBackgroundColor,
+    paddingTop: 10,
+    marginBottom: 120
   }
 })

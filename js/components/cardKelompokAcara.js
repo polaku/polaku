@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
-import CardAcara from './cardAcara'
+import React, { Component } from 'react';
+import { View, StyleSheet } from 'react-native';
+import CardAcara from './cardAcara';
 
 export default class cardAcara extends Component {
   constructor(props) {

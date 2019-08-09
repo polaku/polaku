@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { View, StyleSheet, Image, Dimensions, TouchableHighlight } from 'react-native';
 import { Text, Icon } from 'native-base';
-import { withNavigation } from 'react-navigation';
+import { defaultColor } from '../defaultColor';
 
 export default class cardAnnouncement extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   render() {
     return (
       <TouchableHighlight onPress={() => this.props.navigation.navigate("DetailAnnouncement")}>
@@ -20,7 +20,7 @@ export default class cardAnnouncement extends Component {
                 <Text style={styles.datePost}>August 5, 2019</Text>
               </View>
               <View>
-                <Icon name='bookmark' style={styles.bookmark} size={32} />
+                <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
               </View>
             </View>
           </View>
@@ -37,9 +37,9 @@ export default class cardAnnouncement extends Component {
             <View>
               <Text style={styles.footerItem}>Baca lebih lanjut</Text>
             </View>
-            <View style={styles.footerRight}>
+            <View style={{ flexDirection: 'row' }}>
               <Text style={styles.footerItem}>2</Text>
-              <Icon name='heart-empty' size={5} style={{ color: 'gray', border: 1 }} />
+              <Icon name='heart-empty' size={5} />
             </View>
           </View>
         </View>
@@ -61,17 +61,12 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   header: {
-    display: 'flex',
     flexDirection: 'row',
   },
   headerRight: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
-  },
-  bookmark: {
-    color: '#A6250F'
   },
   iconUser: {
     height: 50,
@@ -92,17 +87,12 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   footer: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 5
   },
   footerItem: {
     fontSize: 12,
-    color: '#A6250F'
-  },
-  footerRight: {
-    display: 'flex',
-    flexDirection: 'row'
+    color: defaultColor
   }
 })

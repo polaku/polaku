@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
-import { Text, Icon, Input, Item } from 'native-base';
+import React, { Component } from 'react';
+import { View, StyleSheet, Image, ScrollView } from 'react-native';
+import { Text, Icon, Input } from 'native-base';
 import CardComment from '../../components/cardComment';
+import { defaultColor } from '../../defaultColor';
 
 export default class detailAnnouncement extends Component {
 
@@ -9,81 +10,64 @@ export default class detailAnnouncement extends Component {
     return (
       <ScrollView>
         <View style={styles.container} >
-          <View style={styles.header}>
+
+          {/* UP SECTION */}
+          <View style={{ flexDirection: 'row' }}>
             <Image source={require('../../../assest/icon_user.png')} style={styles.iconUser} />
             <View style={styles.headerRight}>
               <View>
-                <Text style={styles.userComment}>nama user</Text>
+                <Text style={{ fontWeight: 'bold' }}>nama user</Text>
                 <Text style={styles.dateComment}>August 5, 2019</Text>
               </View>
               <View>
-                <Icon name='bookmark' style={styles.bookmark} size={32} />
+                <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
               </View>
             </View>
           </View>
           <Text style={styles.title}>Judul tidak lebih dari sepuluh kata yang akan tampil disini</Text>
-          <View style={{ marginTop: 10, marginBottom: 10 }}>
-            <Image source={require('../../../assest/index.jpeg')} style={{
-              resizeMode: 'cover',
-              height: 200,
-              width: '100%',
-              alignItems: 'center',
-            }} />
+          <View style={styles.imagePlace}>
+            <Image source={require('../../../assest/index.jpeg')} style={styles.image} />
           </View>
           <Text style={styles.description}>Tulisan tidak lebih dari 300 kata</Text>
           <View style={styles.footer}>
             <Text style={styles.footerItem}>2</Text>
-            <Icon name='heart-empty' size={5} style={{ color: 'gray', border: 1 }} />
+            <Icon name='heart-empty' size={5} style={{ color: 'gray' }} />
           </View>
+
           <View style={styles.line}></View>
 
+          {/* BOTTOM SECTION */}
           <View>
-            <Text style={{ fontSize: 17, color: '#A6250F' }}>3 Komentar</Text>
+            <Text style={{ fontSize: 17, color: defaultColor }}>3 Komentar</Text>
             <View style={styles.userComments}>
               <Image source={require('../../../assest/icon_user.png')} style={styles.iconUserComment} />
               <View style={styles.headerRight}>
-                <View style={{ width: '100%', paddingRight: 15 }}>
-                  <Input placeholder='Tambah komentar ...' style={{ borderWidth: 0.7, borderColor: 'gray' }} />
+                <View style={styles.spaceInputKomen}>
+                  <Input placeholder='Tambah komentar ...' style={styles.columnComment} />
                 </View>
-                <Icon name='send' style={styles.bookmark} size={32} />
+                <Icon name='send' style={{ color: defaultColor }} size={32} />
               </View>
             </View>
             <CardComment />
             <CardComment />
           </View>
+          
         </View>
       </ScrollView>
     )
   }
 }
 
-const { width } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     borderRadius: 20,
     padding: 20,
   },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  userComments: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 17,
-    marginBottom: 17
-  },
   headerRight: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
     alignItems: 'center'
-  },
-  bookmark: {
-    color: '#A6250F'
   },
   iconUserComment: {
     height: 40,
@@ -96,9 +80,6 @@ const styles = StyleSheet.create({
     width: 50,
     marginRight: 10,
     borderRadius: 30
-  },
-  userComment: {
-    fontWeight: 'bold'
   },
   dateComment: {
     fontSize: 12,
@@ -118,14 +99,37 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   footer: {
-    display: 'flex',
     flexDirection: 'row',
     marginTop: 5
   },
   footerItem: {
     fontSize: 12,
-    color: '#A6250F',
+    color: defaultColor,
     marginRight: 5,
     alignItems: 'center'
   },
+  imagePlace: {
+    marginTop: 10,
+    marginBottom: 10
+  },
+  userComments: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 17,
+    marginBottom: 17
+  },
+  columnComment: {
+    borderWidth: 0.7,
+    borderColor: 'gray'
+  },
+  image: {
+    resizeMode: 'cover',
+    height: 200,
+    width: '100%',
+    alignItems: 'center',
+  },
+  spaceInputKomen: {
+    width: '100%',
+    paddingRight: 15
+  }
 })

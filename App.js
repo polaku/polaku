@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Text, SafeAreaView, ScrollView, Image, View } from 'react-native';
 import Login from './js/screens/login';
 import Announcement from './js/navigations/announcement';
 import Polanews from './js/navigations/polanews';
@@ -17,7 +17,8 @@ import Ruangan from './js/navigations/ruangan';
 import RuanganSaya from './js/navigations/ruanganSaya';
 import HubungiKami from './js/navigations/hubungiKami';
 import DaftarPermintaanNav from './js/screens/hubungiKami/daftarPermintaan'
-import { createStackNavigator, createAppContainer, createDrawerNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer, createDrawerNavigator, DrawerItems } from 'react-navigation';
+import { Container, Content, Header, Body, Icon } from 'native-base'
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -25,8 +26,15 @@ const BeritaNav = createStackNavigator({
   Berita: Announcement,
   Polanews: Polanews,
 }, {
-    initialRouteName: 'Berita'
+    initialRouteName: 'Berita',
   })
+
+BeritaNav.navigationOptions = {
+  drawerIcon: ({ tintColor }) => (
+    <Icon name="paper" style={{ fontSize: 24, color: 'white' }} />
+  )
+}
+
 
 const AcaraNav = createStackNavigator({
   Acara: Acara,
@@ -35,6 +43,13 @@ const AcaraNav = createStackNavigator({
     initialRouteName: 'Acara'
   })
 
+AcaraNav.navigationOptions = {
+  drawerIcon: ({ tintColor }) => (
+    <Icon name="browsers" style={{ fontSize: 24, color: 'white' }} />
+  )
+}
+
+
 const RuanganNav = createStackNavigator({
   Ruangan: Ruangan,
   RuanganSaya: RuanganSaya
@@ -42,12 +57,38 @@ const RuanganNav = createStackNavigator({
     initialRouteName: 'Ruangan'
   })
 
+RuanganNav.navigationOptions = {
+  drawerIcon: ({ tintColor }) => (
+    <Icon name="room" style={{ fontSize: 24, color: 'white' }} />
+  )
+}
+
+
 const HubungiKamiNav = createStackNavigator({
   HubungiKami: HubungiKami,
   DaftarPermintaan: { screen: DaftarPermintaanNav }
 }, {
     initialRouteName: 'HubungiKami'
   })
+
+HubungiKamiNav.navigationOptions = {
+  drawerIcon: ({ tintColor }) => (
+    <Icon name="home" style={{ fontSize: 24, color: 'white' }} />
+  )
+}
+
+
+const CustomDrawerComponent = (props) => (
+  <View style={{ flex: 1 }}>
+    <View style={{ height: 150, alignItems: 'center', justifyContent: 'center', marginTop: 30 }}>
+      <Image source={require('./assest/Group.png')} style={{ height: 90, width: 90 }} />
+      <Image source={require('./assest/polaku.png')} style={{ height: 40, width: 90 }} />
+    </View>
+    <View style={{ margin: 20 }}>
+      <DrawerItems {...props} />
+    </View>
+  </View>
+)
 
 const DrawerNav = createDrawerNavigator({
   Berita: BeritaNav,
@@ -57,7 +98,15 @@ const DrawerNav = createDrawerNavigator({
 }, {
     drawerWidth: WIDTH * 0.7,
     drawerBackgroundColor: '#9F1616',
-    drawerColor: '#DBA89F'
+    drawerFontColor: 'white',
+    contentComponent: CustomDrawerComponent,
+    contentOptions: {
+      labelStyle: {
+        color: 'white',
+        fontSize: 17
+      },
+    }
+
   })
 
 DrawerNav.navigationOptions = ({ navigation }) => ({

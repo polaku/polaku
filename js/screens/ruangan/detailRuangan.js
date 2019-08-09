@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { Text, Icon, Input, Item, Tabs, Tab, ScrollableTab } from 'native-base';
-import CardComment from '../../components/cardComment';
-import { TouchableHighlight } from 'react-native-gesture-handler';
-import CardKelompokAcara from '../../components/cardKelompokAcara';
 import CardBookingRuangan from '../../components/cardBookingRuangan';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 
 export default class detailAnnouncement extends Component {
   constructor(props) {
@@ -47,20 +45,21 @@ export default class detailAnnouncement extends Component {
   render() {
     return (
       <View>
-        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', height:50 }}>
-          <Icon name='arrow-round-back' style={styles.bookmark} size={32} />
-          <Text style={{ ...styles.bookmark, marginRight: 15, marginLeft: 15, marginTop: 10, marginBottom: 10 }} >Juli</Text>
-          <Icon name='arrow-round-forward' style={styles.bookmark} size={32} />
+        {/* NAVIGATION MONTH */}
+        <View style={styles.header}>
+          <Icon name='arrow-round-back' style={{color: defaultColor}} size={32} />
+          <Text style={styles.textMonth} >Juli</Text>
+          <Icon name='arrow-round-forward' style={{color: defaultColor}} size={32} />
         </View>
-        <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1', paddingTop:20, paddingBottom:20 }}>
+        <View style={styles.container}>
           <CardBookingRuangan />
         </View>
-        {/* <Tabs renderTabBar={() => <ScrollableTab />} tabBarUnderlineStyle={{ backgroundColor: '#A6250F' }}>
+        {/* <Tabs renderTabBar={() => <ScrollableTab />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
           {
             this.state.dates.map(el => (
               // <ScrollView>
-              <Tab heading={el} tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: '#A6250F', fontWeight: 'normal' }}>
-                <View style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', backgroundColor: '#F1F1F1' }}>
+              <Tab heading={el} tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: defaultColor, fontWeight: 'normal' }}>
+                <View style={{ height: '100%', width: '100% alignItems: 'center', backgroundColor: '#F1F1F1' }}>
                   <CardKelompokAcara navigation={this.props.navigation} />
                 </View>
               </Tab>
@@ -73,33 +72,35 @@ export default class detailAnnouncement extends Component {
   }
 }
 
-const { width } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 20,
-    padding: 20,
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: defaultBackgroundColor,
+    paddingTop:20,
+    paddingBottom:20
   },
   header: {
-    display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height:50
   },
   userComments: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 17,
     marginBottom: 17
   },
   headerRight: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
     alignItems: 'center'
   },
   bookmark: {
-    color: '#A6250F'
+    color: defaultColor
   },
   iconUserComment: {
     height: 40,
@@ -134,19 +135,24 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   footer: {
-    display: 'flex',
     flexDirection: 'row',
     marginTop: 5
   },
   footerItem: {
     fontSize: 12,
-    color: '#A6250F',
+    color: defaultColor,
     marginRight: 5,
     alignItems: 'center'
   },
   isiAcara: {
-    display: 'flex',
     flexDirection: 'row',
     marginBottom: 5
+  },
+  textMonth: {
+    color: defaultColor,
+    marginRight: 15,
+    marginLeft: 15,
+    marginTop: 10,
+    marginBottom: 10
   }
 })
