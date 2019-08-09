@@ -1,13 +1,43 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableHighlight } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableHighlight, Fragment } from 'react-native';
 import { Header, Icon } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardAnnouncement from '../../components/cardAnnouncement';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { API } from '../../../config/API';
 
 export default class announcement extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: [],
+      loading: true
+    }
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+
+  fetchData = async () => {
+    let getData
+    try {
+      getData = await API.get('/announcement',
+        {
+          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTMxNzE3NywiZXhwIjoxNTY1MzYwMzc3fQ.K2LbWIQvqJmtmGXJBpK1VEOef-LcJGbEd0btcn23bqM' }
+        })
+      this.setState({
+        data: getData.data.data,
+        loading: false
+      })
+      console.log(this.state.data)
+    } catch (err) {
+      this.setState({
+        loading: false
+      })
+      // alert(`${err}`)
+    }
   }
 
   render() {
@@ -26,28 +56,36 @@ export default class announcement extends Component {
 
         {/* CONTENT */}
         <View style={styles.container}>
+          {
+            this.state.loading
+              ? <Text>Loading</Text>
 
-          {/* MENU BERITA */}
-          <View style={styles.title}>
-            <Text style={styles.textTitleActive}> Pengumuman </Text>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('Polanews')}>
-              <Text style={styles.textTitleInactive}>polanews</Text>
-            </TouchableHighlight>
-          </View>
+              : <View>
+                < View style={styles.title}>
+                  <Text style={styles.textTitleActive}> Pengumuman </Text>
+                  <TouchableHighlight onPress={() => this.props.navigation.navigate('Polanews')}>
+                    <Text style={styles.textTitleInactive}>polanews</Text>
+                  </TouchableHighlight>
+                </View>
 
-          {/* CONTENT PENGUMUMAN  */}
-          <ScrollView style={{ marginBottom: 120 }}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-              <CardAnnouncement navigation={this.props.navigation} />
-              <CardAnnouncement navigation={this.props.navigation} />
-            </ScrollView>
-            <View style={styles.teksPengumuman}>
-              <Icon name='megaphone' size={15} style={{ marginRight: 10 }} />
-              <Text>Pengumuman terbaru</Text>
-            </View>
-            <CardAnnouncement navigation={this.props.navigation} />
-            <CardAnnouncement navigation={this.props.navigation} />
-          </ScrollView>
+                <ScrollView style={{ marginBottom: 120 }}>
+                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+                    {
+                      this.state.data.map(el => (<CardAnnouncement navigation={this.props.navigation} data={el} />
+                      ))
+                    }
+                  </ScrollView>
+                  <View style={styles.teksPengumuman}>
+                    <Icon name='megaphone' size={15} style={{ marginRight: 10 }} />
+                    <Text>Pengumuman terbaru</Text>
+                  </View>
+                  {
+                    this.state.data.map(el => (<CardAnnouncement navigation={this.props.navigation} data={el} />
+                    ))
+                  }
+                </ScrollView>
+              </View>
+          }
         </View>
       </SafeAreaView>
     )

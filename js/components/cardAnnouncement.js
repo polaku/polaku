@@ -6,42 +6,59 @@ import { defaultColor } from '../defaultColor';
 export default class cardAnnouncement extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: this.props.data,
+    }
   }
 
   render() {
+    function getDate(args) {
+      let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      let date = new Date(args).getDate()
+      let month = months[new Date(args).getMonth()]
+      let years = new Date(args).getFullYear()
+      return `${month} ${date}, ${years}`
+    }
+
     return (
-      <TouchableHighlight onPress={() => this.props.navigation.navigate("DetailAnnouncement")}>
-        <View style={styles.container} >
-          <View style={styles.header}>
-            <Image source={require('../../assest/icon_user.png')} style={styles.iconUser} />
-            <View style={styles.headerRight}>
-              <View>
-                <Text style={styles.userPost}>nama user</Text>
-                <Text style={styles.datePost}>August 5, 2019</Text>
+      <TouchableHighlight onPress={() => this.props.navigation.navigate("DetailAnnouncement", {
+        dataAnnouncement: this.props.data })} >
+        <View>
+          {
+            this.props.data && <View style={styles.container} >
+              <View style={styles.header}>
+                <Image source={require('../../assest/icon_user.png')} style={styles.iconUser} />
+                <View style={styles.headerRight}>
+                  <View>
+                    <Text style={styles.userPost}>{this.props.data.tbl_user.username}</Text>
+                    <Text style={styles.datePost}>{getDate(this.props.data.created_date)}</Text>
+                  </View>
+                  <View>
+                    <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
+                  </View>
+                </View>
               </View>
+              <Text style={styles.title}>{this.props.data.title}</Text>
+
               <View>
-                <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
+                <Image source={require('../../assest/index.jpeg')} style={{
+                  resizeMode: 'cover',
+                  height: 200,
+                  width: '100%',
+                  alignItems: 'center',
+                }} />
+              </View>
+              <View style={styles.footer}>
+                <View>
+                  <Text style={styles.footerItem}>Baca lebih lanjut</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={styles.footerItem}>2</Text>
+                  <Icon name='heart-empty' size={5} />
+                </View>
               </View>
             </View>
-          </View>
-          <Text style={styles.title}>Judul tidak lebih dari sepuluh kata yang akan tampil disini</Text>
-          <View>
-            <Image source={require('../../assest/index.jpeg')} style={{
-              resizeMode: 'cover',
-              height: 200,
-              width: '100%',
-              alignItems: 'center',
-            }} />
-          </View>
-          <View style={styles.footer}>
-            <View>
-              <Text style={styles.footerItem}>Baca lebih lanjut</Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.footerItem}>2</Text>
-              <Icon name='heart-empty' size={5} />
-            </View>
-          </View>
+          }
         </View>
       </TouchableHighlight>
     )
@@ -84,7 +101,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 5
+    marginTop: 10,
+    marginBottom: 15
   },
   footer: {
     flexDirection: 'row',

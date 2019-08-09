@@ -3,10 +3,31 @@ import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { Text, Icon, Input } from 'native-base';
 import CardComment from '../../components/cardComment';
 import { defaultColor } from '../../defaultColor';
+// import { WebView } from 'react-native-webview';
 
 export default class detailAnnouncement extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: {}
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      data: this.props.navigation.getParam('dataAnnouncement')
+    })
+  }
 
   render() {
+    function getDate(args) {
+      let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      let date = new Date(args).getDate()
+      let month = months[new Date(args).getMonth()]
+      let years = new Date(args).getFullYear()
+      return `${month} ${date}, ${years}`
+    }
+
     return (
       <ScrollView>
         <View style={styles.container} >
@@ -16,19 +37,22 @@ export default class detailAnnouncement extends Component {
             <Image source={require('../../../assest/icon_user.png')} style={styles.iconUser} />
             <View style={styles.headerRight}>
               <View>
-                <Text style={{ fontWeight: 'bold' }}>nama user</Text>
-                <Text style={styles.dateComment}>August 5, 2019</Text>
+                {
+                  this.state.data.tbl_user && <Text style={{ fontWeight: 'bold' }}>{this.state.data.tbl_user.username}</Text>
+                }
+                <Text style={styles.dateComment}>{getDate(this.state.data.created_date)}</Text>
               </View>
               <View>
                 <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
               </View>
             </View>
           </View>
-          <Text style={styles.title}>Judul tidak lebih dari sepuluh kata yang akan tampil disini</Text>
+          <Text style={styles.title}>{this.state.data.title}</Text>
           <View style={styles.imagePlace}>
             <Image source={require('../../../assest/index.jpeg')} style={styles.image} />
           </View>
-          <Text style={styles.description}>Tulisan tidak lebih dari 300 kata</Text>
+          {/* <WebView style={styles.description} source={{ html: this.state.data.description }} /> */}
+          <Text style={styles.description}>{this.state.data.description}</Text>
           <View style={styles.footer}>
             <Text style={styles.footerItem}>2</Text>
             <Icon name='heart-empty' size={5} style={{ color: 'gray' }} />
@@ -51,7 +75,7 @@ export default class detailAnnouncement extends Component {
             <CardComment />
             <CardComment />
           </View>
-          
+
         </View>
       </ScrollView>
     )
