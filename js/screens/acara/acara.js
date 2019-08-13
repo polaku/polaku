@@ -1,18 +1,78 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, ScrollView } from 'react-native';
 import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardKelompokAcara from '../../components/cardKelompokAcara';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { API } from '../../../config/API';
 
 export default class acara extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: [
-        { id: 1, image: '../../assest/placeholder.jpg', title: 'Tulip 1' },
-        { id: 2, image: '../../assest/placeholder.jpg', title: 'Tulip 2' },
-        { id: 3, image: '../../assest/placeholder.jpg', title: 'Tulip besar' }]
+      data: [],
+      loading: false,
+      eventsToday: [],
+      eventsTomorrow: [],
+      eventsThisWeek: [],
+      eventsThisMonth: []
+      // data: [
+      //   { id: 1, image: '../../assest/placeholder.jpg', title: 'Tulip 1' },
+      //   { id: 2, image: '../../assest/placeholder.jpg', title: 'Tulip 2' },
+      //   { id: 3, image: '../../assest/placeholder.jpg', title: 'Tulip besar' }]
+    }
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  fetchData = async () => {
+    let getData, startDate, endDate, date, month, years
+    let today = [], tomorrow = [], thisWeek = [], thisMonth = []
+
+    this.setState({
+      loading: true
+    })
+    date = new Date().getDate()
+    month = new Date().getMonth() + 1
+    years = new Date().getFullYear()
+
+    try {
+      getData = await API.get('/events',
+        {
+          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+        })
+
+      getData.data.data.forEach(el => {
+        startDate = el.start_date.split('-')
+        endDate = el.end_date.split('-')
+
+        if ((Number(startDate[2]) === date && Number(startDate[1]) === month && Number(startDate[0]) === years) ||
+          ((Number(startDate[2]) < date && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && (Number(endDate[2]) > date && Number(endDate[1]) >= month && Number(startDate[0]) <= years))) {
+          today.push(el)
+        } else if ((Number(startDate[2]) === date + 1 && Number(startDate[1]) === month && Number(startDate[0]) === years) ||
+          ((Number(startDate[2]) < date + 1 && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) > date + 1 && Number(endDate[1]) >= month && Number(startDate[0]) <= years))) {
+          tomorrow.push(el)
+        }
+        if ((Number(startDate[2]) >= date && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) >= date && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) {
+          thisMonth.push(el)
+        }
+      })
+
+      this.setState({
+        data: getData.data.data,
+        loading: false,
+        eventsToday: today,
+        eventsTomorrow: tomorrow,
+        eventsThisMonth: thisMonth
+      })
+
+    } catch (err) {
+      this.setState({
+        loading: false
+      })
+      alert('Fetch data failed')
     }
   }
 
@@ -33,7 +93,6 @@ export default class acara extends Component {
         {/* CONTENT */}
         <View style={styles.container}>
 
-          {/* MENU ACARA */}
           <View style={styles.title}>
             <Text style={styles.textTitleActive}> Semua Acara </Text>
             <TouchableHighlight onPress={() => this.props.navigation.navigate('AcaraSaya')}>
@@ -47,38 +106,79 @@ export default class acara extends Component {
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.eventsToday.map(el => (
+                          <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                        ))
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
             <Tab heading="Besok"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.eventsTomorrow.map(el => (
+                          <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                        ))
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
             <Tab heading="Minggu ini"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.eventsThisMonth.map(el => (
+                          <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                        ))
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
             <Tab heading="Bulan ini"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.eventsThisMonth.map(el => (
+                          <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                        ))
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
           </Tabs>
+
         </View>
 
         {/* BUTTON ADD */}
@@ -169,7 +269,12 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     alignItems: 'center',
-    backgroundColor: defaultBackgroundColor
+    backgroundColor: defaultBackgroundColor,
+    marginBottom: 300
+  },
+  scrollView: {
+    width: '100%',
+    marginBottom: 160
   }
 })
 

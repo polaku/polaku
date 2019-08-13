@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { Text, Icon, Input, Item, Tabs, Tab, ScrollableTab } from 'native-base';
+import { View, StyleSheet, Dimensions, TouchableHighlight, FlatList } from 'react-native';
+import { Text, Icon, Header, Item, Tabs, Tab, ScrollableTab } from 'native-base';
 import CardBookingRuangan from '../../components/cardBookingRuangan';
+import CardKelompokAcara from '../../components/cardKelompokAcara';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { API } from '../../../config/API';
 
 export default class detailAnnouncement extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       dates: [],
-      test: 0,
-      nameTab: ['Hari ini', 'Besok', 'Minggu ini'],
+      month: new Date().getMonth()
     }
   }
 
@@ -18,55 +20,123 @@ export default class detailAnnouncement extends Component {
     let years = new Date().getFullYear()
     let month = new Date().getMonth() + 1
 
-    this.fetchDate(years, month)
-    // console.log(this.state.dates);
-    console.log("ASDASDASDASDASDADASDASDADADSAD")
+    if (this.props.myRoom) this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'), 'myRoom')
+    else this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'))
+
   }
 
-
-  fetchDate = (years, month) => {
+  fetchDataPerMonth = async (years, month, idRoom, myRoom) => {
+    let getData, data = []
     let date = new Date(years, month, 0).getDate();
-    let temp = []
 
-    console.log(date);
     this.setState({
-      test: date
+      loading: true
     })
 
-    for (let i = 1; i <= date; i++) {
-      temp.push(String(i))
+    try {
+      if (myRoom) {
+        getData = await API.get(`/bookingRoom/${idRoom}/${month}/myRoom`,
+          {
+            headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+          })
+      } else {
+        getData = await API.get(`/bookingRoom/${idRoom}/${month}`,
+          {
+            headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+          })
+      }
+      for (let i = 1; i <= date; i++) {
+        let temp = []
+        getData.data.data.forEach(dataElement => {
+          let date_in = dataElement.date_in.split('-')
+
+          if (Number(i) === Number(date_in[2])) {
+            temp.push(dataElement)
+          }
+        })
+        data.push({ key: String(i), data: temp })
+      }
+
+      this.setState({
+        dates: data,
+        loading: false,
+      })
+    } catch (err) {
+      this.setState({
+        loading: false
+      })
+      alert(err)
     }
+  }
 
+  prevMonth = () => {
+    let years = new Date().getFullYear()
+    let newMonth = this.state.month - 1
     this.setState({
-      dates: temp
+      month: newMonth
     })
+    this.fetchDataPerMonth(years, newMonth + 1, this.props.navigation.getParam('room_id'))
+  }
+
+  nextMonth = () => {
+    let years = new Date().getFullYear()
+    let newMonth = this.state.month + 1
+    this.setState({
+      month: newMonth
+    })
+    this.fetchDataPerMonth(years, newMonth + 1, this.props.navigation.getParam('room_id'))
+  }
+
+  renderSeparator = () => {
+    return (
+      <View
+        style={styles.separator}
+      />
+    );
   }
 
   render() {
+    function getMonth(args) {
+      let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      return months[args]
+    }
+
     return (
-      <View>
+      <View style={styles.container}>
+
         {/* NAVIGATION MONTH */}
         <View style={styles.header}>
-          <Icon name='arrow-round-back' style={{color: defaultColor}} size={32} />
-          <Text style={styles.textMonth} >Juli</Text>
-          <Icon name='arrow-round-forward' style={{color: defaultColor}} size={32} />
+          <TouchableHighlight onPress={() => this.prevMonth()}>
+            <Icon name='arrow-round-back' style={{ color: defaultColor }} size={32} />
+          </TouchableHighlight>
+          <Text style={styles.textMonth} >{getMonth(this.state.month)}</Text>
+          <TouchableHighlight onPress={() => this.nextMonth()}>
+            <Icon name='arrow-round-forward' style={{ color: defaultColor }} size={32} />
+          </TouchableHighlight>
         </View>
-        <View style={styles.container}>
-          <CardBookingRuangan />
-        </View>
-        {/* <Tabs renderTabBar={() => <ScrollableTab />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
-          {
-            this.state.dates.map(el => (
-              // <ScrollView>
-              <Tab heading={el} tabStyle={styles.tab} textStyle={{ color: '#B8B4B4' }} activeTabStyle={{ backgroundColor: '#F1F1F1' }} activeTextStyle={{ color: defaultColor, fontWeight: 'normal' }}>
-                <View style={{ height: '100%', width: '100% alignItems: 'center', backgroundColor: '#F1F1F1' }}>
-                  <CardKelompokAcara navigation={this.props.navigation} />
-                </View>
-              </Tab>
-              // </ScrollView>
-            ))
-          }
-        </Tabs> */}
+
+        {
+          this.state.loading
+            ? <Text>Loading</Text>
+            : <Tabs renderTabBar={() => <ScrollableTab tabsContainerStyle={styles.tabsContainerStyle} />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
+              {
+                this.state.dates.map(el => (
+                  <Tab heading={el.key}
+                    tabStyle={styles.tab}
+                    textStyle={{ color: defaultColor }}
+                    activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+                    activeTextStyle={styles.activeTextStyle}>
+                    <FlatList
+                      style={{ paddingTop: 15 }}
+                      data={el.data}
+                      ItemSeparatorComponent={this.renderSeparator}
+                      renderItem={({ item }) => <CardBookingRuangan navigation={this.props.navigation} data={item} />}
+                    />
+                  </Tab>
+                ))
+              }
+            </Tabs>
+        }
       </View >
     )
   }
@@ -78,74 +148,13 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     backgroundColor: defaultBackgroundColor,
-    paddingTop:20,
-    paddingBottom:20
+    paddingBottom: 20
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height:50
-  },
-  userComments: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 17,
-    marginBottom: 17
-  },
-  headerRight: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    alignItems: 'center'
-  },
-  bookmark: {
-    color: defaultColor
-  },
-  iconUserComment: {
-    height: 40,
-    width: 40,
-    marginRight: 10,
-    borderRadius: 30
-  },
-  iconUser: {
-    height: 50,
-    width: 50,
-    marginRight: 10,
-    borderRadius: 30
-  },
-  userComment: {
-    fontWeight: 'bold'
-  },
-  dateComment: {
-    fontSize: 12,
-    color: '#C1C1C1'
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10
-  },
-  line: {
-    borderWidth: 1,
-    width: '100%',
-    borderColor: 'gray',
-    marginTop: 10,
-    marginBottom: 10
-  },
-  footer: {
-    flexDirection: 'row',
-    marginTop: 5
-  },
-  footerItem: {
-    fontSize: 12,
-    color: defaultColor,
-    marginRight: 5,
-    alignItems: 'center'
-  },
-  isiAcara: {
-    flexDirection: 'row',
+    marginTop: 5,
     marginBottom: 5
   },
   textMonth: {
@@ -154,5 +163,24 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 10,
     marginBottom: 10
+  },
+  tabsContainerStyle: {
+    backgroundColor: defaultBackgroundColor,
+    justifyContent: 'flex-start',
+  },
+  tab: {
+    backgroundColor: defaultBackgroundColor
+  },
+  separator: {
+    height: 1,
+    width: "80%",
+    backgroundColor: "#CED0CE",
+    marginTop: 8,
+    marginBottom: 8,
+    alignSelf: 'center'
+  },
+  activeTextStyle: {
+    color: defaultColor,
+    fontWeight: 'normal'
   }
 })

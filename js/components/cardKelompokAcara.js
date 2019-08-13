@@ -10,7 +10,7 @@ export default class cardAcara extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <CardAcara navigation={this.props.navigation}/>
+        <CardAcara navigation={this.props.navigation} data={this.props.data} />
       </View>
     )
   }
@@ -18,10 +18,10 @@ export default class cardAcara extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 10, 
-    width: '95%', 
-    backgroundColor: 'white', 
-    borderRadius: 10, 
+    margin: 10,
+    width: '95%',
+    backgroundColor: 'white',
+    borderRadius: 10,
     padding: 15
   }
 })

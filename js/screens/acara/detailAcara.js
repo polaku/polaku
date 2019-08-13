@@ -7,6 +7,9 @@ import { defaultColor } from '../../defaultColor';
 
 
 export default class detailAnnouncement extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
@@ -20,9 +23,6 @@ export default class detailAnnouncement extends Component {
               <View>
                 <Text style={styles.userComment}>nama user</Text>
                 <Text style={styles.dateComment}>August 5, 2019</Text>
-              </View>
-              <View>
-                <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
               </View>
             </View>
           </View>

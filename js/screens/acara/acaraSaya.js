@@ -1,13 +1,64 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, ScrollView } from 'react-native';
 import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardKelompokAcara from '../../components/cardKelompokAcara';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { API } from '../../../config/API';
 
 export default class acaraSaya extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: [],
+      loading: false,
+      eventsMengikuti: [],
+      eventsDiajukan: [],
+      eventsDitolak: []
+    }
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  fetchData = async () => {
+    let getData
+    let mengikuti = [], diajukan = [], ditolak = []
+
+    this.setState({
+      loading: true
+    })
+    try {
+      getData = await API.get('/events/myevents',
+        {
+          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+        })
+
+      console.log('on process', getData.data.data);
+
+      getData.data.data.forEach(el => {
+        if (el.status === 0) {
+          diajukan.push(el)
+        } else if (el.status === 2) {
+          ditolak.push(el)
+        }
+      })
+
+      this.setState({
+        data: getData.data.data,
+        loading: false,
+        eventsMengikuti: mengikuti,
+        eventsDiajukan: diajukan,
+        eventsDitolak: ditolak
+      })
+
+    } catch (err) {
+      this.setState({
+        loading: false
+      })
+      alert('Fetch data failed')
+    }
   }
 
   render() {
@@ -41,36 +92,84 @@ export default class acaraSaya extends Component {
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.data
+                          ? this.state.data.map(el => (
+                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
             <Tab heading="semua"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.data.length > 0
+                          ? this.state.data.map(el => (
+                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
             <Tab heading="diajukan"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.eventsDiajukan.length > 0
+                          ? this.state.eventsDiajukan.map(el => (
+                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
             <Tab heading="ditolak"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <CardKelompokAcara navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <View style={styles.containerInTab}>
+                    <ScrollView style={styles.scrollView}>
+                      {
+                        this.state.eventsDitolak.length > 0
+                          ? this.state.eventsDitolak.map(el => (
+                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </ScrollView>
+                  </View>
+              }
             </Tab>
           </Tabs>
         </View>
@@ -164,5 +263,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     backgroundColor: defaultBackgroundColor
+  },
+  scrollView: {
+    width: '100%',
+    marginBottom: 160
   }
 })

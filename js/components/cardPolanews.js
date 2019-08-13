@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: defaultBackgroundColor,
     width: 1 / 3 * width,
-    height: 230,
+    height: 'auto',
     padding: 5,
   },
   image : {

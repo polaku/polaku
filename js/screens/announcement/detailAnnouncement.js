@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import { Text, Icon, Input } from 'native-base';
 import CardComment from '../../components/cardComment';
 import { defaultColor } from '../../defaultColor';
-// import { WebView } from 'react-native-webview';
+import HTML from 'react-native-render-html';
 
 export default class detailAnnouncement extends Component {
   constructor(props) {
@@ -51,8 +51,7 @@ export default class detailAnnouncement extends Component {
           <View style={styles.imagePlace}>
             <Image source={require('../../../assest/index.jpeg')} style={styles.image} />
           </View>
-          {/* <WebView style={styles.description} source={{ html: this.state.data.description }} /> */}
-          <Text style={styles.description}>{this.state.data.description}</Text>
+          <HTML html={this.state.data.description} />
           <View style={styles.footer}>
             <Text style={styles.footerItem}>2</Text>
             <Icon name='heart-empty' size={5} style={{ color: 'gray' }} />

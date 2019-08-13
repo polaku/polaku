@@ -4,15 +4,52 @@ import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardRuangan from '../../components/cardRuangan';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { API } from '../../../config/API';
 
 export default class acara extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        { id: 1, image: '../../assest/placeholder.jpg', title: 'Tulip 1' },
-        { id: 2, image: '../../assest/placeholder.jpg', title: 'Tulip 2' },
-        { id: 3, image: '../../assest/placeholder.jpg', title: 'Tulip besar' }]
+      data: [],
+      roomsP40: []
+    }
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  fetchData = async () => {
+    let getData
+    let P40 = []
+
+    this.setState({
+      loading: true
+    })
+
+    try {
+      getData = await API.get('/bookingRoom/rooms',
+        {
+          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+        })
+
+      getData.data.data.forEach(el => {
+        if(el.company_id===1){
+          P40.push(el)
+        }
+      })
+
+      this.setState({
+        data: getData.data.data,
+        loading: false,
+        roomsP40: P40,
+      })
+
+    } catch (err) {
+      this.setState({
+        loading: false
+      })
+      alert(err)
     }
   }
 
@@ -48,7 +85,12 @@ export default class acara extends Component {
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
               <View style={styles.containerInTab}>
-                <Text>Semua</Text>
+                <FlatList
+                  style={styles.flatList}
+                  numColumns={3}
+                  data={this.state.data}
+                  renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} />}
+                />
               </View>
             </Tab>
             <Tab heading="P40"
@@ -60,7 +102,7 @@ export default class acara extends Component {
                 <FlatList
                   style={styles.flatList}
                   numColumns={3}
-                  data={this.state.data}
+                  data={this.state.roomsP40}
                   renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} />}
                 />
               </View>

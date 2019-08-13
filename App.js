@@ -17,6 +17,8 @@ import Ruangan from './js/navigations/ruangan';
 import RuanganSaya from './js/navigations/ruanganSaya';
 import HubungiKami from './js/navigations/hubungiKami';
 import DaftarPermintaanNav from './js/screens/hubungiKami/daftarPermintaan'
+import RuanganScreen from './js/screens/ruangan/ruangan'
+import DetailRuanganScreen from './js/screens/ruangan/detailRuangan'
 import { createStackNavigator, createAppContainer, createDrawerNavigator, DrawerItems } from 'react-navigation';
 import { Container, Content, Header, Body, Icon } from 'native-base'
 
@@ -51,7 +53,9 @@ AcaraNav.navigationOptions = {
 
 
 const RuanganNav = createStackNavigator({
-  Ruangan: Ruangan,
+  // Ruangan: {screen: RuanganScreen},
+  // DetailRuanganScreen : {screen :DetailRuanganScreen},
+  Ruangan : Ruangan,
   RuanganSaya: RuanganSaya
 }, {
     initialRouteName: 'Ruangan'

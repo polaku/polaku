@@ -1,13 +1,65 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardPermintaan from '../../components/cardPermintaan';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { API } from '../../../config/API';
 
 export default class acara extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      data: [],
+      ongoing: [],
+      confirmation: [],
+      done: [],
+      cancel: []
+    }
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  fetchData = async () => {
+    let getData, tempOngoing = [], tempConfirmation = [], tempDone = [], tempCancel = []
+    this.setState({
+      loading: true
+    })
+    try {
+      getData = await API.get('/contactUs',
+        {
+          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+        })
+
+      // ongoing(new, assigned, on going), confirmation, done, cancel
+      getData.data.data.forEach(el => {
+        if (el.status === 'confirmation') {
+          tempConfirmation.push(el)
+        } else if (el.status === 'done') {
+          tempDone.push(el)
+        } else if (el.status === 'cancel') {
+          tempCancel.push(el)
+        } else {
+          tempOngoing.push(el)
+        }
+      });
+
+      this.setState({
+        data: getData.data.data,
+        loading: false,
+        ongoing: tempOngoing,
+        confirmation: tempConfirmation,
+        done: tempDone,
+        cancel: tempCancel
+      })
+    } catch (err) {
+      this.setState({
+        loading: false
+      })
+      alert(err)
+    }
   }
 
   render() {
@@ -33,37 +85,84 @@ export default class acara extends Component {
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerItem}>
-                <CardPermintaan navigation={this.props.navigation} />
-                <CardPermintaan navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <ScrollView style={styles.scrollView}>
+                    <View style={styles.containerItem}>
+                      {
+                        this.state.ongoing.length > 0
+                          ? this.state.ongoing.map(el => (
+                            <CardPermintaan navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </View>
+                  </ScrollView>
+              }
             </Tab>
             <Tab heading="konfirmasi"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerItem}>
-                <CardPermintaan navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <ScrollView style={styles.scrollView}>
+                    <View style={styles.containerItem}>
+                      {
+                        this.state.confirmation.length > 0
+                          ? this.state.confirmation.map(el => (
+                            <CardPermintaan navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </View>
+                  </ScrollView>
+              }
             </Tab>
             <Tab heading="selesai"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerItem}>
-                <CardPermintaan navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <ScrollView style={styles.scrollView}>
+                    <View style={styles.containerItem}>
+                      {
+                        this.state.done.length > 0
+                          ? this.state.done.map(el => (
+                            <CardPermintaan navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </View>
+                  </ScrollView>
+              }
             </Tab>
             <Tab heading="dibatalkan"
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerItem}>
-                <CardPermintaan navigation={this.props.navigation} />
-              </View>
+              {
+                this.state.loading
+                  ? <Text>Loading</Text>
+                  : <ScrollView style={styles.scrollView}>
+                    <View style={styles.containerItem}>
+                      {
+                        this.state.cancel.length > 0
+                          ? this.state.cancel.map(el => (
+                            <CardPermintaan navigation={this.props.navigation} data={el} />
+                          ))
+                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                      }
+                    </View>
+                  </ScrollView>
+              }
             </Tab>
           </Tabs>
         </View>
@@ -72,6 +171,12 @@ export default class acara extends Component {
     )
   }
 }
+
+//admin
+// new, assigned, on going, confirmation, done, cancel
+
+//user
+// ongoing(new, assigned, on going), confirmation, done, cancel
 
 acara.navigationOptions = {
   header: null
@@ -82,7 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: defaultBackgroundColor,
     padding: 5,
     height: '100%',
-    marginBottom: 60
+    alignSelf: 'center'
   },
   header: {
     backgroundColor: defaultColor,
@@ -103,20 +208,23 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 15,
     right: 20,
-    color: '#DBA89F'
+    color: defaultTextColor
   },
   tab: {
-    backgroundColor: '#F1F1F1'
+    backgroundColor: defaultBackgroundColor
   },
   activeTextStyle: {
-    color: '#A6250F',
+    color: defaultColor,
     fontWeight: 'normal'
   },
   containerItem: {
     height: '100%',
     width: '100%',
-    display: 'flex',
     alignItems: 'center',
+    backgroundColor: defaultBackgroundColor
+  },
+  scrollView: {
+    width: '100%',
     backgroundColor: defaultBackgroundColor
   }
 })

@@ -11,7 +11,7 @@ export default class announcement extends Component {
     super(props);
     this.state = {
       data: [],
-      loading: true
+      loading: false
     }
   }
 
@@ -19,24 +19,25 @@ export default class announcement extends Component {
     this.fetchData()
   }
 
-
   fetchData = async () => {
     let getData
+    this.setState({
+      loading: true
+    })
     try {
       getData = await API.get('/announcement',
         {
-          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTMxNzE3NywiZXhwIjoxNTY1MzYwMzc3fQ.K2LbWIQvqJmtmGXJBpK1VEOef-LcJGbEd0btcn23bqM' }
+          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
         })
       this.setState({
         data: getData.data.data,
         loading: false
       })
-      console.log(this.state.data)
     } catch (err) {
       this.setState({
         loading: false
       })
-      // alert(`${err}`)
+      alert('Fetch data failed')
     }
   }
 
@@ -59,7 +60,6 @@ export default class announcement extends Component {
           {
             this.state.loading
               ? <Text>Loading</Text>
-
               : <View>
                 < View style={styles.title}>
                   <Text style={styles.textTitleActive}> Pengumuman </Text>
@@ -68,10 +68,10 @@ export default class announcement extends Component {
                   </TouchableHighlight>
                 </View>
 
-                <ScrollView style={{ marginBottom: 120 }}>
+                <ScrollView style={{ marginBottom: 160 }}>
                   <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
                     {
-                      this.state.data.map(el => (<CardAnnouncement navigation={this.props.navigation} data={el} />
+                      this.state.data.map((el, index) => (<CardAnnouncement navigation={this.props.navigation} data={el} key={index} />
                       ))
                     }
                   </ScrollView>
@@ -80,7 +80,7 @@ export default class announcement extends Component {
                     <Text>Pengumuman terbaru</Text>
                   </View>
                   {
-                    this.state.data.map(el => (<CardAnnouncement navigation={this.props.navigation} data={el} />
+                    this.state.data.map((el, index) => (<CardAnnouncement navigation={this.props.navigation} data={el} key={index} />
                     ))
                   }
                 </ScrollView>

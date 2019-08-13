@@ -7,14 +7,22 @@ export default class cardAcara extends Component {
   }
 
   render() {
+    function getDate(args) {
+      let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      let date = new Date(args).getDate()
+      let month = months[new Date(args).getMonth()]
+      let years = new Date(args).getFullYear()
+      return `${month} ${date}, ${years}`
+    }
+
     return (
       <TouchableHighlight style={styles.container}>
         <View>
-          <Text style={styles.divisi}>IT</Text>
-          <Text style={styles.judulPermintaan}>JUDUL PERMINTAAN</Text>
+          <Text style={styles.divisi}>{this.props.data.tbl_contact_category.contact_categories}</Text>
+          <Text style={styles.judulPermintaan}>{this.props.data.message}</Text>
 
           <View style={styles.keterangan}>
-            <Text> tgl submit </Text>
+            <Text>{getDate(this.props.data.created)}</Text>
             <Text> 3 hari </Text>
           </View>
         </View>

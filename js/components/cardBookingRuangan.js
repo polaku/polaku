@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, Image } from 'react-native';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../defaultColor';
 
 export default class cardAcara extends Component {
   constructor(props) {
@@ -10,17 +11,16 @@ export default class cardAcara extends Component {
     return (
       <View style={styles.container}>
 
-        <View style={{ backgroundColor: '#7F7F7F', width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-          <Text style={{ color: 'white', fontSize: 30 }}>30</Text>
-          <Text style={{ color: 'white', fontSize: 20 }}>Jul</Text>
-        </View>
+        <Image source={require('../../assest/icon_user.png')} style={styles.iconUserComment} />
 
-        <View style={{ marginLeft: 20, width: '50%' }}>
-          <Text style={{ fontSize: 15 }}>nama user</Text>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>10:00 - 12:00</Text>
-          <TouchableHighlight style={{ backgroundColor: '#A2A2A2', padding: 8, justifyContent: 'center', display: 'flex', borderRadius: 30 }}>
-            <Text style={{ color: 'white', textAlign: 'center' }}> batal pesanan </Text>
-          </TouchableHighlight>
+        <View style={{ width: '70%', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 15 }}>{this.props.data.tbl_user.username}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>10:00 - 12:00</Text>
+            <TouchableHighlight style={{ backgroundColor: defaultColor, padding: 8, justifyContent: 'center', borderRadius: 30 }}>
+              <Text style={{ color: defaultTextColor, textAlign: 'center' }}> batal pesanan </Text>
+            </TouchableHighlight>
+          </View>
         </View>
 
       </View>
@@ -30,12 +30,14 @@ export default class cardAcara extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
     flexDirection: 'row',
-    width: '80%',
     justifyContent: 'center',
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 10
-  }
+    alignItems: 'center',
+  },
+  iconUserComment: {
+    height: 50,
+    width: 50,
+    marginRight: 10,
+    borderRadius: 30
+  },
 })

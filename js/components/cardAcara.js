@@ -4,24 +4,52 @@ import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 export default class cardAcara extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: [],
+      date: '',
+      month: '',
+
+    }
+  }
+
+  componentDidMount() {
+    let startDate, endDate
+    console.log('>>>>>>>>>>>>', this.props.data);
+
+    // startDate = el.start_date.split('-')
+    // endDate = el.end_date.split('-')
+
+
   }
 
   render() {
+    function getDate(args) {
+      let startDate = args.split('-')
+      return startDate[2]
+    }
+
+    function getMonth(args) {
+      let startDate = args.split('-')
+      let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      let month = months[new Date(startDate[1]).getMonth()]
+      return `${month}`
+    }
+
     return (
       <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailAcara')}>
         <View>
           <View style={{ flexDirection: 'row' }}>
 
             <View style={styles.placeDateMonth}>
-              <Text style={styles.date}>30</Text>
-              <Text style={styles.month}>Jul</Text>
+              <Text style={styles.date}>{getDate(this.props.data.start_date)}</Text>
+              <Text style={styles.month}>{getMonth(this.props.data.start_date)}</Text>
             </View>
 
             <View style={{ marginLeft: 10 }}>
-              <Text style={styles.titleAcara}>1 baris saja kalau Panjang</Text>
-              <Text>Alamat 1 baris juga</Text>
+              <Text style={styles.titleAcara}>{this.props.data.event_name}</Text>
+              <Text>{this.props.data.location}</Text>
               <Text>Jumat 10:00 - 12:00</Text>
-              <Text>Nama Creator</Text>
+              <Text>{this.props.data.tbl_user.username}</Text>
             </View>
 
           </View>
