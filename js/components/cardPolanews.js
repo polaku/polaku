@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, Dimensions, StyleSheet } from 'react-native';
+import { Text, View, Image, Dimensions, StyleSheet, TouchableHighlight } from 'react-native';
 
 export default class cardPolanews extends Component {
   constructor(props) {
@@ -8,16 +8,22 @@ export default class cardPolanews extends Component {
 
   componentDidMount() {
     // console.log(this.props.data.image)
-    console.log("OKE")
+    console.log(this.props.data.thumbnail)
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <Image source={require('../../assest/placeholder.jpg')} style={styles.image} />
-        {/* <Image source={require("'" + this.props.data.image + "'")} style={{ width: '100%', height: 190, }} /> */}
-        <Text> {this.props.data.title} </Text>
-      </View>
+      <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailPolanews', { data: this.props.data })} underlayColor="transparent">
+        <View style={styles.container}>
+          {
+            this.props.data.thumbnail
+              ? <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
+              : <Image source={require('../../assest/placeholder.jpg')} style={styles.image} />
+          }
+          {/* <Image source={require("'" + this.props.data.image + "'")} style={{ width: '100%', height: 190, }} /> */}
+          <Text> {this.props.data.title} </Text>
+        </View>
+      </TouchableHighlight>
     )
   }
 }
@@ -33,7 +39,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     padding: 5,
   },
-  image : {
+  image: {
     width: '100%',
     height: 190,
   }

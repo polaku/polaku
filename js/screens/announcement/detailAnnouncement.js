@@ -4,6 +4,9 @@ import { Text, Icon, Input } from 'native-base';
 import CardComment from '../../components/cardComment';
 import { defaultColor } from '../../defaultColor';
 import HTML from 'react-native-render-html';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { BaseURL } from '../../../config/API'
 
 export default class detailAnnouncement extends Component {
   constructor(props) {
@@ -38,29 +41,31 @@ export default class detailAnnouncement extends Component {
             <View style={styles.headerRight}>
               <View>
                 {
-                  this.state.data.tbl_user && <Text style={{ fontWeight: 'bold' }}>{this.state.data.tbl_user.username}</Text>
+                  this.state.data.tbl_user && <Text style={{ fontWeight: 'bold' }}>{this.state.data.tbl_user.tbl_account_detail.fullname}</Text>
                 }
-                <Text style={styles.dateComment}>{getDate(this.state.data.created_date)}</Text>
+                <Text style={styles.dateComment}>{getDate(this.state.data.created_at)}</Text>
               </View>
               <View>
-                <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
+                {/* <FontAwesome name='bookmark' style={{ color: defaultColor }} size={32} /> */}
+                {/* <FontAwesome name='bookmark-o' style={{ color: defaultColor }} size={32} /> */}
               </View>
             </View>
           </View>
           <Text style={styles.title}>{this.state.data.title}</Text>
           <View style={styles.imagePlace}>
-            <Image source={require('../../../assest/index.jpeg')} style={styles.image} />
+            <Image source={{ uri: this.state.data.thumbnail }} style={styles.image} />
           </View>
           <HTML html={this.state.data.description} />
-          <View style={styles.footer}>
+          {/* <View style={styles.footer}>
             <Text style={styles.footerItem}>2</Text>
-            <Icon name='heart-empty' size={5} style={{ color: 'gray' }} />
-          </View>
+            <MaterialCommunityIcons name='heart' style={{ color: defaultColor }} size={20} />
+            <MaterialCommunityIcons name='heart-outline' style={{ color: defaultColor }} size={20} />
+          </View> */}
 
-          <View style={styles.line}></View>
+          {/* <View style={styles.line}></View> */}
 
           {/* BOTTOM SECTION */}
-          <View>
+          {/* <View>
             <Text style={{ fontSize: 17, color: defaultColor }}>3 Komentar</Text>
             <View style={styles.userComments}>
               <Image source={require('../../../assest/icon_user.png')} style={styles.iconUserComment} />
@@ -73,7 +78,7 @@ export default class detailAnnouncement extends Component {
             </View>
             <CardComment />
             <CardComment />
-          </View>
+          </View> */}
 
         </View>
       </ScrollView>
@@ -147,7 +152,7 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'cover',
-    height: 200,
+    height: 250,
     width: '100%',
     alignItems: 'center',
   },

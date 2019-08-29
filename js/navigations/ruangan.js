@@ -8,7 +8,6 @@ export default RuanganNav = createStackNavigator({
   DetailRuangan: {
     screen: DetailRuangan,
     navigationOptions: {
-      title: 'Ruangan',
       headerTintColor: defaultTextColor,
       headerStyle: {
         backgroundColor: defaultColor,

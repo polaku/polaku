@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, TouchableHighlight, FlatList } from 'react-native';
-import { Text, Icon, Header, Item, Tabs, Tab, ScrollableTab } from 'native-base';
+import { View, StyleSheet, TouchableHighlight, FlatList, Image } from 'react-native';
+import { Text, Tabs, Tab, ScrollableTab } from 'native-base';
 import CardBookingRuangan from '../../components/cardBookingRuangan';
-import CardKelompokAcara from '../../components/cardKelompokAcara';
-import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
+import Entypo from 'react-native-vector-icons/Entypo';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export default class detailAnnouncement extends Component {
+export default class detailRuangan extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,8 +26,14 @@ export default class detailAnnouncement extends Component {
 
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    title: `${navigation.getParam('room')}`
+  });
+
   fetchDataPerMonth = async (years, month, idRoom, myRoom) => {
-    let getData, data = []
+    let token = await AsyncStorage.getItem('token')
+
+    let getData, data = [], batasAwalTanggal = 1
     let date = new Date(years, month, 0).getDate();
 
     this.setState({
@@ -37,20 +44,22 @@ export default class detailAnnouncement extends Component {
       if (myRoom) {
         getData = await API.get(`/bookingRoom/${idRoom}/${month}/myRoom`,
           {
-            headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+            headers: { token }
           })
       } else {
         getData = await API.get(`/bookingRoom/${idRoom}/${month}`,
           {
-            headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+            headers: { token }
           })
       }
-      for (let i = 1; i <= date; i++) {
+
+      if (month === new Date().getMonth() + 1) batasAwalTanggal = new Date().getDate()
+
+
+      for (let i = batasAwalTanggal; i <= date; i++) {
         let temp = []
         getData.data.data.forEach(dataElement => {
-          let date_in = dataElement.date_in.split('-')
-
-          if (Number(i) === Number(date_in[2])) {
+          if (Number(i) === Number(new Date(dataElement.date_in).getDate())) {
             temp.push(dataElement)
           }
         })
@@ -61,6 +70,8 @@ export default class detailAnnouncement extends Component {
         dates: data,
         loading: false,
       })
+      console.log(this.state.dates);
+
     } catch (err) {
       this.setState({
         loading: false
@@ -95,6 +106,12 @@ export default class detailAnnouncement extends Component {
     );
   }
 
+  deleteRoom = () => {
+    let years = new Date().getFullYear()
+    console.log(years, this.state.month, this.props.navigation.getParam('room_id'));
+    this.fetchDataPerMonth(years, this.state.month + 1, this.props.navigation.getParam('room_id'))
+  }
+
   render() {
     function getMonth(args) {
       let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -106,32 +123,50 @@ export default class detailAnnouncement extends Component {
 
         {/* NAVIGATION MONTH */}
         <View style={styles.header}>
-          <TouchableHighlight onPress={() => this.prevMonth()}>
-            <Icon name='arrow-round-back' style={{ color: defaultColor }} size={32} />
-          </TouchableHighlight>
+          {
+            this.state.month != new Date().getMonth() && <TouchableHighlight onPress={() => this.prevMonth()} underlayColor="transparent">
+              <Entypo name='chevron-thin-left' style={{ color: defaultColor }} size={32} />
+            </TouchableHighlight>
+          }
           <Text style={styles.textMonth} >{getMonth(this.state.month)}</Text>
-          <TouchableHighlight onPress={() => this.nextMonth()}>
-            <Icon name='arrow-round-forward' style={{ color: defaultColor }} size={32} />
+          <TouchableHighlight onPress={() => this.nextMonth()} underlayColor="transparent">
+            <Entypo name='chevron-thin-right' style={{ color: defaultColor }} size={32} />
           </TouchableHighlight>
         </View>
 
         {
           this.state.loading
-            ? <Text>Loading</Text>
+            ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+              <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
+            </View>
             : <Tabs renderTabBar={() => <ScrollableTab tabsContainerStyle={styles.tabsContainerStyle} />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
               {
-                this.state.dates.map(el => (
+                this.state.dates.map((el, index) => (
                   <Tab heading={el.key}
                     tabStyle={styles.tab}
                     textStyle={{ color: defaultColor }}
                     activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
-                    activeTextStyle={styles.activeTextStyle}>
-                    <FlatList
-                      style={{ paddingTop: 15 }}
-                      data={el.data}
-                      ItemSeparatorComponent={this.renderSeparator}
-                      renderItem={({ item }) => <CardBookingRuangan navigation={this.props.navigation} data={item} />}
-                    />
+                    activeTextStyle={styles.activeTextStyle}
+                    key={index}>
+
+                    {/* // ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                        //   <Image source={require('../../../assest/polaku.png')} style={{ height: 80, width: 80 }} />
+                        // </View> */}
+                    <View>
+                      {
+                        el.data.length === 0
+                          ? <View style={{ height: '90%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require('../../../assest/ruang_kosong.png')} style={{ height: 200, width: 200 }} />
+                            <Text style={{ color: 'gray' }}>Hore! Ruang rapat masih kosong</Text>
+                          </View>
+                          : <FlatList
+                            keyExtractor={(item) => item.room_booking_id}
+                            style={{ paddingTop: 15 }}
+                            data={el.data}
+                            ItemSeparatorComponent={this.renderSeparator}
+                            renderItem={({ item }) => <CardBookingRuangan navigation={this.props.navigation} data={item} deleteRoom={this.deleteRoom} />} />
+                      }
+                    </View>
                   </Tab>
                 ))
               }
@@ -147,8 +182,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     alignItems: 'center',
-    backgroundColor: defaultBackgroundColor,
-    paddingBottom: 20
+    backgroundColor: defaultBackgroundColor
   },
   header: {
     flexDirection: 'row',

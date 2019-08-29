@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList } from 'react-native';
-import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
+import { Header, Tab, Tabs, ScrollableTab, Icon } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardRuangan from '../../components/cardRuangan';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
+import AsyncStorage from '@react-native-community/async-storage';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 export default class ruanganSaya extends Component {
   constructor(props) {
@@ -20,6 +22,8 @@ export default class ruanganSaya extends Component {
   }
 
   fetchData = async () => {
+    let token = await AsyncStorage.getItem('token')
+
     let getData
     let P40 = []
 
@@ -30,11 +34,11 @@ export default class ruanganSaya extends Component {
     try {
       getData = await API.get('/bookingRoom/rooms',
         {
-          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+          headers: { token }
         })
 
       getData.data.data.forEach(el => {
-        if(el.company_id===1){
+        if (el.company_id === 1) {
           P40.push(el)
         }
       })
@@ -59,12 +63,11 @@ export default class ruanganSaya extends Component {
 
         {/* HEADER - menu button drawer, title, icon sorting */}
         <Header style={styles.header}>
+          <MenuButton navigation={this.props.navigation} />
           <View style={styles.titleHeader}>
-            <Icon name='business' style={styles.textColor} size={32} />
+            <FontAwesome5 name="building" style={styles.textColor} size={25} />
             <Text style={styles.textTitleHeader}>Ruang Rapat</Text>
           </View>
-          <MenuButton navigation={this.props.navigation} />
-          <Icon name='funnel' style={styles.sorting} size={32} />
         </Header>
 
         {/* CONTENT */}
@@ -72,7 +75,7 @@ export default class ruanganSaya extends Component {
 
           {/* MENU ACARA */}
           <View style={styles.title}>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('Ruangan')}>
+            <TouchableHighlight onPress={() => this.props.navigation.navigate('Ruangan')} underlayColor="transparent">
               <Text style={styles.textTitleInactive}> ruangan </Text>
             </TouchableHighlight>
             <Text style={styles.textTitleActive}> Pesanan Saya </Text>
@@ -86,11 +89,12 @@ export default class ruanganSaya extends Component {
               activeTextStyle={styles.activeTextStyle}>
               <View style={styles.containerInTab}>
                 <FlatList
-                    style={styles.flatList}
-                    numColumns={3}
-                    data={this.state.data}
-                    renderItem={({ item }) => <CardRuangan data={item} myRoom='yes' navigation={this.props.navigation} />}
-                  />
+                  keyExtractor={(item) => item.room_id}
+                  style={styles.flatList}
+                  numColumns={3}
+                  data={this.state.data}
+                  renderItem={({ item }) => <CardRuangan data={item} myRoom='yes' navigation={this.props.navigation} />}
+                />
               </View>
             </Tab>
             <Tab heading="P40"
@@ -100,6 +104,7 @@ export default class ruanganSaya extends Component {
               activeTextStyle={styles.activeTextStyle}>
               <View style={styles.containerInTab}>
                 <FlatList
+                  keyExtractor={(item) => item.room_id}
                   style={styles.flatList}
                   numColumns={3}
                   data={this.state.roomsP40}
@@ -181,13 +186,12 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   textTitleActive: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: defaultColor
   },
   textTitleInactive: {
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 17,
     color: defaultColor
   },
   activeTextStyle: {

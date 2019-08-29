@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon } from 'native-base';
 import { defaultTextColor } from '../defaultColor';
+import { DrawerActions } from 'react-navigation';
 
 export default class menuButton extends Component {
   render() {
     return (
-      <Icon name='menu' style={styles.menuIcon} onPress={() => this.props.navigation.toggleDrawer()} size={32} />
+      <Icon name='menu' style={styles.menuIcon} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())} size={32} />
     )
   }
 }

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image, Dimensions, TouchableHighlight } from 'react-native';
 import { Text, Icon } from 'native-base';
 import { defaultColor } from '../defaultColor';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default class cardAnnouncement extends Component {
   constructor(props) {
@@ -10,6 +12,10 @@ export default class cardAnnouncement extends Component {
       data: this.props.data,
     }
   }
+  componentDidMount() {
+    // console.log(this.props.data)
+  }
+
 
   render() {
     function getDate(args) {
@@ -22,26 +28,32 @@ export default class cardAnnouncement extends Component {
 
     return (
       <TouchableHighlight onPress={() => this.props.navigation.navigate("DetailAnnouncement", {
-        dataAnnouncement: this.props.data })} >
+        dataAnnouncement: this.props.data
+      })} underlayColor="transparent">
         <View>
           {
             this.props.data && <View style={styles.container} >
               <View style={styles.header}>
+                {/* <Image source={{uri: 'http://localhost:3000/public/uploads/attachment-1564468045860'}} style={styles.iconUser} /> */}
                 <Image source={require('../../assest/icon_user.png')} style={styles.iconUser} />
                 <View style={styles.headerRight}>
+                  {
+                    this.props.data.tbl_user && <View>
+                      <Text style={styles.userPost}>{this.props.data.tbl_user.tbl_account_detail.fullname}</Text>
+                      <Text style={styles.datePost}>{getDate(this.props.data.created_at)}</Text>
+                    </View>
+                  }
+
                   <View>
-                    <Text style={styles.userPost}>{this.props.data.tbl_user.username}</Text>
-                    <Text style={styles.datePost}>{getDate(this.props.data.created_date)}</Text>
-                  </View>
-                  <View>
-                    <Icon name='bookmark' style={{ color: defaultColor }} size={32} />
+                    {/* <FontAwesome name='bookmark' style={{ color: defaultColor }} size={32} /> */}
+                    {/* <FontAwesome name='bookmark-o' style={{ color: defaultColor }} size={32} /> */}
                   </View>
                 </View>
               </View>
               <Text style={styles.title}>{this.props.data.title}</Text>
 
               <View>
-                <Image source={require('../../assest/index.jpeg')} style={{
+                <Image source={{ uri: this.props.data.thumbnail }} style={{
                   resizeMode: 'cover',
                   height: 200,
                   width: '100%',
@@ -52,10 +64,11 @@ export default class cardAnnouncement extends Component {
                 <View>
                   <Text style={styles.footerItem}>Baca lebih lanjut</Text>
                 </View>
-                <View style={{ flexDirection: 'row' }}>
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={styles.footerItem}>2</Text>
-                  <Icon name='heart-empty' size={5} />
-                </View>
+                  <MaterialCommunityIcons name='heart' style={{ color: defaultColor }} size={20} />
+                  // <MaterialCommunityIcons name='heart-outline' style={{ color: defaultColor }} size={20} /> 
+                 </View> */}
               </View>
             </View>
           }
@@ -69,16 +82,14 @@ const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 20,
-    width: 92 / 100 * width,
+    width: width,
     backgroundColor: 'white',
-    margin: 5,
-    padding: 15,
-    marginTop: 10,
-    marginBottom: 10
+    marginTop: 5,
+    marginBottom: 5
   },
   header: {
     flexDirection: 'row',
+    margin: 15
   },
   headerRight: {
     flexDirection: 'row',
@@ -101,16 +112,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 15
+    margin: 15,
+    marginTop: 5
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 5
+    margin: 15,
+    marginTop: 5,
+    alignItems: 'center'
   },
   footerItem: {
     fontSize: 12,
-    color: defaultColor
+    color: defaultColor,
+    marginRight: 5
   }
 })

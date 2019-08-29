@@ -5,8 +5,10 @@ import MenuButton from '../../components/menuButton';
 import CardRuangan from '../../components/cardRuangan';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export default class acara extends Component {
+export default class ruangan extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,6 +22,8 @@ export default class acara extends Component {
   }
 
   fetchData = async () => {
+    let token = await AsyncStorage.getItem('token')
+
     let getData
     let P40 = []
 
@@ -30,11 +34,11 @@ export default class acara extends Component {
     try {
       getData = await API.get('/bookingRoom/rooms',
         {
-          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
+          headers: { token }
         })
 
       getData.data.data.forEach(el => {
-        if(el.company_id===1){
+        if (el.company_id === 1) {
           P40.push(el)
         }
       })
@@ -59,21 +63,20 @@ export default class acara extends Component {
 
         {/* HEADER - menu button drawer, title, icon sorting */}
         <Header style={styles.header}>
+          <MenuButton navigation={this.props.navigation} />
           <View style={styles.titleHeader}>
-            <Icon name='business' style={styles.textColor} size={32} />
+            <FontAwesome5 name="building" style={styles.textColor} size={25} />
             <Text style={styles.textTitleHeader}>Ruang Rapat</Text>
           </View>
-          <MenuButton navigation={this.props.navigation} />
-          <Icon name='funnel' style={styles.sorting} size={32} />
         </Header>
 
         {/* CONTENT */}
         <View style={styles.container}>
 
-          {/* MENU ACARA */}
+          {/* MENU ruangan */}
           <View style={styles.title}>
             <Text style={styles.textTitleActive}> Ruangan </Text>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('RuanganSaya')}>
+            <TouchableHighlight onPress={() => this.props.navigation.navigate('RuanganSaya')} underlayColor="transparent">
               <Text style={styles.textTitleInactive}> pesanan saya </Text>
             </TouchableHighlight>
           </View>
@@ -86,6 +89,7 @@ export default class acara extends Component {
               activeTextStyle={styles.activeTextStyle}>
               <View style={styles.containerInTab}>
                 <FlatList
+                  keyExtractor={(item) => item.room_id}
                   style={styles.flatList}
                   numColumns={3}
                   data={this.state.data}
@@ -94,12 +98,14 @@ export default class acara extends Component {
               </View>
             </Tab>
             <Tab heading="P40"
+              actived
               tabStyle={styles.tab}
               textStyle={{ color: defaultColor }}
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
               <View style={styles.containerInTab}>
                 <FlatList
+                  keyExtractor={(item) => item.room_id}
                   style={styles.flatList}
                   numColumns={3}
                   data={this.state.roomsP40}
@@ -111,7 +117,7 @@ export default class acara extends Component {
         </View>
 
         {/* BUTTON ADD */}
-        <TouchableOpacity style={styles.buttonAdd} >
+        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateRuangan")}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>
@@ -119,7 +125,7 @@ export default class acara extends Component {
   }
 }
 
-acara.navigationOptions = {
+ruangan.navigationOptions = {
   header: null
 };
 
@@ -181,13 +187,12 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   textTitleActive: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: defaultColor
   },
   textTitleInactive: {
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 17,
     color: defaultColor
   },
   activeTextStyle: {

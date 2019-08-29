@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+const BaseURL = 'http://api.polagroup.co.id';
+
 const API = axios.create({
-  baseURL: 'http://222be5a7.ngrok.io'
+  baseURL: BaseURL
 })
 
 export {
-  API
+  API, BaseURL
 }

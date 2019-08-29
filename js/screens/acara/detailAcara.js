@@ -1,17 +1,87 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, ScrollView, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { Text, Icon, Input } from 'native-base';
 import CardComment from '../../components/cardComment';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 import { defaultColor } from '../../defaultColor';
+import { API } from '../../../config/API';
+import { fetchDataEvent, fetchDataMyEvent } from '../../store/action';
+import { connect } from 'react-redux'
+import AsyncStorage from '@react-native-community/async-storage';
 
-
-export default class detailAnnouncement extends Component {
+class detailAcara extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: {},
+      statusJoinUser: 'Not Join'
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      data: this.props.navigation.getParam('detailAcara'),
+      statusJoinUser: this.props.navigation.getParam('statusJoin')
+    })
+    console.log(this.props.navigation.getParam('detailAcara'));
+  }
+
+  joinEvent = async (args) => {
+    this.setState({
+      proses: true
+    })
+    let token = await AsyncStorage.getItem('token')
+
+    try {
+      getData = await API.post(`/events/follow`,
+        {
+          event_id: this.state.data.event_id, response: args.toLowerCase(),
+        },
+        {
+          headers: { token }
+        })
+
+      this.setState({
+        statusJoinUser: args,
+      })
+
+      if (getData) {
+        this.props.fetchDataEvent()
+        this.props.fetchDataMyEvent()
+        alert(`${args} Success`)
+        this.setState({
+          proses: false
+        })
+      }
+    } catch (err) {
+      this.setState({
+        proses: false
+      })
+      alert(err)
+    }
   }
 
   render() {
+    function getDates(args) {
+      let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      let date = new Date(args).getDate()
+      let month = months[new Date(args).getMonth()]
+      let years = new Date(args).getFullYear()
+
+      return `${month} ${date}, ${years}`
+    }
+
+    function getMonth(args) {
+      let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      let month = months[new Date(args).getMonth()]
+      return `${month}`
+    }
+
+    function getMonthDate(args) {
+      let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      let month = months[new Date(args).getMonth()]
+      return `${new Date(args).getDate()} ${month}`
+    }
+
     return (
       <ScrollView>
         <View style={styles.container} >
@@ -21,48 +91,73 @@ export default class detailAnnouncement extends Component {
             <Image source={require('../../../assest/icon_user.png')} style={styles.iconUser} />
             <View style={styles.headerRight}>
               <View>
-                <Text style={styles.userComment}>nama user</Text>
-                <Text style={styles.dateComment}>August 5, 2019</Text>
+                {
+                  this.state.data.tbl_users &&
+                  <Text style={styles.userComment}>{this.state.data.tbl_users[0].tbl_account_detail.fullname}</Text>
+                }
+                <Text style={styles.dateComment}>{getDates(this.state.data.created_at)}</Text>
               </View>
             </View>
           </View>
-          <Text style={styles.title}>Judul tidak lebih dari sepuluh kata yang akan tampil disini</Text>
+          <Text style={styles.title}>{this.state.data.event_name}</Text>
           <View style={styles.imagePlace}>
             <Image source={require('../../../assest/index.jpeg')} style={styles.image} />
           </View>
           <View style={styles.dateMonthButtonPlace}>
             <View style={styles.dateMonthPlace}>
-              <Text style={styles.month}>Juli</Text>
-              <Text style={styles.date}>29</Text>
+              {
+                this.state.data.start_date &&
+                <Text style={styles.month}>{getMonth(this.state.data.start_date)}</Text>
+              }
+              {
+                this.state.data.start_date &&
+                <Text style={styles.date}>{new Date(this.state.data.start_date).getDate()}</Text>
+              }
             </View>
             <View style={{ width: '79%' }}>
-              <TouchableHighlight style={styles.buttonIkut}>
-                <Text style={styles.textButtonIkut}>IKUT</Text>
-              </TouchableHighlight>
+              {
+                this.state.statusJoinUser != 'Join'
+                  ? < TouchableHighlight style={styles.buttonIkut} onPress={() => this.joinEvent("Join")} underlayColor="transparent">
+                    {
+                      this.state.proses
+                        ? <ActivityIndicator size="small" color="#fff" />
+                        : <Text style={styles.textButtonIkut}>IKUT</Text>
+                    }
+                  </TouchableHighlight>
+                  : <TouchableHighlight style={styles.buttonIkut} onPress={() => this.joinEvent("Cancel Join")} underlayColor="transparent">
+                    {
+                      this.state.proses
+                        ? <ActivityIndicator size="small" color="#fff" />
+                        : <Text style={styles.textButtonIkut}>BATAL IKUT</Text>
+                    }
+                  </TouchableHighlight>
+              }
             </View>
           </View>
           <View style={{ padding: 10 }}>
             <View style={styles.isiAcara}>
               <Icon name='time' size={32} style={{ marginRight: 15 }} />
               <View>
-                <Text style={{ fontSize: 15 }}>Juli 29 - Juli 30</Text>
-                <Text>Jul 29 pada 10:00 sampai Jul 30 pada 13:00</Text>
+                {
+                  this.state.data.start_date &&
+                  <Text style={{ fontSize: 15 }}>{getMonthDate(this.state.data.start_date)} - {getMonthDate(this.state.data.end_date)}</Text>
+                }
               </View>
             </View>
             <View style={styles.isiAcara}>
               <Icon name='map' size={32} style={{ marginRight: 15 }} />
-              <Text>Location</Text>
+              <Text>{this.state.data.location}</Text>
             </View>
             <View style={styles.isiAcara}>
               <Icon name='list-box' size={32} style={{ marginRight: 15 }} />
-              <Text>Keterangan acara</Text>
+              <Text>{this.state.data.description}</Text>
             </View>
           </View>
 
-          <View style={styles.line}></View>
+          {/* <View style={styles.line}></View> */}
 
           {/* BOTTOM SECTION */}
-          <View>
+          {/* <View>
             <Text style={styles.keteranganKomen}>3 Komentar</Text>
             <View style={styles.userComments}>
               <Image source={require('../../../assest/icon_user.png')} style={styles.iconUserComment} />
@@ -75,10 +170,10 @@ export default class detailAnnouncement extends Component {
             </View>
             <CardComment />
             <CardComment />
-          </View>
-          
+          </View> */}
+
         </View>
-      </ScrollView>
+      </ScrollView >
     )
   }
 }
@@ -137,7 +232,8 @@ const styles = StyleSheet.create({
   },
   isiAcara: {
     flexDirection: 'row',
-    marginBottom: 5
+    marginBottom: 10,
+    alignItems: 'center'
   },
   columnComment: {
     borderWidth: 0.7,
@@ -195,3 +291,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 })
+
+const mapDispatchToProps = {
+  fetchDataEvent,
+  fetchDataMyEvent
+}
+
+export default connect(null, mapDispatchToProps)(detailAcara)

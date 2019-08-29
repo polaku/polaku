@@ -1,12 +1,46 @@
 import HubungiKami from '../screens/hubungiKami/hubungiKami';
-import HubungiKamiLanjutan from '../screens/hubungiKami/hubungiKamiLanjutan';
+import HubungiKamiDivisi1 from '../screens/hubungiKami/hubungiKamiDivisi1';
+import HubungiKamiDivisi2 from '../screens/hubungiKami/hubungiKamiDivisi2';
+import hubungiKamiFormQuestion from '../screens/hubungiKami/hubungiKamiFormQuestion';
+import hubungiKamiFormRequest from '../screens/hubungiKami/hubungiKamiFormRequest';
 import { createStackNavigator } from 'react-navigation';
-import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../defaultColor';
+import { defaultTextColor, defaultColor } from '../defaultColor';
 
 export default HubungiKamiNav = createStackNavigator({
   HubungiKami: { screen: HubungiKami },
-  HubungiKamiLanjutan: {
-    screen: HubungiKamiLanjutan,
+  
+  HubungiKamiDivisi1: {
+    screen: HubungiKamiDivisi1,
+    navigationOptions: {
+      title: 'HUBUNGI KAMI',
+      headerTintColor: defaultTextColor,
+      headerStyle: {
+        backgroundColor: defaultColor,
+      },
+    }
+  },
+  hubungiKamiFormQuestion: {
+    screen: hubungiKamiFormQuestion,
+    navigationOptions: {
+      title: 'HUBUNGI KAMI',
+      headerTintColor: defaultTextColor,
+      headerStyle: {
+        backgroundColor: defaultColor,
+      },
+    }
+  },
+  HubungiKamiDivisi2: {
+    screen: HubungiKamiDivisi2,
+    navigationOptions: {
+      title: 'HUBUNGI KAMI',
+      headerTintColor: defaultTextColor,
+      headerStyle: {
+        backgroundColor: defaultColor,
+      },
+    }
+  },
+  hubungiKamiFormRequest: {
+    screen: hubungiKamiFormRequest,
     navigationOptions: {
       title: 'HUBUNGI KAMI',
       headerTintColor: defaultTextColor,

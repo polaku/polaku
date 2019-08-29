@@ -1,100 +1,114 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableHighlight, Image, View } from 'react-native';
-import { Container, Item, Input, Icon, Text } from 'native-base';
+import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
+import { Container, Item, Input, Text } from 'native-base';
 import { defaultTextColor, defaultColor } from '../defaultColor';
-import axios from 'axios';
 import { API } from '../../config/API';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import AsyncStorage from '@react-native-community/async-storage';
+import { connect } from 'react-redux';
+import { setUserId } from '../store/action';
 
-export class login extends Component {
+class login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
       password: '',
-      pressStatus: false,
-      backgroundColor: defaultColor
+      backgroundColor: defaultColor,
+      proses: false
     };
   }
 
-  _onHideUnderlay() {
-    this.setState({ pressStatus: false });
-  }
-  _onShowUnderlay() {
-    this.setState({ pressStatus: true });
-  }
-
   login = async () => {
-    // let user, data
-    // user = {
-    //   username: this.state.username,
-    //   password: this.state.password
-    // }
-    // try {
-    //   data = await API.post('/users/signin', user)
-    //   this.props.navigation.navigate("Home")
-    // } catch (err) {
-    //   console.log(err)
-    //   alert(`${err}`)
-    // }
-    this.props.navigation.navigate("Home")
+    this.setState({
+      proses: true
+    })
+    let user, data
+    user = {
+      username: this.state.username,
+      password: this.state.password
+    }
+    try {
+      data = await API.post('/users/signin', user)
+      if (data) {
+        console.log('sukses1');
+
+      }
+      await AsyncStorage.setItem('token', data.data.token)
+      console.log('sukses2');
+      this.props.setUserId(data.data.user_id)
+      this.props.navigation.navigate("Home")
+    } catch (err) {
+      console.log(err)
+      alert(data)
+    }
+    this.setState({
+      proses: false,
+      username: '',
+      password: '',
+    })
+
   }
 
   render() {
     return (
-      <Container style={styles.container}>
-        <View style={styles.content}>
+      <ScrollView style={{ height: '100%', backgroundColor: defaultColor }} >
+        {/* {
+          this.props.isFocused && this.checkLogin()
+        } */}
+        <View style={styles.container}>
+          <View style={styles.content}>
 
-          {/* LOGO POLAGROUP */}
-          <View style={styles.center}>
-            <Image source={require('../../assest/logo_polagroup.png')} />
-          </View>
+            {/* LOGO POLAGROUP */}
+            <View style={styles.logo}>
+              <Image source={require('../../assest/logo_polagroup.png')} />
+            </View>
 
-          {/* FORM LOGIN */}
-          <View style={styles.center} >
-            <Item style={{ marginBottom: 25 }}>
-              <Icon name='person' style={styles.textColor} />
-              <Input id='username'
-                type='text'
-                placeholder='Username'
-                placeholderTextColor={defaultTextColor}
-                style={styles.textColor}
-                value={this.state.username}
-                onChangeText={(text) => this.setState({
-                  username: text
-                })} />
-            </Item>
-            <Item style={{ marginBottom: 45 }}>
-              <Icon name='lock' style={styles.textColor} />
-              <Input id='password'
-                placeholder='Password'
-                placeholderTextColor={defaultTextColor}
-                secureTextEntry={true}
-                style={styles.textColor}
-                value={this.state.password}
-                onChangeText={(text) => this.setState({
-                  password: text
-                })} />
-            </Item>
-            <TouchableHighlight onPress={() => this.login()}
-              style={
-                this.state.pressStatus
-                  ? styles.buttonPress
-                  : styles.button
-              }
-              onHideUnderlay={this._onHideUnderlay.bind(this)}
-              onShowUnderlay={this._onShowUnderlay.bind(this)}
-            >
-              <Text style={styles.textLogin}>Login</Text>
-            </TouchableHighlight>
-            <Text style={styles.textColor} >Forget Password?</Text>
-          </View>
+            {/* FORM LOGIN */}
+            <View style={styles.center} >
+              <Item style={{ marginBottom: 25 }}>
+                <MaterialIcons name='person-outline' style={styles.icon} size={32} />
+                <Input id='username'
+                  type='text'
+                  placeholder='Username'
+                  placeholderTextColor={defaultTextColor}
+                  style={{ color: defaultTextColor }}
+                  value={this.state.username}
+                  onChangeText={(text) => this.setState({
+                    username: text
+                  })} />
+              </Item>
+              <Item style={{ marginBottom: 45 }}>
+                <SimpleLineIcons name='lock' style={styles.icon} size={30} />
+                <Input id='password'
+                  placeholder='Password'
+                  placeholderTextColor={defaultTextColor}
+                  secureTextEntry={true}
+                  style={{ color: defaultTextColor }}
+                  value={this.state.password}
+                  onChangeText={(text) => this.setState({
+                    password: text
+                  })} />
+              </Item>
+              <TouchableHighlight onPress={() => this.login()}
+                style={styles.button} underlayColor="transparent">
+                {
+                  this.state.proses
+                    ? <ActivityIndicator size="small" color="#fff" />
+                    : <Text style={styles.textLogin}>Login</Text>
+                }
+              </TouchableHighlight>
+              <Text style={{ color: defaultTextColor }} >Forget Password?</Text>
+            </View>
 
-          {/* HUBUNGI KAMI */}
-          <View style={styles.center}>
-            <Text style={styles.textColor} >Kesulitan masuk? Hubungi Kami</Text>
+            {/* HUBUNGI KAMI */}
+            <View style={styles.center}>
+              <Text style={{ color: defaultTextColor }} >Kesulitan masuk? Hubungi Kami</Text>
+            </View>
           </View>
         </View>
-      </Container>
+      </ScrollView>
     )
   }
 }
@@ -103,23 +117,21 @@ login.navigationOptions = {
   header: null
 };
 
+const { height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
-  textColor: {
-    color: defaultTextColor
-  },
   container: {
     height: '100%',
     backgroundColor: defaultColor,
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   content: {
-    marginTop: 30,
     flex: 1,
-    height: '100%',
+    height: height - 25,
     width: '80%',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-around'
   },
   button: {
     padding: 15,
@@ -140,10 +152,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  logo: {
+    marginTop: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   textLogin: {
     textAlign: 'center',
     color: defaultTextColor
+  },
+  icon: {
+    color: defaultTextColor,
+    marginRight: 5
   }
 });
 
-export default login
+const mapDispatchToProps = {
+  setUserId
+}
+
+export default connect(null, mapDispatchToProps)(login)

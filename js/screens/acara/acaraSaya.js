@@ -1,64 +1,29 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, ScrollView, Image, RefreshControl } from 'react-native';
 import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
-import CardKelompokAcara from '../../components/cardKelompokAcara';
+import CardAcara from '../../components/cardAcara';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
-import { API } from '../../../config/API';
+import { fetchDataMyEvent } from '../../store/action';
+import { connect } from 'react-redux'
 
-export default class acaraSaya extends Component {
+class acaraSaya extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      loading: false,
-      eventsMengikuti: [],
-      eventsDiajukan: [],
-      eventsDitolak: []
+      refreshing: false,
+      currentTab: 0
     }
   }
 
   componentDidMount() {
-    this.fetchData()
+    this.props.fetchDataMyEvent()
   }
 
-  fetchData = async () => {
-    let getData
-    let mengikuti = [], diajukan = [], ditolak = []
-
-    this.setState({
-      loading: true
-    })
-    try {
-      getData = await API.get('/events/myevents',
-        {
-          headers: { token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MzEsImlhdCI6MTU2NTY1NzkwMywiZXhwIjoxNTY1NzAxMTAzfQ.f2zqusZ_wR3Sg94HrdCWu6VMadqlQUZi8tnMpFedtDg' }
-        })
-
-      console.log('on process', getData.data.data);
-
-      getData.data.data.forEach(el => {
-        if (el.status === 0) {
-          diajukan.push(el)
-        } else if (el.status === 2) {
-          ditolak.push(el)
-        }
-      })
-
-      this.setState({
-        data: getData.data.data,
-        loading: false,
-        eventsMengikuti: mengikuti,
-        eventsDiajukan: diajukan,
-        eventsDitolak: ditolak
-      })
-
-    } catch (err) {
-      this.setState({
-        loading: false
-      })
-      alert('Fetch data failed')
-    }
+  _onRefresh = async () => {
+    this.setState({ refreshing: true });
+    await this.props.fetchDataMyEvent()
+    this.setState({ refreshing: false });
   }
 
   render() {
@@ -67,12 +32,12 @@ export default class acaraSaya extends Component {
 
         {/* HEADER - menu button drawer, title, icon sorting */}
         <Header style={styles.header}>
+          <MenuButton navigation={this.props.navigation} />
           <View style={styles.titleHeader}>
             <Icon name='browsers' style={styles.textColor} size={32} />
             <Text style={styles.textTitleHeader}>Acara</Text>
           </View>
-          <MenuButton navigation={this.props.navigation} />
-          <Icon name='funnel' style={styles.sorting} size={32} />
+          {/* <Icon name='filter' style={styles.sorting} size={32} /> */}
         </Header>
 
         {/* CONTENT */}
@@ -80,7 +45,7 @@ export default class acaraSaya extends Component {
 
           {/* MENU ACARA */}
           <View style={styles.title}>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('Acara')}>
+            <TouchableHighlight onPress={() => this.props.navigation.navigate('Acara')} underlayColor="transparent">
               <Text style={styles.textTitleInactive}> semua acara </Text>
             </TouchableHighlight>
             <Text style={styles.textTitleActive}> Acara Saya </Text>
@@ -93,16 +58,32 @@ export default class acaraSaya extends Component {
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
               {
-                this.state.loading
-                  ? <Text>Loading</Text>
+                this.props.loading
+                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
+                  </View>
                   : <View style={styles.containerInTab}>
-                    <ScrollView style={styles.scrollView}>
+                    <ScrollView style={styles.scrollView}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh}
+                      />
+                    }>
                       {
-                        this.state.data
-                          ? this.state.data.map(el => (
-                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
-                          ))
-                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                        this.props.eventsMengikuti.length === 0
+                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                            <Text style={{ color: 'gray' }}>Tidak ada acara yang diikuti</Text>
+                          </View>
+                          : <View>
+                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            {
+                              this.props.eventsMengikuti.map((el, index) => (
+                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                              ))
+                            }
+                          </View>
                       }
                     </ScrollView>
                   </View>
@@ -114,16 +95,32 @@ export default class acaraSaya extends Component {
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
               {
-                this.state.loading
-                  ? <Text>Loading</Text>
+                this.props.loading
+                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
+                  </View>
                   : <View style={styles.containerInTab}>
-                    <ScrollView style={styles.scrollView}>
+                    <ScrollView style={styles.scrollView}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh}
+                      />
+                    }>
                       {
-                        this.state.data.length > 0
-                          ? this.state.data.map(el => (
-                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
-                          ))
-                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                        this.props.myEvents.length === 0
+                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                            <Text style={{ color: 'gray' }}>Tidak ada acara</Text>
+                          </View>
+                          : <View>
+                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            {
+                              this.props.myEvents.map((el, index) => (
+                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                              ))
+                            }
+                          </View>
                       }
                     </ScrollView>
                   </View>
@@ -135,16 +132,32 @@ export default class acaraSaya extends Component {
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
               {
-                this.state.loading
-                  ? <Text>Loading</Text>
+                this.props.loading
+                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
+                  </View>
                   : <View style={styles.containerInTab}>
-                    <ScrollView style={styles.scrollView}>
+                    <ScrollView style={styles.scrollView}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh}
+                      />
+                    }>
                       {
-                        this.state.eventsDiajukan.length > 0
-                          ? this.state.eventsDiajukan.map(el => (
-                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
-                          ))
-                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                        this.props.eventsDiajukan.length === 0
+                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                            <Text style={{ color: 'gray' }}>Tidak ada acara yang diajukan</Text>
+                          </View>
+                          : <View>
+                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            {
+                              this.props.eventsDiajukan.map((el, index) => (
+                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                              ))
+                            }
+                          </View>
                       }
                     </ScrollView>
                   </View>
@@ -156,16 +169,32 @@ export default class acaraSaya extends Component {
               activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
               activeTextStyle={styles.activeTextStyle}>
               {
-                this.state.loading
-                  ? <Text>Loading</Text>
+                this.props.loading
+                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
+                  </View>
                   : <View style={styles.containerInTab}>
-                    <ScrollView style={styles.scrollView}>
+                    <ScrollView style={styles.scrollView}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh}
+                      />
+                    }>
                       {
-                        this.state.eventsDitolak.length > 0
-                          ? this.state.eventsDitolak.map(el => (
-                            <CardKelompokAcara navigation={this.props.navigation} data={el} />
-                          ))
-                          : <Text style={{ alignSelf: 'center' }}>Empty</Text>
+                        this.props.eventsDitolak.length === 0
+                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                            <Text style={{ color: 'gray' }}>Tidak ada acara yang ditolak</Text>
+                          </View>
+                          : <View>
+                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            {
+                              this.props.eventsDitolak.map((el, index) => (
+                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                              ))
+                            }
+                          </View>
                       }
                     </ScrollView>
                   </View>
@@ -175,7 +204,7 @@ export default class acaraSaya extends Component {
         </View>
 
         {/* BUTTON ADD */}
-        <TouchableOpacity style={styles.buttonAdd}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateRuangan")}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>
@@ -245,13 +274,12 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   textTitleActive: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: defaultColor
   },
   textTitleInactive: {
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 17,
     color: defaultColor
   },
   activeTextStyle: {
@@ -269,3 +297,20 @@ const styles = StyleSheet.create({
     marginBottom: 160
   }
 })
+
+
+const mapDispatchToProps = {
+  fetchDataMyEvent
+}
+
+const mapStateToProps = ({ loading, myEvents, eventsMengikuti, eventsDiajukan, eventsDitolak }) => {
+  return {
+    loading,
+    myEvents,
+    eventsMengikuti,
+    eventsDiajukan,
+    eventsDitolak
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(acaraSaya)

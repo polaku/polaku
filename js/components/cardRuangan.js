@@ -9,8 +9,8 @@ export default class cardAcara extends Component {
   render() {
     return (
       <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailRuangan', {
-        room_id: this.props.data.room_id
-      })} style={styles.container}>
+        room_id: this.props.data.room_id, room: this.props.data.room
+      })} style={styles.container} underlayColor="transparent">
         <View style={{}}>
           <Image source={require('../../assest/diskusi.png')} style={styles.image} />
           <Text> {this.props.data.room} </Text>

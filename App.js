@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Dimensions, Text, SafeAreaView, ScrollView, Image, View } from 'react-native';
+import { Dimensions, Text, SafeAreaView, Image, View, Button } from 'react-native';
 import Login from './js/screens/login';
 import Announcement from './js/navigations/announcement';
 import Polanews from './js/navigations/polanews';
@@ -17,10 +17,17 @@ import Ruangan from './js/navigations/ruangan';
 import RuanganSaya from './js/navigations/ruanganSaya';
 import HubungiKami from './js/navigations/hubungiKami';
 import DaftarPermintaanNav from './js/screens/hubungiKami/daftarPermintaan'
-import RuanganScreen from './js/screens/ruangan/ruangan'
-import DetailRuanganScreen from './js/screens/ruangan/detailRuangan'
 import { createStackNavigator, createAppContainer, createDrawerNavigator, DrawerItems } from 'react-navigation';
-import { Container, Content, Header, Body, Icon } from 'native-base'
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { Provider } from 'react-redux'
+import store from './js/store'
+import CreateAcaraScreen from './js/screens/acara/createAcara';
+import CreateRuanganScreen from './js/screens/ruangan/createRuangan';
+import DetailHubungiKami from './js/screens/hubungiKami/detailHubungiKami';
+import { defaultColor, defaultTextColor } from './js/defaultColor';
+import Profil from './js/screens/profil';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -32,8 +39,8 @@ const BeritaNav = createStackNavigator({
   })
 
 BeritaNav.navigationOptions = {
-  drawerIcon: ({ tintColor }) => (
-    <Icon name="paper" style={{ fontSize: 24, color: 'white' }} />
+  drawerIcon: () => (
+    <FontAwesome name='newspaper-o' style={{ color: 'white' }} size={21} />
   )
 }
 
@@ -41,49 +48,68 @@ BeritaNav.navigationOptions = {
 const AcaraNav = createStackNavigator({
   Acara: Acara,
   AcaraSaya: AcaraSaya,
+  CreateAcara: { screen: CreateAcaraScreen }
 }, {
     initialRouteName: 'Acara'
   })
 
 AcaraNav.navigationOptions = {
-  drawerIcon: ({ tintColor }) => (
-    <Icon name="browsers" style={{ fontSize: 24, color: 'white' }} />
+  drawerIcon: () => (
+    <MaterialIcons name='event' style={{ color: 'white' }} size={28} />
   )
 }
 
 
 const RuanganNav = createStackNavigator({
-  // Ruangan: {screen: RuanganScreen},
-  // DetailRuanganScreen : {screen :DetailRuanganScreen},
-  Ruangan : Ruangan,
-  RuanganSaya: RuanganSaya
+  Ruangan: Ruangan,
+  RuanganSaya: RuanganSaya,
+  CreateRuangan: { screen: CreateRuanganScreen }
 }, {
     initialRouteName: 'Ruangan'
   })
 
 RuanganNav.navigationOptions = {
-  drawerIcon: ({ tintColor }) => (
-    <Icon name="room" style={{ fontSize: 24, color: 'white' }} />
+  drawerIcon: () => (
+    <FontAwesome5 name="building" style={{ color: 'white' }} size={28} />
   )
 }
 
+const HubungiKamiListNav = createStackNavigator({
+  DaftarPermintaan: { screen: DaftarPermintaanNav },
+  DetailHubungiKami: {
+    screen: DetailHubungiKami,
+    navigationOptions: {
+      title: 'HUBUNGI KAMI',
+      headerTintColor: defaultTextColor,
+      headerStyle: {
+        backgroundColor: defaultColor,
+      },
+    }
+  }
+}, {
+    initialRouteName: 'DaftarPermintaan',
+  })
+
+HubungiKamiListNav.navigationOptions = {
+  header: null
+}
 
 const HubungiKamiNav = createStackNavigator({
   HubungiKami: HubungiKami,
-  DaftarPermintaan: { screen: DaftarPermintaanNav }
+  DaftarPermintaan: HubungiKamiListNav
 }, {
     initialRouteName: 'HubungiKami'
   })
 
 HubungiKamiNav.navigationOptions = {
   drawerIcon: ({ tintColor }) => (
-    <Icon name="home" style={{ fontSize: 24, color: 'white' }} />
+    <FontAwesome name="send-o" style={{ color: 'white' }} size={24} />
   )
 }
 
 
-const CustomDrawerComponent = (props) => (
-  <View style={{ flex: 1 }}>
+const CustomDrawerComponent = (props) => {
+  return <View style={{ flex: 1 }}>
     <View style={{ height: 150, alignItems: 'center', justifyContent: 'center', marginTop: 30 }}>
       <Image source={require('./assest/Group.png')} style={{ height: 90, width: 90 }} />
       <Image source={require('./assest/polaku.png')} style={{ height: 40, width: 90 }} />
@@ -92,14 +118,22 @@ const CustomDrawerComponent = (props) => (
       <DrawerItems {...props} />
     </View>
   </View>
-)
+}
 
 const DrawerNav = createDrawerNavigator({
   Berita: BeritaNav,
   Acara: AcaraNav,
   Ruangan: RuanganNav,
-  'Hubungi Kami': HubungiKamiNav
+  'Hubungi Kami': HubungiKamiNav,
+  Profil: { screen : Profil,
+  navigationOptions: {
+    drawerIcon: () => (
+      <MaterialIcons name="perm-identity" style={{ color: 'white' }} size={30} />
+    )
+  }
+}
 }, {
+    initialRouteName: 'Berita',
     drawerWidth: WIDTH * 0.7,
     drawerBackgroundColor: '#9F1616',
     drawerFontColor: 'white',
@@ -110,7 +144,6 @@ const DrawerNav = createDrawerNavigator({
         fontSize: 17
       },
     }
-
   })
 
 DrawerNav.navigationOptions = ({ navigation }) => ({
@@ -120,14 +153,14 @@ DrawerNav.navigationOptions = ({ navigation }) => ({
 const StackNav = createStackNavigator({
   Login: { screen: Login },
   Home: DrawerNav,
-})
+}, {
+    initialRouteName: 'Login'
+  })
 
 
 const App = () => {
   const Router = createAppContainer(StackNav)
-  return (
-    <Router />
-  );
+  return <Provider store={store}><Router /></Provider>
 };
 
 export default App;
