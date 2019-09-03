@@ -17,7 +17,7 @@ export default class HubungiKamiDivisi1 extends Component {
   render() {
     return (
       <SafeAreaView style={{ backgroundColor: defaultBackgroundColor, height: '100%' }}>
-        <Text style={{ marginTop: 15, marginLeft: 15, fontSize: 17, fontWeight:'bold', color: defaultColor }}>Ada yang ingin ditanyakan?</Text>
+        <Text style={styles.textTitle}>Ada yang ingin ditanyakan?</Text>
         <FlatList
           keyExtractor={(item) => item.id}
           style={styles.flatList}
@@ -46,29 +46,6 @@ const styles = StyleSheet.create({
     height: '100%',
     marginBottom: 60
   },
-  header: {
-    backgroundColor: defaultColor,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  titleHeader: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  textTitleHeader: {
-    color: defaultTextColor,
-    marginLeft: 5,
-    fontSize: 20
-  },
-  menuIcon: {
-    zIndex: 9,
-    position: 'absolute',
-    top: 15,
-    left: 20
-  },
-  textColor: {
-    color: defaultTextColor
-  },
   flatList: {
     paddingTop: 10,
     marginBottom: 120,
@@ -84,10 +61,12 @@ const styles = StyleSheet.create({
     margin: 5,
     paddingTop: 5
   },
-  textTitleInactive: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: defaultColor
-  },
+  textTitle: {
+    marginTop: 15,
+    marginLeft: 15,
+    fontSize: 17,
+    fontWeight:'bold',
+    color: defaultColor }
+  
 })
 

@@ -28,9 +28,6 @@ class cardAcara extends Component {
           statusJoinUser: 'Join'
         })
       }
-      if (Number(element.user_id) === Number(this.props.user_id)) {
-        // console.log('responnya>>>>>>>>>>>>',element.tbl_event_responses.response);
-      }
     });
     this.setState({
       joinEvent: temp
@@ -42,13 +39,9 @@ class cardAcara extends Component {
       if (this.props.data.tbl_users != prevProps.data.tbl_users) {
         let temp = []
         this.props.data.tbl_users.forEach(element => {
-          // console.log(element.tbl_event_responses.response)
 
           if (element.tbl_event_responses.response === 'join') {
             temp.push(element)
-          }
-          if (Number(element.user_id) === Number(this.props.user_id)) {
-            // console.log('responnya>>>>>>>>>>>>',element.tbl_event_responses.response);
           }
           if (Number(element.user_id) === Number(this.props.user_id) && element.tbl_event_responses.response === 'join') {
 
@@ -75,10 +68,6 @@ class cardAcara extends Component {
       proses: true
     })
     let token = await AsyncStorage.getItem('token')
-    console.log('statusJoinUser ', this.state.statusJoinUser);
-    console.log('args ', args);
-    console.log("data lama ", this.props.data);
-    console.log('this.props.data.event_id', this.props.data.event_id)
     try {
       getData = await API.post(`/events/follow`,
         {
@@ -90,8 +79,6 @@ class cardAcara extends Component {
 
       if (args === "Join") {
         let newPerson = this.state.joinEvent
-        console.log("atas", newPerson);
-
         newPerson.push('newPerson')
 
         this.setState({
@@ -101,8 +88,6 @@ class cardAcara extends Component {
       } else {
         let newPerson = this.state.joinEvent
         newPerson.shift()
-        console.log("bawah", newPerson);
-
         this.setState({
           statusJoinUser: args,
           joinEvent: newPerson
@@ -125,6 +110,14 @@ class cardAcara extends Component {
     }
   }
 
+  join = () => {
+    this.joinEvent("Join")
+  }
+
+  cancelJoin =() => {
+    this.joinEvent("Cancel Join")
+  }
+
 
   render() {
 
@@ -134,10 +127,14 @@ class cardAcara extends Component {
       return `${month}`
     }
 
-    return (
-      <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailAcara', {
+    navigateDetail = () => {
+      this.props.navigation.navigate('DetailAcara', {
         detailAcara: this.props.data, statusJoin: this.state.statusJoinUser
-      })} style={styles.container} underlayColor="transparent">
+      })
+    }
+
+    return (
+      <TouchableHighlight onPress={this.navigateDetail} style={styles.container} underlayColor="transparent">
         <View>
           <View style={{ flexDirection: 'row' }}>
 
@@ -158,14 +155,14 @@ class cardAcara extends Component {
             <Text> {this.state.joinEvent.length} Mengikuti </Text>
             {
               this.state.statusJoinUser != 'Join'
-                ? <TouchableHighlight style={styles.button} onPress={() => this.joinEvent("Join")} underlayColor="transparent">
+                ? <TouchableHighlight style={styles.button} onPress={this.join} underlayColor="transparent">
                   {
                     this.state.proses
                       ? <ActivityIndicator size="small" color="#fff" />
                       : <Text style={styles.textButton}> Ikuti </Text>
                   }
                 </TouchableHighlight>
-                : <TouchableHighlight style={styles.button} onPress={() => this.joinEvent("Cancel Join")} underlayColor="transparent">
+                : <TouchableHighlight style={styles.button} onPress={this.cancelJoin} underlayColor="transparent">
                   {
                     this.state.proses
                       ? <ActivityIndicator size="small" color="#fff" />

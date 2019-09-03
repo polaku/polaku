@@ -127,7 +127,6 @@ class createAcara extends Component {
       })
       .catch(err => {
         alert(err)
-        console.log(err);
         this.resetForm()
         this.setState({
           proses: false
@@ -167,7 +166,7 @@ class createAcara extends Component {
                 <Input id='event_name'
                   placeholder="e.g., Megafit"
                   value={this.state.event_name}
-                  style={{ alignSelf: 'flex-start', width: '100%', padding: 0 }}
+                  style={styles.input}
                   onChangeText={(text) => this.setState({
                     event_name: text
                   })} />
@@ -177,7 +176,7 @@ class createAcara extends Component {
                 <Input id='description'
                   placeholder="e.g., Megawarrior"
                   value={this.state.description}
-                  style={{ alignSelf: 'flex-start', width: '100%', padding: 0 }}
+                  style={styles.input}
                   onChangeText={(text) => this.setState({
                     description: text
                   })} />
@@ -221,7 +220,7 @@ class createAcara extends Component {
                 <Input id='location'
                   placeholder="e.g., Jakarta"
                   value={this.state.location}
-                  style={{ alignSelf: 'flex-start', width: '100%', padding: 0 }}
+                  style={styles.input}
                   onChangeText={(text) => this.setState({
                     location: text
                   })} />
@@ -229,7 +228,7 @@ class createAcara extends Component {
               <Item>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={{ color: defaultColor, fontSize: 15 }}>Thumbnail</Text>
-                  <TouchableHighlight onPress={this.selectImage} style={{ width: 150, height: 40, borderRadius: 15, backgroundColor: defaultColor, alignItems: 'center', justifyContent: 'center', margin: 10, marginLeft: 20 }} underlayColor="transparent">
+                  <TouchableHighlight onPress={this.selectImage} style={styles.buttonChooseImage} underlayColor="transparent">
                     <Text style={{ color: defaultBackgroundColor, fontSize: 15 }}>Choose Image</Text>
                   </TouchableHighlight>
                 </View>
@@ -242,11 +241,11 @@ class createAcara extends Component {
               }} resizeMode={'stretch'} />
             </View>
           </View>
-          <TouchableHighlight onPress={() => this.createAcara()} style={{ width: '100%', height: 50, backgroundColor: defaultColor, alignItems: 'center', justifyContent: 'center'}} underlayColor="transparent">
+          <TouchableHighlight onPress={this.createAcara} style={styles.buttonCreateAcara} underlayColor="transparent">
             {
               this.state.proses
                 ? <ActivityIndicator size="small" color="#fff" />
-                : <Text style={{ color: defaultBackgroundColor, fontSize: 15, fontWeight: "bold" }}>Send</Text>
+                : <Text style={styles.textButton}>Send</Text>
             }
           </TouchableHighlight>
         </ScrollView>
@@ -284,6 +283,33 @@ const styles = StyleSheet.create({
   form: {
     alignSelf: 'center',
     width: '90%'
+  },
+  buttonChooseImage: {
+    width: 150,
+    height: 40,
+    borderRadius: 15,
+    backgroundColor: defaultColor,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+    marginLeft: 20
+  },
+  buttonCreateAcara: {
+    width: '100%',
+    height: 50,
+    backgroundColor: defaultColor,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textButton: {
+    color: defaultBackgroundColor,
+    fontSize: 15,
+    fontWeight: "bold"
+  },
+  input: {
+    alignSelf: 'flex-start',
+    width: '100%',
+    padding: 0
   }
 })
 

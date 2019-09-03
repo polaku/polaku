@@ -13,9 +13,7 @@ export default class detailPolanews extends Component {
   componentDidMount() {
     this.setState({
       data: this.props.navigation.getParam('data')
-    })
-    console.log(this.props.navigation.getParam('data').attachments);
-    
+    })    
   }
 
 

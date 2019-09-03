@@ -14,13 +14,13 @@ export default class hubungiKamiFormQuestion extends Component {
       category: '',
       type: this.props.navigation.getParam('keterangan'),
       categories: [],
-      proses: false
+      proses: false,
+      contactCategoresId: ''
     }
   }
 
   async componentDidMount() {
     let token = await AsyncStorage.getItem('token')
-    console.log(height)
     let division = ''
     if (this.props.navigation.getParam('data') === 'DESAIN') division = 1
     else if (this.props.navigation.getParam('data') === 'IT') division = 2
@@ -34,7 +34,8 @@ export default class hubungiKamiFormQuestion extends Component {
       .then(({ data }) => {
         let datas = data.data.filter(element => element.contact_categories_id === division);
         this.setState({
-          categories: datas
+          categories: datas,
+          contactCategoresId: division
         })
       })
   }
@@ -54,9 +55,11 @@ export default class hubungiKamiFormQuestion extends Component {
     let newData = {
       subject: this.state.subject,
       message: this.state.message,
-      contactCategoresId: this.state.category,
+      contactCategoriesId: this.state.contactCategoresId,
+      categoriId: this.state.category,
       type: this.state.type
     }
+    console.log(newData)
 
     API.post('/contactUs', newData, {
       headers: {
@@ -114,7 +117,7 @@ export default class hubungiKamiFormQuestion extends Component {
                 >
                   {
                     this.state.categories.map((el, index) => (
-                      <Picker.Item label={el.sub_categori} value={index} key={index} />
+                      <Picker.Item label={el.sub_categori} value={el.categori_id} key={index} />
                     ))
                   }
                 </Picker>

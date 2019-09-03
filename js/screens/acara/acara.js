@@ -4,10 +4,11 @@ import { Header, Icon, Tab, Tabs, ScrollableTab, Input, Picker, Item } from 'nat
 import MenuButton from '../../components/menuButton';
 import CardAcara from '../../components/cardAcara';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
-// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { fetchDataEvent } from '../../store/action';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import Loading from '../../components/loading';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class acara extends Component {
   constructor(props) {
@@ -26,8 +27,6 @@ class acara extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.navigation);
-
     this.props.fetchDataEvent()
   }
 
@@ -47,6 +46,14 @@ class acara extends Component {
     this.setState({ refreshing: true });
     await this.props.fetchDataEvent()
     this.setState({ refreshing: false });
+  }
+
+  navigateAcaraSaya = () => {
+    this.props.navigation.navigate('AcaraSaya')
+  }
+
+  navigateCreateAcara = () => {
+    this.props.navigation.navigate("CreateAcara")
   }
 
   render() {
@@ -115,7 +122,7 @@ class acara extends Component {
 
           <View style={styles.title}>
             <Text style={styles.textTitleActive}> Semua Acara </Text>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('AcaraSaya')} underlayColor="transparent">
+            <TouchableHighlight onPress={this.navigateAcaraSaya} underlayColor="transparent">
               <Text style={styles.textTitleInactive}> acara saya </Text>
             </TouchableHighlight>
           </View>
@@ -128,9 +135,7 @@ class acara extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading/>
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                       refreshControl={
@@ -141,12 +146,12 @@ class acara extends Component {
                       }>
                       {
                         this.props.eventsToday.length === 0
-                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          ? <View style={styles.placeImageAcaraKosong}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada hari ini</Text>
                           </View>
                           : <View>
-                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            <Text style={styles.textPullDownToRefresh}>Pull down to refresh</Text>
                             {
                               this.props.eventsToday.map((el, index) => (
                                 <CardAcara navigation={this.props.navigation} data={el} key={index} />
@@ -165,9 +170,7 @@ class acara extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading/>
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                       refreshControl={
@@ -179,7 +182,7 @@ class acara extends Component {
                       {
                         this.props.eventsTomorrow.length === 0
                           ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada esok hari</Text>
                           </View>
                           : <View>
@@ -202,9 +205,7 @@ class acara extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading/>
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                       refreshControl={
@@ -216,7 +217,7 @@ class acara extends Component {
                       {
                         this.props.eventsThisWeek.length === 0
                           ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada minggu hari</Text>
                           </View>
                           : <View>
@@ -239,9 +240,7 @@ class acara extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading/>
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                       refreshControl={
@@ -253,7 +252,7 @@ class acara extends Component {
                       {
                         this.props.eventsThisMonth.length === 0
                           ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada bulan hari</Text>
                           </View>
                           : <View>
@@ -274,7 +273,7 @@ class acara extends Component {
         </View>
 
         {/* BUTTON ADD */}
-        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateAcara")}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={this.navigateCreateAcara}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>
@@ -374,6 +373,21 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: 'center',
     marginTop: 10
+  },
+  imageAcaraKosong: {
+    height: 200,
+    width: 250,
+    resizeMode: 'stretch'
+  },
+  placeImageAcaraKosong : {
+    marginTop: 60,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textPullDownToRefresh:{
+    alignSelf: 'center',
+    color: '#B4ACAA',
+    fontSize: 12
   }
 })
 

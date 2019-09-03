@@ -4,7 +4,7 @@ import { Input, Header, Item, DatePicker, Label, Picker } from 'native-base';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MenuButton from '../../components/menuButton';
-import { API, token } from '../../../config/API';
+import { API } from '../../../config/API';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default class createRuangan extends Component {
@@ -35,7 +35,6 @@ export default class createRuangan extends Component {
       }
     })
       .then(({ data }) => {
-        console.log(data.data);
         this.setState({
           listRoom: data.data
         })
@@ -140,8 +139,6 @@ export default class createRuangan extends Component {
   validateCount = (text) => {
     this.state.listRoom.forEach(el => {
       if (el.room_id === this.state.room_id) {
-        console.log(el);
-
         if (el.max >= text) {
           this.setState({
             count: text
@@ -288,7 +285,7 @@ export default class createRuangan extends Component {
               </Item>
             </View>
           </View>
-          <TouchableHighlight onPress={() => this.createBookingRoom()} style={{ width: "100%", height: 50, backgroundColor: defaultColor, alignItems: "center", justifyContent: "center" }} underlayColor="transparent">
+          <TouchableHighlight onPress={this.createBookingRoom} style={{ width: "100%", height: 50, backgroundColor: defaultColor, alignItems: "center", justifyContent: "center" }} underlayColor="transparent">
             {
               this.state.proses
                 ? <ActivityIndicator size="small" color="#fff" />

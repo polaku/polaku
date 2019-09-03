@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
-import { Container, Item, Input, Text } from 'native-base';
+import { Item, Input, Text } from 'native-base';
 import { defaultTextColor, defaultColor } from '../defaultColor';
 import { API } from '../../config/API';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -31,22 +31,21 @@ class login extends Component {
     }
     try {
       data = await API.post('/users/signin', user)
-      if (data) {
-        console.log('sukses1');
-
-      }
       await AsyncStorage.setItem('token', data.data.token)
-      console.log('sukses2');
+      if (data) {
+        this.setState({
+          proses: false,
+          username: '',
+          password: ''
+        })
+      }
       this.props.setUserId(data.data.user_id)
       this.props.navigation.navigate("Home")
     } catch (err) {
-      console.log(err)
-      alert(data)
+      alert(err)
     }
     this.setState({
       proses: false,
-      username: '',
-      password: '',
     })
 
   }
@@ -91,7 +90,7 @@ class login extends Component {
                     password: text
                   })} />
               </Item>
-              <TouchableHighlight onPress={() => this.login()}
+              <TouchableHighlight onPress={this.login}
                 style={styles.button} underlayColor="transparent">
                 {
                   this.state.proses

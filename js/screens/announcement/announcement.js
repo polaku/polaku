@@ -5,10 +5,11 @@ import MenuButton from '../../components/menuButton';
 import CardAnnouncement from '../../components/cardAnnouncement';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
-// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import { withNavigationFocus } from 'react-navigation';
+import Loading from '../../components/loading';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -37,8 +38,6 @@ class announcement extends Component {
 
   async componentDidMount() {
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    // console.log(this.props.navigation);
-
     this.setState({
       loading: true
     })
@@ -65,13 +64,13 @@ class announcement extends Component {
     let getData
 
     try {
-      getData = await API.get(`/announcement?page=${this.state.page}`,
+      getData = await API.get(`/announcement?page=1`,
         {
           headers: { token }
         })
       this.setState({
-        data: [...this.state.data, ...getData.data.data],
-        dataPilihan: [...this.state.dataPilihan, ...getData.data.dataPilihan]
+        data: getData.data.data,
+        dataPilihan: getData.data.dataPilihan
       })
     } catch (err) {
       this.setState({
@@ -92,7 +91,7 @@ class announcement extends Component {
         })
       this.setState({
         data: [...this.state.data, ...getData.data.data],
-        dataPilihan: [...this.state.dataPilihan, ...getData.data.dataPilihan]
+        dataPilihan: getData.data.dataPilihan
       })
     } catch (err) {
       this.setState({
@@ -137,6 +136,10 @@ class announcement extends Component {
     })
   }
 
+  navigatePolanews = () => {
+    this.props.navigation.navigate('Polanews')
+  }
+
   render() {
     return (
       <SafeAreaView>
@@ -152,7 +155,7 @@ class announcement extends Component {
             <MaterialCommunityIcons name='filter-outline' style={{ color: defaultTextColor }} size={30} />
           </TouchableHighlight> */}
         </Header>
-        {
+        {/* {
           this.state.showSortingMenu && <View style={{
             zIndex: 9,
             position: 'absolute',
@@ -190,19 +193,17 @@ class announcement extends Component {
               </View>
             </View>
           </View>
-        }
+        } */}
 
         {/* CONTENT */}
         <View style={styles.container}>
           {
             this.state.loading
-              ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-              </View>
+              ? <Loading />
               : <View>
                 <View style={styles.title}>
                   <Text style={styles.textTitleActive}> Pengumuman </Text>
-                  <TouchableHighlight onPress={() => this.props.navigation.navigate('Polanews')} underlayColor="transparent">
+                  <TouchableHighlight onPress={this.navigatePolanews} underlayColor="transparent">
                     <Text style={styles.textTitleInactive}>polanews</Text>
                   </TouchableHighlight>
                 </View>
@@ -230,7 +231,7 @@ class announcement extends Component {
                           ))
                         }
                       </ScrollView>
-                      <Text style={{ alignSelf: "center", color: defaultColor, fontWeight: 'bold' }}>{this.state.indexSlide} / {this.state.dataPilihan.length}</Text>
+                      <Text style={styles.indexSlideHorizontal}>{this.state.indexSlide} / {this.state.dataPilihan.length}</Text>
                     </Fragment>
                   }
                   <View style={styles.teksPengumuman}>
@@ -310,6 +311,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 5,
     marginLeft: 5
+  },
+  indexSlideHorizontal: {
+    alignSelf: "center",
+    color: defaultColor,
+    fontWeight: 'bold'
   }
 })
 

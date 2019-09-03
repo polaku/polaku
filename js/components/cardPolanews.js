@@ -6,19 +6,18 @@ export default class cardPolanews extends Component {
     super(props);
   }
 
-  componentDidMount() {
-    // console.log(this.props.data.image)
-    console.log(this.props.data.thumbnail)
+  navigateDetailPolanews = () => {
+    this.props.navigation.navigate('DetailPolanews', { data: this.props.data })
   }
 
   render() {
     return (
-      <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailPolanews', { data: this.props.data })} underlayColor="transparent">
+      <TouchableHighlight onPress={this.navigateDetailPolanews} underlayColor="transparent">
         <View style={styles.container}>
           {
             this.props.data.thumbnail
               ? <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
-              : <Image source={require('../../assest/placeholder.jpg')} style={styles.image} />
+              : <Image source={require('../../assest/placeholder.jpeg')} style={styles.image} />
           }
           {/* <Image source={require("'" + this.props.data.image + "'")} style={{ width: '100%', height: 190, }} /> */}
           <Text> {this.props.data.title} </Text>

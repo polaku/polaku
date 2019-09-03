@@ -5,8 +5,8 @@ import MenuButton from '../../components/menuButton';
 import CardPermintaan from '../../components/cardPermintaan';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
+import Loading from '../../components/loading';
 
 export default class daftarPermintaan extends Component {
   constructor(props) {
@@ -22,6 +22,7 @@ export default class daftarPermintaan extends Component {
   }
 
   componentDidMount() {
+    console.log('daftar permintaan')
     this.fetchData()
   }
 
@@ -37,6 +38,7 @@ export default class daftarPermintaan extends Component {
         {
           headers: { token }
         })
+      console.log(getData)
 
       // ongoing(new, assigned, on going), confirmation, done, cancel
       getData.data.data.forEach(el => {
@@ -84,7 +86,6 @@ export default class daftarPermintaan extends Component {
             <Icon name='browsers' style={{ color: defaultColor }} size={32} />
             <Text style={styles.textTitleHeader}>Daftar Permintaan</Text>
           </View>
-          {/* <MaterialCommunityIcons name='filter-outline' style={styles.sorting} size={30} /> */}
         </Header>
 
         {/* CONTENT */}
@@ -98,9 +99,7 @@ export default class daftarPermintaan extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.state.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <ScrollView style={styles.scrollView} refreshControl={
                     <RefreshControl
                       refreshing={this.state.refreshing}
@@ -111,10 +110,10 @@ export default class daftarPermintaan extends Component {
                       {
                         this.state.ongoing.length > 0
                           ? this.state.ongoing.map((el, index) => (
-                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index}/>
+                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index} />
                           ))
-                          : <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/permintaan_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          : <View style={styles.placeImage}>
+                            <Image source={require('../../../assest/permintaan_kosong.png')} style={styles.image} />
                           </View>
                       }
                     </View>
@@ -128,9 +127,7 @@ export default class daftarPermintaan extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.state.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <ScrollView style={styles.scrollView} refreshControl={
                     <RefreshControl
                       refreshing={this.state.refreshing}
@@ -141,10 +138,10 @@ export default class daftarPermintaan extends Component {
                       {
                         this.state.confirmation.length > 0
                           ? this.state.confirmation.map((el, index) => (
-                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index}/>
+                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index} />
                           ))
-                          : <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/permintaan_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          : <View style={styles.placeImage}>
+                            <Image source={require('../../../assest/permintaan_kosong.png')} style={styles.image} />
                           </View>
                       }
                     </View>
@@ -158,9 +155,7 @@ export default class daftarPermintaan extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.state.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <ScrollView style={styles.scrollView} refreshControl={
                     <RefreshControl
                       refreshing={this.state.refreshing}
@@ -171,10 +166,10 @@ export default class daftarPermintaan extends Component {
                       {
                         this.state.done.length > 0
                           ? this.state.done.map((el, index) => (
-                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index}/>
+                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index} />
                           ))
-                          : <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/permintaan_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          : <View style={styles.placeImage}>
+                            <Image source={require('../../../assest/permintaan_kosong.png')} style={styles.image} />
                           </View>
                       }
                     </View>
@@ -188,9 +183,7 @@ export default class daftarPermintaan extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.state.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <ScrollView style={styles.scrollView} refreshControl={
                     <RefreshControl
                       refreshing={this.state.refreshing}
@@ -201,10 +194,10 @@ export default class daftarPermintaan extends Component {
                       {
                         this.state.cancel.length > 0
                           ? this.state.cancel.map((el, index) => (
-                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index}/>
+                            <CardPermintaan navigation={this.props.navigation} data={el} fetchData={this.fetchData} key={index} />
                           ))
-                          : <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/permintaan_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          : <View style={styles.placeImage}>
+                            <Image source={require('../../../assest/permintaan_kosong.png')} style={styles.image} />
                           </View>
                       }
                     </View>
@@ -274,6 +267,16 @@ const styles = StyleSheet.create({
   scrollView: {
     width: '100%',
     backgroundColor: defaultBackgroundColor
+  },
+  image: {
+    height: 200,
+    width: 250,
+    resizeMode: 'stretch'
+  },
+  placeImage: {
+    marginTop: 60,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 

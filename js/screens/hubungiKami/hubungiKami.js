@@ -8,13 +8,18 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 export default class hubungiKami extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      data: [
-        { id: 1, image: '../../assest/placeholder.jpg', title: 'IT' },
-        { id: 2, image: '../../assest/placeholder.jpg', title: 'HRD' },
-        { id: 3, image: '../../assest/placeholder.jpg', title: 'DESIGN' },
-        { id: 4, image: '../../assest/placeholder.jpg', title: 'LAINNYA' }]
-    }
+  }
+
+  navigateHubungiKamiDivisi1 = () => {
+    this.props.navigation.navigate('HubungiKamiDivisi1')
+  }
+
+  navigateHubungiKamiDivisi2 = () => {
+   this.props.navigation.navigate('HubungiKamiDivisi2', { keterangan : 'request'})
+  }
+
+  navigateDaftarPermintaan = () => {
+    this.props.navigation.navigate('DaftarPermintaan')
   }
 
   render() {
@@ -34,19 +39,18 @@ export default class hubungiKami extends Component {
         <View style={styles.container} >
 
           {/* MENU HUBUNGI KAMI */}
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('DaftarPermintaan')} style={{ alignSelf: 'flex-end', padding: 10, marginRight: 10, height: 50, justifyContent: 'center' }} underlayColor="transparent">
+          <TouchableHighlight onPress={this.navigateDaftarPermintaan} style={styles.buttonDaftarPermintaan} underlayColor="transparent">
             <Text style={styles.textTitleInactive}> daftar permintaan </Text>
           </TouchableHighlight>
 
-
           <View style={{ backgroundColor: 'white', height: '100%', padding: 10 }}>
             <Text style={{ fontSize: 18 }}>Ada yang bisa kami bantu?</Text>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('HubungiKamiDivisi1')} style={{ marginTop: 20 }} underlayColor="transparent">
+            <TouchableHighlight onPress={this.navigateHubungiKamiDivisi1} style={{ marginTop: 20 }} underlayColor="transparent">
               <View style={styles.containerItem} underlayColor="transparent">
                 <Text style={{ color: 'white', fontSize: 18 }}>Ada yang ingin ditanyakan?</Text>
               </View>
             </TouchableHighlight>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('HubungiKamiDivisi2', { keterangan : 'request'})} style={{ marginTop: 20 }} underlayColor="transparent">
+            <TouchableHighlight onPress={this.navigateHubungiKamiDivisi2} style={{ marginTop: 20 }} underlayColor="transparent">
               <View style={styles.containerItem} underlayColor="transparent">
                 <Text style={{ color: 'white', fontSize: 18 }}>Ingin membuat permintaan?</Text>
               </View>
@@ -87,15 +91,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 20
   },
-  menuIcon: {
-    zIndex: 9,
-    position: 'absolute',
-    top: 15,
-    left: 20
-  },
-  textColor: {
-    color: defaultTextColor
-  },
   containerItem: {
     width: 95 / 100 * width,
     height: 1 / 3 * width,
@@ -110,5 +105,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: defaultColor
   },
+  buttonDaftarPermintaan: {
+    alignSelf: 'flex-end',
+    padding: 10,
+    marginRight: 10,
+    height: 50,
+    justifyContent: 'center'
+  }
 })
 

@@ -4,15 +4,29 @@ import { Text, View, StyleSheet, TouchableHighlight, Image, Dimensions } from 'r
 export default class cardAcara extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      dataImage: [],
+      myRoom: ''
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.myRoom) {
+      this.setState({ myRoom: 'yes' })
+    }
+  }
+
+  navigateDetailRuangan = () => {
+    this.props.navigation.navigate('DetailRuangan', {
+      room_id: this.props.data.room_id, room: this.props.data.room, myRoom: this.state.myRoom
+    })
   }
 
   render() {
     return (
-      <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailRuangan', {
-        room_id: this.props.data.room_id, room: this.props.data.room
-      })} style={styles.container} underlayColor="transparent">
-        <View style={{}}>
-          <Image source={require('../../assest/diskusi.png')} style={styles.image} />
+      <TouchableHighlight onPress={this.navigateDetailRuangan} style={styles.container} underlayColor="transparent">
+        <View>
+          <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
           <Text> {this.props.data.room} </Text>
         </View>
       </TouchableHighlight>

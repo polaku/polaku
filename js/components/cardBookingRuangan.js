@@ -19,7 +19,7 @@ class cardBookungRuangan extends Component {
       this.setState({
         owner: true
       })
-    }
+    }    
   }
 
   cancelBooking = () => {
@@ -48,7 +48,6 @@ class cardBookungRuangan extends Component {
       })
       .then(data => {
         alert("SUCCESS")
-        console.log(data);
         this.props.deleteRoom()
         this.setState({
           proses: false
@@ -56,7 +55,6 @@ class cardBookungRuangan extends Component {
       })
       .catch(err => {
         alert(err)
-        console.log(err);
         this.setState({
           proses: false
         })
@@ -71,12 +69,12 @@ class cardBookungRuangan extends Component {
 
         <View style={{ width: '70%', justifyContent: 'center' }}>
           <Text style={{ fontSize: 15 }}>{this.props.data.tbl_user.tbl_account_detail.fullname}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={styles.bottomPlace}>
             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{this.props.data.time_in.slice(0, 5)} - {this.props.data.time_out.slice(0, 5)}</Text>
             {
               this.state.owner
               &&
-              <TouchableHighlight style={{ backgroundColor: defaultColor, padding: 8, justifyContent: 'center', borderRadius: 30 }} onPress={() => this.cancelBooking()} underlayColor="transparent">
+              <TouchableHighlight style={styles.button} onPress={this.cancelBooking} underlayColor="transparent">
                 {
                   this.state.proses
                     ? <ActivityIndicator size="small" color="#fff" />
@@ -104,6 +102,17 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 30
   },
+  bottomPlace: { 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  button : { 
+    backgroundColor: defaultColor,
+    padding: 8,
+    justifyContent: 'center',
+    borderRadius: 30
+  }
 })
 
 const mapStateToProps = ({ user_id }) => {

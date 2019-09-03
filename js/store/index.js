@@ -35,7 +35,7 @@ const api = store => next => async action => {
           today.push(el)
         }
         if ((Number(startDate[2]) === date + 1 && Number(startDate[1]) === month && Number(startDate[0]) === years) ||
-          ((Number(startDate[2]) < date + 1 && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) > date + 1 && Number(endDate[1]) >= month && Number(startDate[0]) <= years))) {
+          ((Number(startDate[2]) < date + 1 && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) > date + 1 && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) || (Number(endDate[2]) >= date + 1 && Number(endDate[1]) === month && Number(endDate[0]) === years) ) {
           tomorrow.push(el)
         }
         if ((Number(startDate[2]) >= date && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) >= date && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) {
@@ -64,8 +64,6 @@ const api = store => next => async action => {
       })
     }
   } else if (action.type === 'FETCH_DATA_MY_EVENT') {
-    console.log("MASUK FETCH MY EVENT");
-
     next({
       type: 'FETCH_DATA_LOADING'
     })
@@ -95,7 +93,6 @@ const api = store => next => async action => {
           all.push(el)
         }
       })
-      console.log(getData.data);
 
       getData.data.dataFollowing.forEach(el => {
         startDate = el.start_date.split('-')
@@ -106,6 +103,10 @@ const api = store => next => async action => {
         }
       })
 
+      console.log("all", all)
+      console.log("mengikuti", mengikuti)
+      console.log("diajukan",diajukan)
+      console.log("ditolak",ditolak)
 
       next({
         type: 'FETCH_DATA_MY_EVENT_SUCCESS',

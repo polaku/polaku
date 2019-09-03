@@ -5,7 +5,8 @@ import MenuButton from '../../components/menuButton';
 import CardAcara from '../../components/cardAcara';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { fetchDataMyEvent } from '../../store/action';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import Loading from '../../components/loading';
 
 class acaraSaya extends Component {
   constructor(props) {
@@ -26,6 +27,13 @@ class acaraSaya extends Component {
     this.setState({ refreshing: false });
   }
 
+  navigateAcara = () => {
+    this.props.navigation.navigate('Acara')
+  }
+
+  navigateCreateAcara = () => {
+    this.props.navigation.navigate("CreateAcara")
+  }
   render() {
     return (
       <View>
@@ -45,7 +53,7 @@ class acaraSaya extends Component {
 
           {/* MENU ACARA */}
           <View style={styles.title}>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('Acara')} underlayColor="transparent">
+            <TouchableHighlight onPress={this.navigateAcara} underlayColor="transparent">
               <Text style={styles.textTitleInactive}> semua acara </Text>
             </TouchableHighlight>
             <Text style={styles.textTitleActive}> Acara Saya </Text>
@@ -59,9 +67,7 @@ class acaraSaya extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                     refreshControl={
@@ -72,15 +78,15 @@ class acaraSaya extends Component {
                     }>
                       {
                         this.props.eventsMengikuti.length === 0
-                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          ? <View style={styles.placeImageAcaraKosong}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara yang diikuti</Text>
                           </View>
                           : <View>
-                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            <Text style={styles.textPullDownToRefresh}>Pull down to refresh</Text>
                             {
                               this.props.eventsMengikuti.map((el, index) => (
-                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                                <CardAcara navigation={this.props.navigation} data={el} key={el.event_id} />
                               ))
                             }
                           </View>
@@ -96,9 +102,7 @@ class acaraSaya extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                     refreshControl={
@@ -109,15 +113,15 @@ class acaraSaya extends Component {
                     }>
                       {
                         this.props.myEvents.length === 0
-                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          ? <View style={styles.placeImageAcaraKosong}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara</Text>
                           </View>
                           : <View>
-                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            <Text style={styles.textPullDownToRefresh}>Pull down to refresh</Text>
                             {
                               this.props.myEvents.map((el, index) => (
-                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                                <CardAcara navigation={this.props.navigation} data={el} key={el.event_id} />
                               ))
                             }
                           </View>
@@ -133,9 +137,7 @@ class acaraSaya extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                     refreshControl={
@@ -146,15 +148,15 @@ class acaraSaya extends Component {
                     }>
                       {
                         this.props.eventsDiajukan.length === 0
-                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          ? <View style={styles.placeImageAcaraKosong}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara yang diajukan</Text>
                           </View>
                           : <View>
-                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            <Text style={styles.textPullDownToRefresh}>Pull down to refresh</Text>
                             {
                               this.props.eventsDiajukan.map((el, index) => (
-                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                                <CardAcara navigation={this.props.navigation} data={el} key={el.event_id} />
                               ))
                             }
                           </View>
@@ -170,9 +172,7 @@ class acaraSaya extends Component {
               activeTextStyle={styles.activeTextStyle}>
               {
                 this.props.loading
-                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-                  </View>
+                  ? <Loading />
                   : <View style={styles.containerInTab}>
                     <ScrollView style={styles.scrollView}
                     refreshControl={
@@ -183,15 +183,15 @@ class acaraSaya extends Component {
                     }>
                       {
                         this.props.eventsDitolak.length === 0
-                          ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={{ height: 200, width: 250, resizeMode: 'stretch' }} />
+                          ? <View style={styles.placeImageAcaraKosong}>
+                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara yang ditolak</Text>
                           </View>
                           : <View>
-                            <Text style={{ alignSelf: 'center', color: '#B4ACAA', fontSize: 12 }}>Pull down to refresh</Text>
+                            <Text style={styles.textPullDownToRefresh}>Pull down to refresh</Text>
                             {
                               this.props.eventsDitolak.map((el, index) => (
-                                <CardAcara navigation={this.props.navigation} data={el} key={index} />
+                                <CardAcara navigation={this.props.navigation} data={el} key={el.event_id} />
                               ))
                             }
                           </View>
@@ -204,7 +204,7 @@ class acaraSaya extends Component {
         </View>
 
         {/* BUTTON ADD */}
-        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateRuangan")}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={this.navigateCreateAcara}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>
@@ -295,6 +295,21 @@ const styles = StyleSheet.create({
   scrollView: {
     width: '100%',
     marginBottom: 160
+  },
+  imageAcaraKosong : {
+    height: 200,
+    width: 250,
+    resizeMode: 'stretch'
+  },
+  placeImageAcaraKosong: {
+    marginTop: 60,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textPullDownToRefresh : {
+    alignSelf: 'center',
+    color: '#B4ACAA',
+    fontSize: 12
   }
 })
 

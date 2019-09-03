@@ -42,10 +42,9 @@ class profil extends Component {
         this.setState({
           data: data.data
         })
-        console.log(this.state.data)
       })
       .catch(err => {
-        console.log(err);
+        alert(err)
       })
   }
 
@@ -60,7 +59,7 @@ class profil extends Component {
               <Text style={styles.textTitleHeader}>Profil</Text>
             </View>
           </Header>
-          <Image source={require('../../assest/icon_user.png')} style={{ width: 150, height: 150, borderRadius: 100, backgroundColor: 'red', alignSelf: 'center', marginTop: 30, marginBottom: 20 }} />
+          <Image source={require('../../assest/icon_user.png')} style={styles.image} />
 
 
           <View>
@@ -97,11 +96,11 @@ class profil extends Component {
             </View>
           </View>
         </View>
-        <TouchableHighlight onPress={this.logout} style={{ width: '100%', height: 50, backgroundColor: defaultColor, alignItems: 'center', justifyContent: 'center', bottom: 0 }} underlayColor="transparent">
+        <TouchableHighlight onPress={this.logout} style={styles.button} underlayColor="transparent">
           {
             this.state.proses
               ? <ActivityIndicator size="small" color="#fff" />
-              : <Text style={{ color: defaultBackgroundColor, fontSize: 15, fontWeight: "bold" }}>Logout</Text>
+              : <Text style={styles.textButton}>Logout</Text>
           }
         </TouchableHighlight>
 
@@ -131,6 +130,27 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 20
   },
+  button : {
+    width: '100%', 
+    height: 50, 
+    backgroundColor: defaultColor, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    bottom: 0
+  },
+  textButton : {
+    color: defaultBackgroundColor,
+    fontSize: 15,
+    fontWeight: "bold"
+  },
+  image : {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    alignSelf: 'center',
+    marginTop: 30,
+    marginBottom: 20
+  }
 })
 
 const mapStateToProps = ({ user_id }) => {

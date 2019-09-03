@@ -4,9 +4,9 @@ import { Text, Icon, Input } from 'native-base';
 import CardComment from '../../components/cardComment';
 import { defaultColor } from '../../defaultColor';
 import HTML from 'react-native-render-html';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { BaseURL } from '../../../config/API'
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import FontAwesome from 'react-native-vector-icons/FontAwesome';
+// import { BaseURL } from '../../../config/API'
 
 export default class detailAnnouncement extends Component {
   constructor(props) {

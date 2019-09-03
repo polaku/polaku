@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight, ScrollView, ActivityIndicator } from 'react-native';
 import { Item, Input, Label, Textarea, DatePicker } from 'native-base';
 import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { API } from '../../../config/API';
 
 export default class hubungiKamiFormRequest extends Component {
   constructor(props) {

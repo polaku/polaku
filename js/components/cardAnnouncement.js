@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Dimensions, TouchableHighlight } from 'react-native';
-import { Text, Icon } from 'native-base';
+import { Text } from 'native-base';
 import { defaultColor } from '../defaultColor';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default class cardAnnouncement extends Component {
   constructor(props) {
@@ -12,10 +12,12 @@ export default class cardAnnouncement extends Component {
       data: this.props.data,
     }
   }
-  componentDidMount() {
-    // console.log(this.props.data)
-  }
 
+  navigateDetailAnnouncement = () => {
+    this.props.navigation.navigate("DetailAnnouncement", {
+      dataAnnouncement: this.props.data
+    })
+  }
 
   render() {
     function getDate(args) {
@@ -27,9 +29,7 @@ export default class cardAnnouncement extends Component {
     }
 
     return (
-      <TouchableHighlight onPress={() => this.props.navigation.navigate("DetailAnnouncement", {
-        dataAnnouncement: this.props.data
-      })} underlayColor="transparent">
+      <TouchableHighlight onPress={this.navigateDetailAnnouncement} underlayColor="transparent">
         <View>
           {
             this.props.data && <View style={styles.container} >
@@ -53,12 +53,7 @@ export default class cardAnnouncement extends Component {
               <Text style={styles.title}>{this.props.data.title}</Text>
 
               <View>
-                <Image source={{ uri: this.props.data.thumbnail }} style={{
-                  resizeMode: 'cover',
-                  height: 200,
-                  width: '100%',
-                  alignItems: 'center',
-                }} />
+                <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
               </View>
               <View style={styles.footer}>
                 <View>
@@ -126,5 +121,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: defaultColor,
     marginRight: 5
+  },
+  image: {
+    resizeMode: 'cover',
+    height: 200,
+    width: '100%',
+    alignItems: 'center',
   }
 })

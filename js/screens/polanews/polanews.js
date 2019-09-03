@@ -5,8 +5,9 @@ import MenuButton from '../../components/menuButton';
 import CardPolanews from '../../components/cardPolanews';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
+import Loading from '../../components/loading';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default class polanews extends Component {
   constructor(props) {
@@ -63,6 +64,8 @@ export default class polanews extends Component {
     this.setState({ refreshing: false });
   }
 
+  navigateAnnoncement = () => this.props.navigation.navigate('Announcement')
+  
   render() {
     return (
       <SafeAreaView>
@@ -79,7 +82,7 @@ export default class polanews extends Component {
           </TouchableHighlight> */}
         </Header>
 
-        {
+        {/* {
           this.state.showSortingMenu && <View style={{
             zIndex: 9,
             position: 'absolute',
@@ -117,18 +120,16 @@ export default class polanews extends Component {
               </View>
             </View>
           </View>
-        }
+        } */}
 
         {/* CONTENT */}
         <View style={styles.container}>
           {
             this.state.loading
-              ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-              </View>
+              ? <Loading/>
               : <View>
                 <View style={styles.title}>
-                  <TouchableHighlight onPress={() => this.props.navigation.navigate('Announcement')} underlayColor="transparent">
+                  <TouchableHighlight onPress={this.navigateAnnoncement} underlayColor="transparent">
                     <Text style={styles.textTitleInactive}>pengumuman</Text>
                   </TouchableHighlight>
                   <Text style={styles.textTitleActive}> Polanews </Text>

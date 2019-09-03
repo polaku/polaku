@@ -6,6 +6,7 @@ import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
+import Loading from '../../components/loading';
 
 export default class detailRuangan extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ export default class detailRuangan extends Component {
     let years = new Date().getFullYear()
     let month = new Date().getMonth() + 1
 
-    if (this.props.myRoom) this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'), 'myRoom')
+    if (this.props.navigation.getParam('myRoom')) this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'), 'myRoom')
     else this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'))
 
   }
@@ -70,7 +71,6 @@ export default class detailRuangan extends Component {
         dates: data,
         loading: false,
       })
-      console.log(this.state.dates);
 
     } catch (err) {
       this.setState({
@@ -107,8 +107,8 @@ export default class detailRuangan extends Component {
   }
 
   deleteRoom = () => {
+    
     let years = new Date().getFullYear()
-    console.log(years, this.state.month, this.props.navigation.getParam('room_id'));
     this.fetchDataPerMonth(years, this.state.month + 1, this.props.navigation.getParam('room_id'))
   }
 
@@ -124,21 +124,19 @@ export default class detailRuangan extends Component {
         {/* NAVIGATION MONTH */}
         <View style={styles.header}>
           {
-            this.state.month != new Date().getMonth() && <TouchableHighlight onPress={() => this.prevMonth()} underlayColor="transparent">
+            this.state.month != new Date().getMonth() && <TouchableHighlight onPress={this.prevMonth} underlayColor="transparent">
               <Entypo name='chevron-thin-left' style={{ color: defaultColor }} size={32} />
             </TouchableHighlight>
           }
           <Text style={styles.textMonth} >{getMonth(this.state.month)}</Text>
-          <TouchableHighlight onPress={() => this.nextMonth()} underlayColor="transparent">
+          <TouchableHighlight onPress={this.nextMonth} underlayColor="transparent">
             <Entypo name='chevron-thin-right' style={{ color: defaultColor }} size={32} />
           </TouchableHighlight>
         </View>
 
         {
           this.state.loading
-            ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-              <Image source={require('../../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
-            </View>
+            ? <Loading />
             : <Tabs renderTabBar={() => <ScrollableTab tabsContainerStyle={styles.tabsContainerStyle} />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
               {
                 this.state.dates.map((el, index) => (

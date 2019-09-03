@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, ScrollView, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { Text, Icon, Input } from 'native-base';
-import CardComment from '../../components/cardComment';
 import { defaultColor } from '../../defaultColor';
 import { API } from '../../../config/API';
 import { fetchDataEvent, fetchDataMyEvent } from '../../store/action';
 import { connect } from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage';
+// import CardComment from '../../components/cardComment';
 
 class detailAcara extends Component {
   constructor(props) {
@@ -22,7 +22,6 @@ class detailAcara extends Component {
       data: this.props.navigation.getParam('detailAcara'),
       statusJoinUser: this.props.navigation.getParam('statusJoin')
     })
-    console.log(this.props.navigation.getParam('detailAcara'));
   }
 
   joinEvent = async (args) => {
@@ -58,6 +57,14 @@ class detailAcara extends Component {
       })
       alert(err)
     }
+  }
+
+  join = () => {
+    this.joinEvent("Join")
+  }
+
+  cancelJoin = () => {
+    this.joinEvent("Cancel Join")
   }
 
   render() {
@@ -117,14 +124,14 @@ class detailAcara extends Component {
             <View style={{ width: '79%' }}>
               {
                 this.state.statusJoinUser != 'Join'
-                  ? < TouchableHighlight style={styles.buttonIkut} onPress={() => this.joinEvent("Join")} underlayColor="transparent">
+                  ? < TouchableHighlight style={styles.buttonIkut} onPress={this.join} underlayColor="transparent">
                     {
                       this.state.proses
                         ? <ActivityIndicator size="small" color="#fff" />
                         : <Text style={styles.textButtonIkut}>IKUT</Text>
                     }
                   </TouchableHighlight>
-                  : <TouchableHighlight style={styles.buttonIkut} onPress={() => this.joinEvent("Cancel Join")} underlayColor="transparent">
+                  : <TouchableHighlight style={styles.buttonIkut} onPress={this.cancelJoin} underlayColor="transparent">
                     {
                       this.state.proses
                         ? <ActivityIndicator size="small" color="#fff" />

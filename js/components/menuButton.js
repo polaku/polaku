@@ -5,9 +5,13 @@ import { defaultTextColor } from '../defaultColor';
 import { DrawerActions } from 'react-navigation';
 
 export default class menuButton extends Component {
+  drawerToggle = () =>{
+    this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+  }
+
   render() {
     return (
-      <Icon name='menu' style={styles.menuIcon} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())} size={32} />
+      <Icon name='menu' style={styles.menuIcon} onPress={this.drawerToggle} size={32} />
     )
   }
 }

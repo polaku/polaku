@@ -7,13 +7,16 @@ import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../de
 import { API } from '../../../config/API';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-community/async-storage';
+import Loading from '../../components/loading';
 
 export default class ruangan extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      roomsP40: []
+      roomsP40: [],
+      dataImage: [],
+      loading: false
     }
   }
 
@@ -57,6 +60,8 @@ export default class ruangan extends Component {
     }
   }
 
+  navigateRuanganSaya = () => this.props.navigation.navigate('RuanganSaya')
+
   render() {
     return (
       <View>
@@ -76,44 +81,50 @@ export default class ruangan extends Component {
           {/* MENU ruangan */}
           <View style={styles.title}>
             <Text style={styles.textTitleActive}> Ruangan </Text>
-            <TouchableHighlight onPress={() => this.props.navigation.navigate('RuanganSaya')} underlayColor="transparent">
+            <TouchableHighlight onPress={this.navigateRuanganSaya} underlayColor="transparent">
               <Text style={styles.textTitleInactive}> pesanan saya </Text>
             </TouchableHighlight>
           </View>
 
-          <Tabs renderTabBar={() => <ScrollableTab tabsContainerStyle={styles.tabsContainerStyle} />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
-            <Tab heading="semua"
-              tabStyle={styles.tab}
-              textStyle={{ color: defaultColor }}
-              activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
-              activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <FlatList
-                  keyExtractor={(item) => item.room_id}
-                  style={styles.flatList}
-                  numColumns={3}
-                  data={this.state.data}
-                  renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} />}
-                />
-              </View>
-            </Tab>
-            <Tab heading="P40"
-              actived
-              tabStyle={styles.tab}
-              textStyle={{ color: defaultColor }}
-              activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
-              activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.containerInTab}>
-                <FlatList
-                  keyExtractor={(item) => item.room_id}
-                  style={styles.flatList}
-                  numColumns={3}
-                  data={this.state.roomsP40}
-                  renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} />}
-                />
-              </View>
-            </Tab>
-          </Tabs>
+          {
+            this.state.loading
+              ? <Loading />
+              : <Tabs renderTabBar={() => <ScrollableTab tabsContainerStyle={styles.tabsContainerStyle} />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
+                <Tab heading="semua"
+                  tabStyle={styles.tab}
+                  textStyle={{ color: defaultColor }}
+                  activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+                  activeTextStyle={styles.activeTextStyle}>
+                  <View style={styles.containerInTab}>
+                    <FlatList
+                      keyExtractor={(item) => item.room_id}
+                      style={styles.flatList}
+                      numColumns={3}
+                      data={this.state.data}
+                      renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} />}
+                    />
+                  </View>
+                </Tab>
+                <Tab heading="P40"
+                  actived
+                  tabStyle={styles.tab}
+                  textStyle={{ color: defaultColor }}
+                  activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+                  activeTextStyle={styles.activeTextStyle}>
+                  <View style={styles.containerInTab}>
+                    <FlatList
+                      keyExtractor={(item) => item.room_id}
+                      style={styles.flatList}
+                      numColumns={3}
+                      data={this.state.roomsP40}
+                      renderItem={({ item, }) => <CardRuangan data={item} navigation={this.props.navigation} />}
+                    />
+                  </View>
+                </Tab>
+              </Tabs>
+          }
+
+
         </View>
 
         {/* BUTTON ADD */}

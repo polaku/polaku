@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, SafeAreaView, FlatList } from 'react-native';
-import { Header } from 'native-base';
-import MenuButton from '../../components/menuButton';
-import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
-import { API } from '../../../config/API';
+import { Text, View, StyleSheet, Dimensions, SafeAreaView, FlatList } from 'react-native';
+import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 
 export default class hubungiKami extends Component {
   constructor(props) {
@@ -18,7 +15,6 @@ export default class hubungiKami extends Component {
   componentDidMount() {
     let temp = this.props.navigation.getParam('data')
     let tempTimeline = []
-    console.log(this.props.navigation.getParam('data'));
 
     temp.status === 'cancel' && tempTimeline.push({ status: 'Cancel', time: temp.cancel_date })
 
@@ -109,11 +105,6 @@ export default class hubungiKami extends Component {
                 </View>
               </View>} />
           </View>
-          {/* {
-          this.state.status === 'Confirmation' && <TouchableHighlight onPress={this.done} style={{ width, height: 50, backgroundColor: defaultColor, alignItems: 'center', justifyContent: 'center', bottom: 0, position:'absolute' }}>
-          <Text style={{ color: defaultBackgroundColor, fontSize: 15, fontWeight: 'bold' }}>Done</Text>
-        </TouchableHighlight>
-        } */}
         </View>
 
       </SafeAreaView >
