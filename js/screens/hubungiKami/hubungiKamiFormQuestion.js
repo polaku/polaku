@@ -15,7 +15,8 @@ export default class hubungiKamiFormQuestion extends Component {
       type: this.props.navigation.getParam('keterangan'),
       categories: [],
       proses: false,
-      contactCategoresId: ''
+      contactCategoresId: '',
+      editableInput: true
     }
   }
 
@@ -48,7 +49,8 @@ export default class hubungiKamiFormQuestion extends Component {
 
   createContactUs = async () => {
     this.setState({
-      proses: true
+      proses: true,
+      editableInput: false
     })
     let token = await AsyncStorage.getItem('token')
 
@@ -70,12 +72,17 @@ export default class hubungiKamiFormQuestion extends Component {
         alert("input question success")
         this.props.navigation.goBack()
         this.setState({
-          proses: false
+          proses: false,
+          editableInput: true
         })
         this.resetForm()
       })
       .catch(err=>{
         alert('Error. Please try again')
+        this.setState({
+          proses: false,
+          editableInput: true
+        })
       })
   }
 
@@ -100,7 +107,8 @@ export default class hubungiKamiFormQuestion extends Component {
               <Input id="subject"
                 style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
                 value={this.state.subject}
-                onChangeText={(text) => this.setState({ subject: text })} />
+                onChangeText={(text) => this.setState({ subject: text })} 
+                editable={this.state.editableInput}/>
             </Item>
             {
               this.props.navigation.getParam('data') != 'LAINNYA' && <Item picker stackedLabel>
@@ -114,6 +122,7 @@ export default class hubungiKamiFormQuestion extends Component {
                   selectedValue={this.state.category}
                   onValueChange={this._onValueChange2.bind(this)}
                   itemStyle={{ height: 44 }}
+                  editable={this.state.editableInput}
                 >
                   {
                     this.state.categories.map((el, index) => (
@@ -126,7 +135,7 @@ export default class hubungiKamiFormQuestion extends Component {
 
             <Item stackedLabel style={{ marginTop: 10 }}>
               <Label style={{ color: defaultColor, margin: 0 }}>Message</Label>
-              <Textarea rowSpan={5} bordered style={{ width: '100%' }} onChangeText={(text) => this.setState({ message: text })} />
+              <Textarea rowSpan={5} bordered style={{ width: '100%' }} onChangeText={(text) => this.setState({ message: text })} editable={this.state.editableInput}/>
             </Item>
 
           </View>

@@ -23,7 +23,8 @@ export default class createRuangan extends Component {
       endHour: '',
       endMinute: '',
       listRoom: [],
-      proses: false
+      proses: false,
+      editableInput: true
     };
   }
 
@@ -66,7 +67,8 @@ export default class createRuangan extends Component {
 
   createBookingRoom = async () => {
     this.setState({
-      proses: true
+      proses: true,
+      editableInput: false
     })
 
     let token = await AsyncStorage.getItem('token')
@@ -119,7 +121,8 @@ export default class createRuangan extends Component {
           alert(`Create booking room success`)
           this.props.navigation.goBack();
           this.setState({
-            proses: true
+            proses: true,
+            editableInput: true
           })
           this.resetForm()
         })
@@ -130,7 +133,8 @@ export default class createRuangan extends Component {
             alert(err)
           }
           this.setState({
-            proses: false
+            proses: false,
+            editableInput: true
           })
         })
     }
@@ -187,6 +191,7 @@ export default class createRuangan extends Component {
                     style={{ width: undefined }}
                     selectedValue={this.state.room_id}
                     onValueChange={this.onValueChange.bind(this)}
+                    editable={this.state.editableInput}
                   >
                     {
                       this.state.listRoom && this.state.listRoom.map(el =>
@@ -204,7 +209,8 @@ export default class createRuangan extends Component {
                   value={this.state.subject}
                   onChangeText={(text) => this.setState({
                     subject: text
-                  })} />
+                  })}
+                  editable={this.state.editableInput}/>
               </Item>
               <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
                 <Label style={{ color: defaultColor }}>Date in</Label>
@@ -221,6 +227,7 @@ export default class createRuangan extends Component {
                   placeHolderTextStyle={{ textAlign: 'left', color: '#535759' }}
                   onDateChange={(text) => this.setDateIn(text)}
                   disabled={false}
+                  editable={this.state.editableInput}
                 />
               </Item>
               <Item stackedLabel>
@@ -235,7 +242,8 @@ export default class createRuangan extends Component {
                     value={this.state.startHour}
                     onChangeText={(text) => this.setState({
                       startHour: text
-                    })} />
+                    })} 
+                    editable={this.state.editableInput}/>
                   <Text> : </Text>
                   <Input id="startMinute"
                     keyboardType="numeric"
@@ -246,7 +254,8 @@ export default class createRuangan extends Component {
                     value={this.state.startMinute}
                     onChangeText={(text) => this.setState({
                       startMinute: text
-                    })} />
+                    })} 
+                    editable={this.state.editableInput}/>
                   <Text> s/d </Text>
                   <Input id="endHour"
                     type="text"
@@ -258,7 +267,8 @@ export default class createRuangan extends Component {
                     value={this.state.endHour}
                     onChangeText={(text) => this.setState({
                       endHour: text
-                    })} />
+                    })} 
+                    editable={this.state.editableInput}/>
                   <Text margin> : </Text>
                   <Input id="endMinute"
                     type="text"
@@ -270,7 +280,8 @@ export default class createRuangan extends Component {
                     value={this.state.endMinute}
                     onChangeText={(text) => this.setState({
                       endMinute: text
-                    })} />
+                    })} 
+                    editable={this.state.editableInput}/>
                 </View>
               </Item>
               <Item stackedLabel style={{ marginTop: 10 }}>
@@ -281,7 +292,8 @@ export default class createRuangan extends Component {
                   placeholder="e.g., 5"
                   style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
                   value={this.state.count}
-                  onChangeText={(text) => this.validateCount(text)} />
+                  onChangeText={(text) => this.validateCount(text)} 
+                  editable={this.state.editableInput}/>
               </Item>
             </View>
           </View>

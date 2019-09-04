@@ -16,13 +16,15 @@ class login extends Component {
       username: '',
       password: '',
       backgroundColor: defaultColor,
-      proses: false
+      proses: false,
+      editableInput: true
     };
   }
 
   login = async () => {
     this.setState({
-      proses: true
+      proses: true,
+      editableInput: false 
     })
     let user, data
     user = {
@@ -35,6 +37,7 @@ class login extends Component {
       if (data) {
         this.setState({
           proses: false,
+          editableInput: true,
           username: '',
           password: ''
         })
@@ -43,10 +46,11 @@ class login extends Component {
       this.props.navigation.navigate("Home")
     } catch (err) {
       alert(err)
+      this.setState({
+        proses: false,
+        editableInput: true
+      })
     }
-    this.setState({
-      proses: false,
-    })
 
   }
 
@@ -76,7 +80,8 @@ class login extends Component {
                   value={this.state.username}
                   onChangeText={(text) => this.setState({
                     username: text
-                  })} />
+                  })} 
+                  editable={this.state.editableInput}/>
               </Item>
               <Item style={{ marginBottom: 45 }}>
                 <SimpleLineIcons name='lock' style={styles.icon} size={30} />
@@ -88,7 +93,8 @@ class login extends Component {
                   value={this.state.password}
                   onChangeText={(text) => this.setState({
                     password: text
-                  })} />
+                  })} 
+                  editable={this.state.editableInput}/>
               </Item>
               <TouchableHighlight onPress={this.login}
                 style={styles.button} underlayColor="transparent">

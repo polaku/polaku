@@ -16,7 +16,8 @@ export default class hubungiKamiFormRequest extends Component {
       deadline: '',
       message: '',
       type: this.props.navigation.getParam('keterangan'),
-      proses: false
+      proses: false,
+      editableInput: true
     }
   }
 
@@ -37,7 +38,8 @@ export default class hubungiKamiFormRequest extends Component {
 
   createContactUs = () => {
     this.setState({
-      proses: true
+      proses: true,
+      editableInput: false
     })
     let newData = {
       message: this.state.message,
@@ -59,11 +61,15 @@ export default class hubungiKamiFormRequest extends Component {
         alert("input question success")
         this.props.navigation.goBack()
         this.setState({
-          proses: false
+          proses: false,
+          editableInput: true
         })
         this.resetForm()
       })
-      .catch(err=>{
+      .catch(err => {
+        this.setState({
+          editableInput: true
+        })
         alert("Error. Please try again")
       })
 
@@ -85,6 +91,7 @@ export default class hubungiKamiFormRequest extends Component {
       message: '',
     })
   }
+  
   render() {
     return (
       <ScrollView style={styles.container} >
@@ -97,35 +104,40 @@ export default class hubungiKamiFormRequest extends Component {
             <Input id="designStyle"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.designStyle}
-              onChangeText={(text) => this.setState({ designStyle: text })} />
+              onChangeText={(text) => this.setState({ designStyle: text })}
+              editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
             <Label style={{ color: defaultColor, margin: 0 }}>Tujuan</Label>
             <Input id="tujuan"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.tujuan}
-              onChangeText={(text) => this.setState({ tujuan: text })} />
+              onChangeText={(text) => this.setState({ tujuan: text })} 
+              editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
             <Label style={{ color: defaultColor, margin: 0 }}>Type</Label>
             <Input id="type"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.type}
-              onChangeText={(text) => this.setState({ type: text })} />
+              onChangeText={(text) => this.setState({ type: text })} 
+              editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
             <Label style={{ color: defaultColor, margin: 0 }}>Ukuran</Label>
             <Input id="ukuran"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.ukuran}
-              onChangeText={(text) => this.setState({ ukuran: text })} />
+              onChangeText={(text) => this.setState({ ukuran: text })} 
+              editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
             <Label style={{ color: defaultColor, margin: 0 }}>Other Specs</Label>
             <Input id="otherSpecs"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.otherSpecs}
-              onChangeText={(text) => this.setState({ otherSpecs: text })} />
+              onChangeText={(text) => this.setState({ otherSpecs: text })} 
+              editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
             <Label style={{ color: defaultColor, margin: 0 }}>Deadline</Label>
@@ -143,11 +155,12 @@ export default class hubungiKamiFormRequest extends Component {
               style={{ alignSelf: 'flex-start', backgroundColor: 'red' }}
               onDateChange={(text) => this.setDeadline(text)}
               disabled={false}
-            />
+              editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
             <Label style={{ color: defaultColor, margin: 0 }}>Message</Label>
-            <Textarea rowSpan={5} bordered style={{ width: '100%' }} />
+            <Textarea rowSpan={5} bordered style={{ width: '100%' }}
+            editable={this.state.editableInput} />
           </Item>
 
         </View>

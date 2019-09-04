@@ -25,7 +25,8 @@ class createAcara extends Component {
       limitDate: '',
       limitMonth: '',
       limitYear: '',
-      proses: ''
+      proses: '',
+      editableInput: true,
     };
   }
 
@@ -70,8 +71,10 @@ class createAcara extends Component {
 
   createAcara = async () => {
     this.setState({
-      proses: true
+      proses: true,
+      editableInput: false
     })
+    console.log("MASUK 1")
     let token = await AsyncStorage.getItem('token')
 
     let startDate, endDate
@@ -116,20 +119,24 @@ class createAcara extends Component {
       }
     )
       .then(() => {
+        console.log("MASUK 2")
         this.props.fetchDataEvent()
         this.props.fetchDataMyEvent()
         this.props.navigation.goBack(null);
         alert(`Create event success`)
         this.setState({
-          proses: false
+          proses: false,
+          editableInput: true
         })
         this.resetForm()
       })
       .catch(err => {
+        console.log("MASUK 3")
         alert(err)
         this.resetForm()
         this.setState({
-          proses: false
+          proses: false,
+          editableInput: true
         })
       })
   }
@@ -148,7 +155,6 @@ class createAcara extends Component {
   render() {
     return (
       <>
-
         {/* HEADER - menu button drawer, title, icon sorting */}
         <Header style={styles.header}>
           <MenuButton navigation={this.props.navigation} />
@@ -169,7 +175,8 @@ class createAcara extends Component {
                   style={styles.input}
                   onChangeText={(text) => this.setState({
                     event_name: text
-                  })} />
+                  })} 
+                  editable={this.state.editableInput}/>
               </Item>
               <Item stackedLabel style={{ marginTop: 10 }}>
                 <Label style={{ color: defaultColor }}>Description</Label>
@@ -179,7 +186,8 @@ class createAcara extends Component {
                   style={styles.input}
                   onChangeText={(text) => this.setState({
                     description: text
-                  })} />
+                  })}
+                  editable={this.state.editableInput}/>
               </Item>
               <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
                 <Label style={{ color: defaultColor }}>Date</Label>
@@ -197,6 +205,7 @@ class createAcara extends Component {
                     placeHolderTextStyle={{ textAlign: 'left', color: '#535759' }}
                     onDateChange={(text) => this.setStartDate(text)}
                     disabled={false}
+                    editable={this.state.editableInput}
                   />
                   <Text style={{ marginLeft: 10, marginRight: 10 }}> s/d </Text>
                   <DatePicker
@@ -212,6 +221,7 @@ class createAcara extends Component {
                     placeHolderTextStyle={{ textAlign: 'left', color: '#535759' }}
                     onDateChange={(text) => this.setEndDate(text)}
                     disabled={false}
+                    editable={this.state.editableInput}
                   />
                 </View>
               </Item>
@@ -223,7 +233,8 @@ class createAcara extends Component {
                   style={styles.input}
                   onChangeText={(text) => this.setState({
                     location: text
-                  })} />
+                  })}
+                  editable={this.state.editableInput}/>
               </Item>
               <Item>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

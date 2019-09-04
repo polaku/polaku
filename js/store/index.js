@@ -103,11 +103,6 @@ const api = store => next => async action => {
         }
       })
 
-      console.log("all", all)
-      console.log("mengikuti", mengikuti)
-      console.log("diajukan",diajukan)
-      console.log("ditolak",ditolak)
-
       next({
         type: 'FETCH_DATA_MY_EVENT_SUCCESS',
         payload: {
