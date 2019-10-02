@@ -6,7 +6,6 @@ import { defaultColor } from '../../defaultColor';
 import HTML from 'react-native-render-html';
 // import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // import FontAwesome from 'react-native-vector-icons/FontAwesome';
-// import { BaseURL } from '../../../config/API'
 
 export default class detailAnnouncement extends Component {
   constructor(props) {
@@ -37,7 +36,9 @@ export default class detailAnnouncement extends Component {
 
           {/* UP SECTION */}
           <View style={{ flexDirection: 'row' }}>
-            <Image source={require('../../../assest/icon_user.png')} style={styles.iconUser} />
+            {
+              this.state.data.tbl_user && <Image source={{ uri: this.state.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUser} />
+            }
             <View style={styles.headerRight}>
               <View>
                 {
@@ -68,7 +69,7 @@ export default class detailAnnouncement extends Component {
           {/* <View>
             <Text style={{ fontSize: 17, color: defaultColor }}>3 Komentar</Text>
             <View style={styles.userComments}>
-              <Image source={require('../../../assest/icon_user.png')} style={styles.iconUserComment} />
+              <Image source={{ uri: this.props.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUserComment} />
               <View style={styles.headerRight}>
                 <View style={styles.spaceInputKomen}>
                   <Input placeholder='Tambah komentar ...' style={styles.columnComment} />

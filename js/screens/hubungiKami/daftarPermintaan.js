@@ -22,7 +22,6 @@ export default class daftarPermintaan extends Component {
   }
 
   componentDidMount() {
-    console.log('daftar permintaan')
     this.fetchData()
   }
 
@@ -38,7 +37,6 @@ export default class daftarPermintaan extends Component {
         {
           headers: { token }
         })
-      console.log(getData)
 
       // ongoing(new, assigned, on going), confirmation, done, cancel
       getData.data.data.forEach(el => {
@@ -65,7 +63,13 @@ export default class daftarPermintaan extends Component {
       this.setState({
         loading: false
       })
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      }else{
+        alert(err)
+      }
     }
   }
 

@@ -27,7 +27,9 @@ import CreateAcaraScreen from './js/screens/acara/createAcara';
 import CreateRuanganScreen from './js/screens/ruangan/createRuangan';
 import DetailHubungiKami from './js/screens/hubungiKami/detailHubungiKami';
 import { defaultColor, defaultTextColor } from './js/defaultColor';
-import Profil from './js/screens/profil';
+import Profil from './js/screens/profil/profil';
+import EditProfil from './js/screens/profil/editProfil';
+import FirstLogin from './js/screens/firstLogin';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -35,8 +37,8 @@ const BeritaNav = createStackNavigator({
   Berita: Announcement,
   Polanews: Polanews,
 }, {
-    initialRouteName: 'Berita',
-  })
+  initialRouteName: 'Berita',
+})
 
 BeritaNav.navigationOptions = {
   drawerIcon: () => (
@@ -50,8 +52,8 @@ const AcaraNav = createStackNavigator({
   AcaraSaya: AcaraSaya,
   CreateAcara: { screen: CreateAcaraScreen }
 }, {
-    initialRouteName: 'Acara'
-  })
+  initialRouteName: 'Acara'
+})
 
 AcaraNav.navigationOptions = {
   drawerIcon: () => (
@@ -65,8 +67,8 @@ const RuanganNav = createStackNavigator({
   RuanganSaya: RuanganSaya,
   CreateRuangan: { screen: CreateRuanganScreen }
 }, {
-    initialRouteName: 'Ruangan'
-  })
+  initialRouteName: 'Ruangan'
+})
 
 RuanganNav.navigationOptions = {
   drawerIcon: () => (
@@ -87,8 +89,8 @@ const HubungiKamiListNav = createStackNavigator({
     }
   }
 }, {
-    initialRouteName: 'DaftarPermintaan',
-  })
+  initialRouteName: 'DaftarPermintaan',
+})
 
 HubungiKamiListNav.navigationOptions = {
   header: null
@@ -98,15 +100,27 @@ const HubungiKamiNav = createStackNavigator({
   HubungiKami: HubungiKami,
   DaftarPermintaan: HubungiKamiListNav
 }, {
-    initialRouteName: 'HubungiKami'
-  })
+  initialRouteName: 'HubungiKami'
+})
 
 HubungiKamiNav.navigationOptions = {
-  drawerIcon: ({ tintColor }) => (
+  drawerIcon: () => (
     <FontAwesome name="send-o" style={{ color: 'white' }} size={24} />
   )
 }
 
+const ProfilNav = createStackNavigator({
+  Profil: { screen: Profil },
+  EditProfil: { screen: EditProfil }
+}, {
+  initialRouteName: 'Profil'
+})
+
+ProfilNav.navigationOptions = {
+  drawerIcon: () => (
+    <MaterialIcons name="perm-identity" style={{ color: 'white' }} size={30} />
+  )
+}
 
 const CustomDrawerComponent = (props) => {
   return <View style={{ flex: 1 }}>
@@ -125,26 +139,20 @@ const DrawerNav = createDrawerNavigator({
   Acara: AcaraNav,
   Ruangan: RuanganNav,
   'Hubungi Kami': HubungiKamiNav,
-  Profil: { screen : Profil,
-  navigationOptions: {
-    drawerIcon: () => (
-      <MaterialIcons name="perm-identity" style={{ color: 'white' }} size={30} />
-    )
-  }
-}
+  Profil: ProfilNav
 }, {
-    initialRouteName: 'Berita',
-    drawerWidth: WIDTH * 0.7,
-    drawerBackgroundColor: '#9F1616',
-    drawerFontColor: 'white',
-    contentComponent: CustomDrawerComponent,
-    contentOptions: {
-      labelStyle: {
-        color: 'white',
-        fontSize: 17
-      },
-    }
-  })
+  initialRouteName: 'Berita',
+  drawerWidth: WIDTH * 0.7,
+  drawerBackgroundColor: '#9F1616',
+  drawerFontColor: 'white',
+  contentComponent: CustomDrawerComponent,
+  contentOptions: {
+    labelStyle: {
+      color: 'white',
+      fontSize: 17
+    },
+  }
+})
 
 DrawerNav.navigationOptions = ({ navigation }) => ({
   header: null
@@ -153,9 +161,10 @@ DrawerNav.navigationOptions = ({ navigation }) => ({
 const StackNav = createStackNavigator({
   Login: { screen: Login },
   Home: DrawerNav,
+  FirstLogin: { screen: FirstLogin }
 }, {
-    initialRouteName: 'Login'
-  })
+  initialRouteName: 'Login'
+})
 
 
 const App = () => {

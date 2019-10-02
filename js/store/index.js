@@ -35,7 +35,7 @@ const api = store => next => async action => {
           today.push(el)
         }
         if ((Number(startDate[2]) === date + 1 && Number(startDate[1]) === month && Number(startDate[0]) === years) ||
-          ((Number(startDate[2]) < date + 1 && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) > date + 1 && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) || (Number(endDate[2]) >= date + 1 && Number(endDate[1]) === month && Number(endDate[0]) === years) ) {
+          ((Number(startDate[2]) < date + 1 && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) > date + 1 && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) || (Number(startDate[2]) <= date + 1 && Number(endDate[2]) >= date + 1 && Number(endDate[1]) === month && Number(endDate[0]) === years) ) {
           tomorrow.push(el)
         }
         if ((Number(startDate[2]) >= date && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) >= date && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) {
@@ -98,7 +98,7 @@ const api = store => next => async action => {
         startDate = el.start_date.split('-')
         endDate = el.end_date.split('-')
 
-        if (Number(startDate[2]) >= date && Number(startDate[1]) >= month && Number(startDate[0]) <= years) {
+        if (Number(endDate[2]) >= date && Number(startDate[1]) >= month && Number(startDate[0]) <= years) {
           mengikuti.push(el)
         }
       })

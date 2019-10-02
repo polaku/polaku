@@ -10,9 +10,9 @@ export function fetchDataMyEvent() {
   }
 }
 
-export function setUserId(payload) {
+export function setDataUser(payload) {
   return {
-    type: 'SET_USER_ID',
+    type: 'SET_DATA_USER',
     payload
   }
 }

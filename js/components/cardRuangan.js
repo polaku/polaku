@@ -14,7 +14,6 @@ export default class cardAcara extends Component {
     if (this.props.myRoom) {
       this.setState({ myRoom: 'yes' })
     }
-    console.log(this.props.data)
   }
 
   navigateDetailRuangan = () => {

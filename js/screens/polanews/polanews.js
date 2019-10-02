@@ -44,7 +44,13 @@ export default class polanews extends Component {
       this.setState({
         loading: false
       })
-      alert('Fetch data failed')
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      }else{
+        alert('Fetch data failed')
+      }
     }
   }
 

@@ -6,7 +6,7 @@ export default class cardComment extends Component {
   render() {
     return (
       <View style={styles.userComments}>
-        <Image source={require('../../assest/icon_user.png')} style={styles.iconUserComment} />
+        <Image source={{ uri: this.props.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUserComment} />
         <View style={styles.headerRight}>
           <View style={{ width: '100%', paddingRight: 15 }}>
             <Text style={styles.userPost}>nama user</Text>

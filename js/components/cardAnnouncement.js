@@ -34,8 +34,7 @@ export default class cardAnnouncement extends Component {
           {
             this.props.data && <View style={styles.container} >
               <View style={styles.header}>
-                {/* <Image source={{uri: 'http://localhost:3000/public/uploads/attachment-1564468045860'}} style={styles.iconUser} /> */}
-                <Image source={require('../../assest/icon_user.png')} style={styles.iconUser} />
+                <Image source={{ uri: this.props.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUser} />
                 <View style={styles.headerRight}>
                   {
                     this.props.data.tbl_user && <View>

@@ -18,13 +18,13 @@ export default class HubungiKamiDivisi1 extends Component {
         <View style={{ flexDirection: 'row' }}>
           <TouchableHighlight onPress={this.navigateHubungiKamiFormRequest} underlayColor="transparent">
             <View style={styles.containerItem}>
-              <Image source={require('../../../assest/design.png')} style={{ height: 80, width: 80, colorTint: 'white' }} />
+              <Image source={require('../../../assest/design.png')} style={{ height: 80, width: 80 }} />
               <Text style={{ marginTop: 10, fontWeight: 'bold' }}>DESAIN</Text>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={this.navigateHubungiKamiFormQuestion} underlayColor="transparent">
             <View style={styles.containerItem}>
-              <Image source={require('../../../assest/other.png')} style={{ height: 80, width: 80, colorTint: 'white' }} />
+              <Image source={require('../../../assest/other.png')} style={{ height: 80, width: 80 }} />
               <Text style={{ marginTop: 10, fontWeight: 'bold' }}>LAINNYA</Text>
             </View>
           </TouchableHighlight>

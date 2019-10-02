@@ -1,5 +1,6 @@
 const defaultState = {
-  user_id: '',
+  user_id: null,
+  token: '',
   loading: false,
   error: {},
   dataAllEvent: [],
@@ -49,10 +50,11 @@ function reducer(state = defaultState, action) {
         error: action.payload
       }
     }
-    case 'SET_USER_ID':{
+    case 'SET_DATA_USER':{
       return {
         ...state,
-        user_id: action.payload
+        user_id: action.payload.user_id,
+        token: action.payload.token
       }
     }
     default:

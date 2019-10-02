@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator, Linking } from 'react-native';
 import { Item, Input, Text } from 'native-base';
 import { defaultTextColor, defaultColor } from '../defaultColor';
 import { API } from '../../config/API';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
-import { setUserId } from '../store/action';
+import { setDataUser } from '../store/action';
 
 class login extends Component {
   constructor(props) {
@@ -15,25 +16,44 @@ class login extends Component {
     this.state = {
       username: '',
       password: '',
-      backgroundColor: defaultColor,
       proses: false,
-      editableInput: true
+      editableInput: true,
+      seePassword: false
     };
   }
+
+  async componentDidMount() {
+
+    let token = await AsyncStorage.getItem('token')
+
+    if (token) {
+      API.get('/users/checktoken', { headers: { token } })
+        .then(data => {
+          this.props.navigation.navigate("Home")
+        })
+        .catch(err => {
+          if (err.message === 'Request failed with status code 403') {
+            console.log("benar")
+          }
+        })
+    }
+  }
+
 
   login = async () => {
     this.setState({
       proses: true,
-      editableInput: false 
+      editableInput: false
     })
     let user, data
+
     user = {
       username: this.state.username,
       password: this.state.password
     }
+
     try {
       data = await API.post('/users/signin', user)
-      await AsyncStorage.setItem('token', data.data.token)
       if (data) {
         this.setState({
           proses: false,
@@ -42,24 +62,49 @@ class login extends Component {
           password: ''
         })
       }
-      this.props.setUserId(data.data.user_id)
-      this.props.navigation.navigate("Home")
+
+      let dataUser = {
+        user_id: data.data.user_id,
+        token: data.data.token
+      }
+
+      this.props.setDataUser(dataUser)
+
+      AsyncStorage.multiSet([['token', data.data.token], ['user_id', String(data.data.user_id)]], () => {
+        if (data.data.status === 0) {
+          this.props.navigation.navigate("FirstLogin")
+        } else {
+          this.props.navigation.navigate("Home")
+        }
+      })
     } catch (err) {
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      } else {
+        alert("Username/password salah. Silahkan coba lagi.")
+      }
       this.setState({
         proses: false,
         editableInput: true
       })
     }
+  }
 
+  seePassword = () => {
+    this.setState({
+      seePassword: !this.state.seePassword
+    })
+  }
+
+  klikwa = () => {
+    Linking.openURL('whatsapp://send?phone=6287886270183')
   }
 
   render() {
     return (
       <ScrollView style={{ height: '100%', backgroundColor: defaultColor }} >
-        {/* {
-          this.props.isFocused && this.checkLogin()
-        } */}
         <View style={styles.container}>
           <View style={styles.content}>
 
@@ -80,21 +125,30 @@ class login extends Component {
                   value={this.state.username}
                   onChangeText={(text) => this.setState({
                     username: text
-                  })} 
-                  editable={this.state.editableInput}/>
+                  })}
+                  editable={this.state.editableInput} />
               </Item>
               <Item style={{ marginBottom: 45 }}>
                 <SimpleLineIcons name='lock' style={styles.icon} size={30} />
                 <Input id='password'
                   placeholder='Password'
                   placeholderTextColor={defaultTextColor}
-                  secureTextEntry={true}
+                  secureTextEntry={!this.state.seePassword}
                   style={{ color: defaultTextColor }}
                   value={this.state.password}
                   onChangeText={(text) => this.setState({
                     password: text
-                  })} 
-                  editable={this.state.editableInput}/>
+                  })}
+                  editable={this.state.editableInput} />
+                <TouchableHighlight onPress={this.seePassword}
+                  underlayColor="transparent">
+                  {
+                    this.state.seePassword
+                      ? <MaterialCommunityIcons name='eye-off-outline' style={styles.icon} size={30} />
+                      : <MaterialCommunityIcons name='eye-outline' style={styles.icon} size={30} />
+                  }
+                </TouchableHighlight>
+
               </Item>
               <TouchableHighlight onPress={this.login}
                 style={styles.button} underlayColor="transparent">
@@ -104,12 +158,12 @@ class login extends Component {
                     : <Text style={styles.textLogin}>Login</Text>
                 }
               </TouchableHighlight>
-              <Text style={{ color: defaultTextColor }} >Forget Password?</Text>
+              {/* <Text style={{ color: defaultTextColor }} >Forget Password?</Text> */}
             </View>
 
             {/* HUBUNGI KAMI */}
             <View style={styles.center}>
-              <Text style={{ color: defaultTextColor }} >Kesulitan masuk? Hubungi Kami</Text>
+              <Text onPress={this.klikwa} style={{ color: defaultTextColor }} >Kesulitan masuk? Hubungi Kami</Text>
             </View>
           </View>
         </View>
@@ -173,7 +227,7 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-  setUserId
+  setDataUser
 }
 
 export default connect(null, mapDispatchToProps)(login)

@@ -13,14 +13,16 @@ class detailAcara extends Component {
     super(props);
     this.state = {
       data: {},
-      statusJoinUser: 'Not Join'
+      statusJoinUser: 'Not Join',
+      creator: {}
     }
   }
 
   componentDidMount() {
     this.setState({
       data: this.props.navigation.getParam('detailAcara'),
-      statusJoinUser: this.props.navigation.getParam('statusJoin')
+      statusJoinUser: this.props.navigation.getParam('statusJoin'),
+      creator: this.props.navigation.getParam('creator')
     })
   }
 
@@ -55,7 +57,13 @@ class detailAcara extends Component {
       this.setState({
         proses: false
       })
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      } else {
+        alert(err)
+      }
     }
   }
 
@@ -95,12 +103,14 @@ class detailAcara extends Component {
 
           {/* UP SECTION */}
           <View style={styles.header}>
-            <Image source={require('../../../assest/icon_user.png')} style={styles.iconUser} />
+            {
+              this.state.creator.tbl_account_detail && <Image source={{ uri: this.state.creator.tbl_account_detail.avatar }} style={styles.iconUser} />
+            }
             <View style={styles.headerRight}>
               <View>
                 {
-                  this.state.data.tbl_users &&
-                  <Text style={styles.userComment}>{this.state.data.tbl_users[0].tbl_account_detail.fullname}</Text>
+                  this.state.creator.tbl_account_detail &&
+                  <Text style={styles.userComment}>{this.state.creator.tbl_account_detail.fullname}</Text>
                 }
                 <Text style={styles.dateComment}>{getDates(this.state.data.created_at)}</Text>
               </View>
@@ -147,7 +157,10 @@ class detailAcara extends Component {
               <View>
                 {
                   this.state.data.start_date &&
-                  <Text style={{ fontSize: 15 }}>{getMonthDate(this.state.data.start_date)} - {getMonthDate(this.state.data.end_date)}</Text>
+                    (this.state.data.start_date != this.state.data.end_date)
+                    ? <Text style={{ fontSize: 15 }}>{getMonthDate(this.state.data.start_date)} - {getMonthDate(this.state.data.end_date)}</Text>
+                    : <Text style={{ fontSize: 15 }}>{getMonthDate(this.state.data.end_date)}</Text>
+
                 }
               </View>
             </View>
@@ -167,7 +180,7 @@ class detailAcara extends Component {
           {/* <View>
             <Text style={styles.keteranganKomen}>3 Komentar</Text>
             <View style={styles.userComments}>
-              <Image source={require('../../../assest/icon_user.png')} style={styles.iconUserComment} />
+              <Image source={{ uri: this.props.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUserComment} />
               <View style={styles.headerRight}>
                 <View style={styles.spaceInputKomen}>
                   <Input placeholder='Tambah komentar ...' style={styles.columnComment} />

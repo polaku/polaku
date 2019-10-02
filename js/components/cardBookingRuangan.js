@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight, Image, ActivityIndicator, Alert } from 'react-native';
 import { defaultTextColor, defaultColor } from '../defaultColor';
-import { connect } from 'react-redux'
 import { API } from '../../config/API';
 import AsyncStorage from '@react-native-community/async-storage';
 
-class cardBookungRuangan extends Component {
+export default class cardBookungRuangan extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,12 +13,13 @@ class cardBookungRuangan extends Component {
     }
   }
 
-  componentDidMount() {
-    if (this.props.data.user_id === this.props.user_id) {
+  async componentDidMount() {
+    let user_id = await AsyncStorage.getItem('user_id')
+    if (this.props.data.user_id === Number(user_id)) {
       this.setState({
         owner: true
       })
-    }    
+    }
   }
 
   cancelBooking = () => {
@@ -54,7 +54,13 @@ class cardBookungRuangan extends Component {
         })
       })
       .catch(err => {
-        alert(err)
+        if (err.message === 'Request failed with status code 403') {
+          alert('Waktu login telah habis, silahkan login kembali')
+          this.props.navigation.navigate('Login')
+          AsyncStorage.clear()
+        } else {
+          alert(err)
+        }
         this.setState({
           proses: false
         })
@@ -65,7 +71,7 @@ class cardBookungRuangan extends Component {
     return (
       <View style={styles.container}>
 
-        <Image source={require('../../assest/icon_user.png')} style={styles.iconUserComment} />
+        <Image source={{ uri: this.props.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUserComment} />
 
         <View style={{ width: '70%', justifyContent: 'center' }}>
           <Text style={{ fontSize: 15 }}>{this.props.data.tbl_user.tbl_account_detail.fullname}</Text>
@@ -102,23 +108,15 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 30
   },
-  bottomPlace: { 
+  bottomPlace: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
-  button : { 
+  button: {
     backgroundColor: defaultColor,
     padding: 8,
     justifyContent: 'center',
     borderRadius: 30
   }
 })
-
-const mapStateToProps = ({ user_id }) => {
-  return {
-    user_id
-  }
-}
-
-export default connect(mapStateToProps)(cardBookungRuangan)

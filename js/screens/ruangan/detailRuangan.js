@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableHighlight, FlatList, Image } from 'react-native';
-import { Text, Tabs, Tab, ScrollableTab } from 'native-base';
+import { View, StyleSheet, TouchableHighlight, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, Tabs, Tab, ScrollableTab, Icon } from 'native-base';
 import CardBookingRuangan from '../../components/cardBookingRuangan';
-import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
+import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -76,7 +76,13 @@ export default class detailRuangan extends Component {
       this.setState({
         loading: false
       })
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      } else {
+        alert(err)
+      }
     }
   }
 
@@ -107,7 +113,7 @@ export default class detailRuangan extends Component {
   }
 
   deleteRoom = () => {
-    
+
     let years = new Date().getFullYear()
     this.fetchDataPerMonth(years, this.state.month + 1, this.props.navigation.getParam('room_id'))
   }
@@ -158,7 +164,7 @@ export default class detailRuangan extends Component {
                             <Text style={{ color: 'gray' }}>Hore! Ruang rapat masih kosong</Text>
                           </View>
                           : <FlatList
-                            keyExtractor={(item) => item.room_booking_id}
+                            keyExtractor={(item) => String(item.room_booking_id)}
                             style={{ paddingTop: 15 }}
                             data={el.data}
                             ItemSeparatorComponent={this.renderSeparator}
@@ -170,10 +176,15 @@ export default class detailRuangan extends Component {
               }
             </Tabs>
         }
+        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateRuangan")}>
+          <Icon name="add" size={30} style={{ color: defaultTextColor }} />
+        </TouchableOpacity>
       </View >
     )
   }
 }
+
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -214,5 +225,18 @@ const styles = StyleSheet.create({
   activeTextStyle: {
     color: defaultColor,
     fontWeight: 'normal'
-  }
+  },
+  buttonAdd: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'center',
+    width: 100,
+    position: 'absolute',
+    bottom: -60,
+    right: 1 / 2 * width - 50,
+    height: 100,
+    backgroundColor: defaultColor,
+    borderRadius: 130,
+    paddingTop: 10
+  },
 })

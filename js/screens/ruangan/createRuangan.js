@@ -30,7 +30,7 @@ export default class createRuangan extends Component {
 
   async componentDidMount() {
     let token = await AsyncStorage.getItem('token')
-    API.get('/bookingRoom/listRoom', {
+    API.get('/bookingRoom/rooms', {
       headers: {
         token
       }
@@ -41,7 +41,13 @@ export default class createRuangan extends Component {
         })
       })
       .catch(err => {
-        alert(err)
+        if (err.message === 'Request failed with status code 403') {
+          alert('Waktu login telah habis, silahkan login kembali')
+          this.props.navigation.navigate('Login')
+          AsyncStorage.clear()
+        } else {
+          alert(err)
+        }
       })
   }
 
@@ -76,16 +82,40 @@ export default class createRuangan extends Component {
 
     if (!this.state.room_id || !this.state.date_in || !this.state.startHour || !this.state.endHour || !this.state.subject || !this.state.count) {
       alert('Data incomplete!')
+      this.setState({
+        proses: false,
+        editableInput: true
+      })
     } else if (Number(this.state.startHour) < 8) {
       alert('Time in must higher than 8')
+      this.setState({
+        proses: false,
+        editableInput: true
+      })
     } else if (Number(this.state.startHour) > 17) {
       alert('Time in must smaller than 17')
+      this.setState({
+        proses: false,
+        editableInput: true
+      })
     } else if (Number(this.state.endHour) < 8) {
       alert(`Time out must higher than ${Number(timeIn[0])}`)
+      this.setState({
+        proses: false,
+        editableInput: true
+      })
     } else if (Number(this.state.endHour) > 17) {
       alert('Limit time out is 17')
+      this.setState({
+        proses: false,
+        editableInput: true
+      })
     } else if (Number(this.state.startHour) > Number(this.state.endHour)) {
       alert('Time out must be higher than time in')
+      this.setState({
+        proses: false,
+        editableInput: true
+      })
     } else {
 
       if (!this.state.startMinute) this.setState({ startMinute: '00' })
@@ -93,14 +123,13 @@ export default class createRuangan extends Component {
 
       dateIn = this.state.date_in.split('-')
       if (Number(dateIn[[1]]) < 10) {
-        dateIn[1] = `0${dateIn[1]}`
+        dateIn[1] = `0${Number(dateIn[1])}`
       }
       if (Number(dateIn[[2]]) < 10) {
-        dateIn[2] = `0${dateIn[2]}`
+        dateIn[2] = `0${Number(dateIn[2])}`
       }
 
       dateIn = dateIn.join('-')
-
       let newData = {
         room_id: this.state.room_id,
         date_in: dateIn,
@@ -129,6 +158,10 @@ export default class createRuangan extends Component {
         .catch((err) => {
           if (err == 'Error: Request failed with status code 400') {
             alert("Waktu yang dipesan sudah terpesan oleh orang lain, harap menentukan waktu yang lain")
+          } else if (err.message === 'Request failed with status code 403') {
+            alert('Waktu login telah habis, silahkan login kembali')
+            this.props.navigation.navigate('Login')
+            AsyncStorage.clear()
           } else {
             alert(err)
           }
@@ -164,6 +197,7 @@ export default class createRuangan extends Component {
       count: '',
     })
   }
+  
   render() {
     return (
       <>
@@ -177,11 +211,11 @@ export default class createRuangan extends Component {
           </View>
         </Header>
 
-        <ScrollView style={{ height: height - 80, backgroundColor: 'green' }} >
+        <ScrollView style={{ height: height }} >
           <View style={styles.container}>
             <View style={styles.form}>
               <Item stackedLabel style={{ marginTop: 10 }}>
-                <Label style={{ color: defaultColor }}>Room</Label>
+                <Label style={{ color: defaultColor }}>Ruangan</Label>
                 <Item picker>
                   <Picker
                     mode="dropdown"
@@ -202,7 +236,7 @@ export default class createRuangan extends Component {
                 </Item>
               </Item>
               <Item stackedLabel style={{ marginTop: 10 }}>
-                <Label style={{ color: defaultColor }}>Subject</Label>
+                <Label style={{ color: defaultColor }}>Agenda</Label>
                 <Input id="subject"
                   placeholder="e.g., Meeting"
                   style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
@@ -210,10 +244,10 @@ export default class createRuangan extends Component {
                   onChangeText={(text) => this.setState({
                     subject: text
                   })}
-                  editable={this.state.editableInput}/>
+                  editable={this.state.editableInput} />
               </Item>
               <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
-                <Label style={{ color: defaultColor }}>Date in</Label>
+                <Label style={{ color: defaultColor }}>Tannggal pesanan</Label>
                 <DatePicker
                   defaultDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())}
                   minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())}
@@ -231,7 +265,7 @@ export default class createRuangan extends Component {
                 />
               </Item>
               <Item stackedLabel>
-                <Label style={{ color: defaultColor }}>Time Booking</Label>
+                <Label style={{ color: defaultColor }}>Waktu pesanan</Label>
                 <View style={{ height: 'auto', flexDirection: 'row', alignItems: 'center' }} >
                   <Input id="startHour"
                     keyboardType="numeric"
@@ -242,8 +276,8 @@ export default class createRuangan extends Component {
                     value={this.state.startHour}
                     onChangeText={(text) => this.setState({
                       startHour: text
-                    })} 
-                    editable={this.state.editableInput}/>
+                    })}
+                    editable={this.state.editableInput} />
                   <Text> : </Text>
                   <Input id="startMinute"
                     keyboardType="numeric"
@@ -254,8 +288,8 @@ export default class createRuangan extends Component {
                     value={this.state.startMinute}
                     onChangeText={(text) => this.setState({
                       startMinute: text
-                    })} 
-                    editable={this.state.editableInput}/>
+                    })}
+                    editable={this.state.editableInput} />
                   <Text> s/d </Text>
                   <Input id="endHour"
                     type="text"
@@ -267,8 +301,8 @@ export default class createRuangan extends Component {
                     value={this.state.endHour}
                     onChangeText={(text) => this.setState({
                       endHour: text
-                    })} 
-                    editable={this.state.editableInput}/>
+                    })}
+                    editable={this.state.editableInput} />
                   <Text margin> : </Text>
                   <Input id="endMinute"
                     type="text"
@@ -280,8 +314,8 @@ export default class createRuangan extends Component {
                     value={this.state.endMinute}
                     onChangeText={(text) => this.setState({
                       endMinute: text
-                    })} 
-                    editable={this.state.editableInput}/>
+                    })}
+                    editable={this.state.editableInput} />
                 </View>
               </Item>
               <Item stackedLabel style={{ marginTop: 10 }}>
@@ -292,8 +326,8 @@ export default class createRuangan extends Component {
                   placeholder="e.g., 5"
                   style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
                   value={this.state.count}
-                  onChangeText={(text) => this.validateCount(text)} 
-                  editable={this.state.editableInput}/>
+                  onChangeText={(text) => this.validateCount(text)}
+                  editable={this.state.editableInput} />
               </Item>
             </View>
           </View>

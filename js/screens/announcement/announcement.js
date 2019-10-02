@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableHighlight, Dimensions, Image, RefreshControl, BackHandler } from 'react-native';
 import { Header, Icon, CheckBox } from 'native-base';
 import MenuButton from '../../components/menuButton';
@@ -37,16 +38,35 @@ class announcement extends Component {
   }
 
   async componentDidMount() {
-    this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    this.setState({
-      loading: true
-    })
-    await this.fetchData()
-    this.setState({
-      loading: false
-    })
+    let token = await AsyncStorage.getItem('token')
+
+    if (token) {
+      this.setState({
+        loading: true
+      })
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+      await this.fetchData()
+      this.setState({
+        loading: false
+      })
+    } else {
+      this.props.navigation.navigate('Login')
+    }
   }
-  
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevProps.token !== this.props.token) {
+      this.setState({
+        loading: true
+      })
+      await this.fetchData()
+      this.setState({
+        loading: false
+      })
+    }
+  }
+
+
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
@@ -76,7 +96,13 @@ class announcement extends Component {
       this.setState({
         loading: false
       })
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      } else {
+        alert(err)
+      }
     }
   }
 
@@ -97,7 +123,13 @@ class announcement extends Component {
       this.setState({
         loading: false
       })
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      } else {
+        alert(err)
+      }
     }
   }
 
@@ -319,4 +351,10 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withNavigationFocus(announcement)
+const mapStateToProps = ({ token }) => {
+  return {
+    token
+  }
+}
+
+export default connect(mapStateToProps)(withNavigationFocus(announcement))

@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, TouchableHighlight, ScrollView, ActivityIndicat
 import { Item, Input, Label, Textarea, DatePicker } from 'native-base';
 import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class hubungiKamiFormRequest extends Component {
   constructor(props) {
@@ -36,11 +37,13 @@ export default class hubungiKamiFormRequest extends Component {
     });
   }
 
-  createContactUs = () => {
+  createContactUs = async () => {
     this.setState({
       proses: true,
       editableInput: false
     })
+    let token = await AsyncStorage.getItem('token')
+
     let newData = {
       message: this.state.message,
       type: this.state.type,
@@ -50,6 +53,7 @@ export default class hubungiKamiFormRequest extends Component {
       ukuran: this.state.ukuran,
       otherSpecs: this.state.otherSpecs,
       deadline: this.state.deadline,
+      contactCategoriesId: '1'
     }
 
     API.post('/contactUs', newData, {
@@ -58,7 +62,7 @@ export default class hubungiKamiFormRequest extends Component {
       }
     })
       .then(() => {
-        alert("input question success")
+        alert("Terima kasih. Mohon menunggu untuk dibantu")
         this.props.navigation.goBack()
         this.setState({
           proses: false,
@@ -70,7 +74,13 @@ export default class hubungiKamiFormRequest extends Component {
         this.setState({
           editableInput: true
         })
-        alert("Error. Please try again")
+        if (err.message === 'Request failed with status code 403') {
+          alert('Waktu login telah habis, silahkan login kembali')
+          this.props.navigation.navigate('Login')
+          AsyncStorage.clear()
+        }else{
+          alert('Error. Please try again')
+        }
       })
 
   }
@@ -91,7 +101,7 @@ export default class hubungiKamiFormRequest extends Component {
       message: '',
     })
   }
-  
+
   render() {
     return (
       <ScrollView style={styles.container} >
@@ -112,7 +122,7 @@ export default class hubungiKamiFormRequest extends Component {
             <Input id="tujuan"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.tujuan}
-              onChangeText={(text) => this.setState({ tujuan: text })} 
+              onChangeText={(text) => this.setState({ tujuan: text })}
               editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
@@ -120,7 +130,7 @@ export default class hubungiKamiFormRequest extends Component {
             <Input id="type"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.type}
-              onChangeText={(text) => this.setState({ type: text })} 
+              onChangeText={(text) => this.setState({ type: text })}
               editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
@@ -128,7 +138,7 @@ export default class hubungiKamiFormRequest extends Component {
             <Input id="ukuran"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.ukuran}
-              onChangeText={(text) => this.setState({ ukuran: text })} 
+              onChangeText={(text) => this.setState({ ukuran: text })}
               editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10 }}>
@@ -136,7 +146,7 @@ export default class hubungiKamiFormRequest extends Component {
             <Input id="otherSpecs"
               style={{ padding: 3, alignSelf: 'flex-start', width: '100%' }}
               value={this.state.otherSpecs}
-              onChangeText={(text) => this.setState({ otherSpecs: text })} 
+              onChangeText={(text) => this.setState({ otherSpecs: text })}
               editable={this.state.editableInput} />
           </Item>
           <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
@@ -160,7 +170,8 @@ export default class hubungiKamiFormRequest extends Component {
           <Item stackedLabel style={{ marginTop: 10 }}>
             <Label style={{ color: defaultColor, margin: 0 }}>Message</Label>
             <Textarea rowSpan={5} bordered style={{ width: '100%' }}
-            editable={this.state.editableInput} />
+              onChangeText={(text) => this.setState({ message: text })}
+              editable={this.state.editableInput} />
           </Item>
 
         </View>

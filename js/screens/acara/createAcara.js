@@ -74,7 +74,7 @@ class createAcara extends Component {
       proses: true,
       editableInput: false
     })
-    console.log("MASUK 1")
+    
     let token = await AsyncStorage.getItem('token')
 
     let startDate, endDate
@@ -104,7 +104,8 @@ class createAcara extends Component {
     formData.append("start_date", startDate)
     formData.append("end_date", endDate)
     formData.append("location", this.state.location)
-    formData.append("thumbnail", {
+    
+    this.state.thumbnail && formData.append("thumbnail", {
       name: this.state.thumbnail.fileName,
       type: 'image/jpeg',
       uri: this.state.thumbnail.uri
@@ -119,7 +120,6 @@ class createAcara extends Component {
       }
     )
       .then(() => {
-        console.log("MASUK 2")
         this.props.fetchDataEvent()
         this.props.fetchDataMyEvent()
         this.props.navigation.goBack(null);
@@ -131,8 +131,13 @@ class createAcara extends Component {
         this.resetForm()
       })
       .catch(err => {
-        console.log("MASUK 3")
-        alert(err)
+        if (err.message === 'Request failed with status code 403') {
+          alert('Waktu login telah habis, silahkan login kembali')
+          this.props.navigation.navigate('Login')
+          AsyncStorage.clear()
+        }else{
+          alert(err)
+        }
         this.resetForm()
         this.setState({
           proses: false,
@@ -160,17 +165,16 @@ class createAcara extends Component {
           <MenuButton navigation={this.props.navigation} />
           <View style={styles.titleHeader}>
             <MaterialIcons name='event' style={{ color: defaultTextColor }} size={30} />
-            <Text style={styles.textTitleHeader}>Create Acara</Text>
+            <Text style={styles.textTitleHeader}>Buat Acara</Text>
           </View>
         </Header>
 
-        <ScrollView style={{ height: height - 80, backgroundColor: 'green' }} >
+        <ScrollView style={{ height: height}} >
           <View style={styles.container}>
             <View style={styles.form}>
               <Item stackedLabel style={{ marginTop: 10 }}>
-                <Label style={{ color: defaultColor }}>Event name</Label>
+                <Label style={{ color: defaultColor }}>Nama Acara</Label>
                 <Input id='event_name'
-                  placeholder="e.g., Megafit"
                   value={this.state.event_name}
                   style={styles.input}
                   onChangeText={(text) => this.setState({
@@ -179,9 +183,8 @@ class createAcara extends Component {
                   editable={this.state.editableInput}/>
               </Item>
               <Item stackedLabel style={{ marginTop: 10 }}>
-                <Label style={{ color: defaultColor }}>Description</Label>
+                <Label style={{ color: defaultColor }}>Keterangan</Label>
                 <Input id='description'
-                  placeholder="e.g., Megawarrior"
                   value={this.state.description}
                   style={styles.input}
                   onChangeText={(text) => this.setState({
@@ -190,7 +193,7 @@ class createAcara extends Component {
                   editable={this.state.editableInput}/>
               </Item>
               <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
-                <Label style={{ color: defaultColor }}>Date</Label>
+                <Label style={{ color: defaultColor }}>Tanggal</Label>
                 <View style={{ height: 'auto', flexDirection: 'row', alignItems: 'center' }} >
                   <DatePicker
                     defaultDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())}
@@ -226,9 +229,8 @@ class createAcara extends Component {
                 </View>
               </Item>
               <Item stackedLabel style={{ marginTop: 10 }}>
-                <Label style={{ color: defaultColor }}>Location</Label>
+                <Label style={{ color: defaultColor }}>Lokasi</Label>
                 <Input id='location'
-                  placeholder="e.g., Jakarta"
                   value={this.state.location}
                   style={styles.input}
                   onChangeText={(text) => this.setState({
@@ -238,7 +240,7 @@ class createAcara extends Component {
               </Item>
               <Item>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={{ color: defaultColor, fontSize: 15 }}>Thumbnail</Text>
+                  <Text style={{ color: defaultColor, fontSize: 15 }}>Gambar</Text>
                   <TouchableHighlight onPress={this.selectImage} style={styles.buttonChooseImage} underlayColor="transparent">
                     <Text style={{ color: defaultBackgroundColor, fontSize: 15 }}>Choose Image</Text>
                   </TouchableHighlight>

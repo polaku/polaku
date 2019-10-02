@@ -61,7 +61,6 @@ export default class hubungiKamiFormQuestion extends Component {
       categoriId: this.state.category,
       type: this.state.type
     }
-    console.log(newData)
 
     API.post('/contactUs', newData, {
       headers: {
@@ -69,7 +68,7 @@ export default class hubungiKamiFormQuestion extends Component {
       }
     })
       .then(() => {
-        alert("input question success")
+        alert("Terima kasih. Mohon menunggu untuk dibantu")
         this.props.navigation.goBack()
         this.setState({
           proses: false,
@@ -78,7 +77,13 @@ export default class hubungiKamiFormQuestion extends Component {
         this.resetForm()
       })
       .catch(err=>{
-        alert('Error. Please try again')
+        if (err.message === 'Request failed with status code 403') {
+          alert('Waktu login telah habis, silahkan login kembali')
+          this.props.navigation.navigate('Login')
+          AsyncStorage.clear()
+        }else{
+          alert('Error. Please try again')
+        }
         this.setState({
           proses: false,
           editableInput: true

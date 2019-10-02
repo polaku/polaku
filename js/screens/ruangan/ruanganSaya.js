@@ -40,7 +40,7 @@ export default class ruanganSaya extends Component {
         })
 
       getData.data.data.forEach(el => {
-        if (el.company_id === 1) {
+        if (el.company_building_id === 1) {
           P40.push(el)
         }
       })
@@ -55,7 +55,13 @@ export default class ruanganSaya extends Component {
       this.setState({
         loading: false
       })
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      } else {
+        alert(err)
+      }
     }
   }
 

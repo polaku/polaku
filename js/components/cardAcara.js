@@ -13,20 +13,28 @@ class cardAcara extends Component {
       month: '',
       joinEvent: [],
       statusJoinUser: 'Not Join',
-      proses: false
+      proses: false,
+      creator: {}
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    let user_id = await AsyncStorage.getItem('user_id')
     let temp = []
     this.props.data.tbl_users.forEach(element => {
       if (element.tbl_event_responses.response === 'join') {
         temp.push(element)
       }
-      if (Number(element.user_id) === Number(this.props.user_id) && element.tbl_event_responses.response === 'join') {
+      if (Number(element.user_id) === Number(user_id) && element.tbl_event_responses.response === 'join') {
         this.setState({
           statusJoinUser: 'Join'
         })
+      }
+      if (element.tbl_event_responses.creator == '1') {
+        this.setState({
+          creator: element
+        })
+
       }
     });
     this.setState({
@@ -34,21 +42,23 @@ class cardAcara extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (this.props.data) {
       if (this.props.data.tbl_users != prevProps.data.tbl_users) {
+
+        let user_id = await AsyncStorage.getItem('user_id')
         let temp = []
         this.props.data.tbl_users.forEach(element => {
 
           if (element.tbl_event_responses.response === 'join') {
             temp.push(element)
           }
-          if (Number(element.user_id) === Number(this.props.user_id) && element.tbl_event_responses.response === 'join') {
+          if (Number(element.user_id) === Number(user_id) && element.tbl_event_responses.response === 'join') {
 
             this.setState({
               statusJoinUser: 'Join'
             })
-          } else if (Number(element.user_id) === Number(this.props.user_id) && element.tbl_event_responses.response === 'cancel join') {
+          } else if (Number(element.user_id) === Number(user_id) && element.tbl_event_responses.response === 'cancel join') {
 
             this.setState({
               statusJoinUser: 'Cancel Join'
@@ -59,6 +69,8 @@ class cardAcara extends Component {
         this.setState({
           joinEvent: temp
         })
+
+
       }
     }
   }
@@ -103,7 +115,13 @@ class cardAcara extends Component {
         })
       }
     } catch (err) {
-      alert(err)
+      if (err.message === 'Request failed with status code 403') {
+        alert('Waktu login telah habis, silahkan login kembali')
+        this.props.navigation.navigate('Login')
+        AsyncStorage.clear()
+      } else {
+        alert(err)
+      }
       this.setState({
         proses: false
       })
@@ -114,10 +132,15 @@ class cardAcara extends Component {
     this.joinEvent("Join")
   }
 
-  cancelJoin =() => {
+  cancelJoin = () => {
     this.joinEvent("Cancel Join")
   }
 
+  navigateDetail = () => {
+    this.props.navigation.navigate('DetailAcara', {
+      detailAcara: this.props.data, statusJoin: this.state.statusJoinUser, creator: this.state.creator
+    })
+  }
 
   render() {
 
@@ -125,12 +148,6 @@ class cardAcara extends Component {
       let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       let month = months[new Date(args).getMonth()]
       return `${month}`
-    }
-
-    navigateDetail = () => {
-      this.props.navigation.navigate('DetailAcara', {
-        detailAcara: this.props.data, statusJoin: this.state.statusJoinUser
-      })
     }
 
     return (
@@ -146,8 +163,12 @@ class cardAcara extends Component {
             <View style={{ marginLeft: 10 }}>
               <Text style={styles.titleAcara}>{this.props.data.event_name}</Text>
               <Text>{this.props.data.location}</Text>
-              <Text>{new Date(this.props.data.start_date).getDate()} - {new Date(this.props.data.end_date).getDate()} {getMonth(this.props.data.start_date)}</Text>
-              <Text>{this.props.data.tbl_users[0].tbl_account_detail.fullname}</Text>
+              {
+                new Date(this.props.data.start_date).getDate() === new Date(this.props.data.end_date).getDate()
+                  ? <Text>{new Date(this.props.data.start_date).getDate()} {getMonth(this.props.data.start_date)}</Text>
+                  : <Text>{new Date(this.props.data.start_date).getDate()} - {new Date(this.props.data.end_date).getDate()} {getMonth(this.props.data.start_date)}</Text>
+              }
+              { this.state.creator.tbl_account_detail && <Text>{this.state.creator.tbl_account_detail.fullname}</Text> }
             </View>
           </View>
 
@@ -173,7 +194,7 @@ class cardAcara extends Component {
             }
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableHighlight >
     )
   }
 }
@@ -228,10 +249,4 @@ const mapDispatchToProps = {
   fetchDataMyEvent
 }
 
-const mapStateToProps = ({ user_id }) => {
-  return {
-    user_id
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(cardAcara)
+export default connect(null, mapDispatchToProps)(cardAcara)
