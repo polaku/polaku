@@ -147,7 +147,7 @@ class acara extends Component {
                       {
                         this.props.eventsToday.length === 0
                           ? <View style={styles.placeImageAcaraKosong}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada hari ini</Text>
                           </View>
                           : <View>
@@ -182,7 +182,7 @@ class acara extends Component {
                       {
                         this.props.eventsTomorrow.length === 0
                           ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada esok hari</Text>
                           </View>
                           : <View>
@@ -217,7 +217,7 @@ class acara extends Component {
                       {
                         this.props.eventsThisWeek.length === 0
                           ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada minggu hari</Text>
                           </View>
                           : <View>
@@ -252,7 +252,7 @@ class acara extends Component {
                       {
                         this.props.eventsThisMonth.length === 0
                           ? <View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center', }}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara pada bulan hari</Text>
                           </View>
                           : <View>

@@ -10,6 +10,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Loading from '../../components/loading';
+import ImagePicker from 'react-native-image-picker';
 
 export default class profil extends Component {
   constructor(props) {
@@ -33,26 +34,9 @@ export default class profil extends Component {
       seeKonfirmasiPasswordBaru: false,
       isEditPassword: false,
       checkStatusKonfirmasiPasswordBaru: true,
-      editableInput: true
+      editableInput: true,
+      isChangeAvatar: false,
     }
-  }
-
-  logout = async () => {
-    this.setState({
-      proses: true
-    })
-
-    await AsyncStorage.clear()
-
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Login' })],
-    });
-    this.props.navigation.dispatch(resetAction);
-
-    this.setState({
-      proses: false
-    })
   }
 
   async componentDidMount() {
@@ -85,6 +69,66 @@ export default class profil extends Component {
         }
 
       })
+    console.log("TESSSSS", this.state.isEdit);
+  }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.isChangeAvatar != this.state.isChangeAvatar) {
+      let token = await AsyncStorage.getItem('token')
+
+      const options = {
+        noData: true,
+      }
+
+      await ImagePicker.launchImageLibrary(options, response => {
+        if (response.uri) {
+          this.setState({
+            isChangeAvatar: true,
+            avatar: response
+          })
+        }
+      })
+
+      var formData = new FormData();
+
+      formData.append("avatar", {
+        name: this.state.avatar.fileName,
+        type: 'image/jpeg',
+        uri: this.state.avatar.uri
+      })
+
+      API.put('/users/changeAvatar', formData,
+        {
+          headers: {
+            token
+          }
+        }
+      )
+        .then(() => {
+          alert(`Avatar has change`)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  }
+
+  logout = async () => {
+    this.setState({
+      proses: true
+    })
+
+    await AsyncStorage.clear()
+
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Login' })],
+    });
+    this.props.navigation.dispatch(resetAction);
+
+    this.setState({
+      proses: false
+    })
   }
 
   changeEdit = () => {
@@ -205,6 +249,22 @@ export default class profil extends Component {
     })
   }
 
+  changeAvatar = async () => {
+    const options = {
+      noData: true,
+    }
+
+    await ImagePicker.launchImageLibrary(options, response => {
+      if (response.uri) {
+        this.setState({
+          isChangeAvatar: true,
+          avatar: response
+        })
+      }
+    })
+
+  }
+
   render() {
     return (
       <View style={{ justifyContent: 'space-between', height: '100%' }}>
@@ -231,8 +291,17 @@ export default class profil extends Component {
           this.state.loading
             ? <Loading />
             : <ScrollView style={{ height: height }} >
-              <Image source={{ uri: this.state.avatar }} style={styles.image} />
+              <Image source={this.state.isChangeAvatar ? this.state.avatar : { uri: this.state.avatar }} style={styles.image} resizeMode={'stretch'} />
+              {/* <Image source={this.state.thumbnail} style={{
+                alignSelf: 'center',
+                width: 150,
+                height: 150,
+                margin: 20
+              }}  /> */}
 
+              <TouchableHighlight onPress={this.changeAvatar} style={{ alignSelf: 'center', backgroundColor: defaultColor, height: 45, width: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 30, left: 50, top: -65 }} underlayColor={defaultColor}>
+                <MaterialCommunityIcons name='camera-outline' style={{ color: defaultTextColor }} size={28} />
+              </TouchableHighlight>
               <View>
                 <View style={{ margin: 20 }}>
                   <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>

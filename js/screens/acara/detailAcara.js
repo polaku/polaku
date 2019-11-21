@@ -118,7 +118,7 @@ class detailAcara extends Component {
           </View>
           <Text style={styles.title}>{this.state.data.event_name}</Text>
           <View style={styles.imagePlace}>
-            <Image source={require('../../../assest/index.jpeg')} style={styles.image} />
+            <Image source={{ uri: "asset:/index.jpeg" }} style={styles.image} />
           </View>
           <View style={styles.dateMonthButtonPlace}>
             <View style={styles.dateMonthPlace}>
@@ -134,7 +134,7 @@ class detailAcara extends Component {
             <View style={{ width: '79%' }}>
               {
                 this.state.statusJoinUser != 'Join'
-                  ? < TouchableHighlight style={styles.buttonIkut} onPress={this.join} underlayColor="transparent">
+                  ? <TouchableHighlight style={styles.buttonIkut} onPress={this.join} underlayColor="transparent">
                     {
                       this.state.proses
                         ? <ActivityIndicator size="small" color="#fff" />

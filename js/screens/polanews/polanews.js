@@ -103,7 +103,7 @@ export default class polanews extends Component {
             <View>
               <View style={{ flexDirection: 'row', marginTop: 5 }}>
                 <CheckBox checked={this.state.checkBoxAll} color='white' onPress={() => this.pressedCheckBox('checkBoxAll')} />
-                <Text style={{ marginLeft: 17, color: 'white' }}>Semua</Text>
+                <Text style={{ marginLeft: 17, color: 'white' }}></Text>
               </View>
               <View style={{ flexDirection: 'row', marginTop: 5 }}>
                 <CheckBox checked={this.state.checkBoxIT} color='white' onPress={() => this.pressedCheckBox('checkBoxIT')} />

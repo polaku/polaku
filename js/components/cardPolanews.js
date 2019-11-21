@@ -17,9 +17,8 @@ export default class cardPolanews extends Component {
           {
             this.props.data.thumbnail
               ? <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
-              : <Image source={require('../../assest/placeholder.jpeg')} style={styles.image} />
+              : <Image source={{ uri: "asset:/placeholder.jpeg" }} style={styles.image} />
           }
-          {/* <Image source={require("'" + this.props.data.image + "'")} style={{ width: '100%', height: 190, }} /> */}
           <Text> {this.props.data.title} </Text>
         </View>
       </TouchableHighlight>

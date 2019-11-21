@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList } from 'react-native';
-import { Header, Tab, Tabs, ScrollableTab, Icon } from 'native-base';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList, Image } from 'react-native';
+import { Header, Icon } from 'native-base';
 import MenuButton from '../../components/menuButton';
-import CardRuangan from '../../components/cardRuangan';
+import CardBookingRuangan from '../../components/cardBookingRuangan';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -14,7 +14,6 @@ export default class ruanganSaya extends Component {
     super(props);
     this.state = {
       data: [],
-      roomsP40: [],
       loading: false
     }
   }
@@ -27,28 +26,20 @@ export default class ruanganSaya extends Component {
     let token = await AsyncStorage.getItem('token')
 
     let getData
-    let P40 = []
 
     this.setState({
       loading: true
     })
 
     try {
-      getData = await API.get('/bookingRoom/rooms',
+      getData = await API.get(`/bookingRoom/myRoom`,
         {
           headers: { token }
         })
 
-      getData.data.data.forEach(el => {
-        if (el.company_building_id === 1) {
-          P40.push(el)
-        }
-      })
-
       this.setState({
         data: getData.data.data,
         loading: false,
-        roomsP40: P40,
       })
 
     } catch (err) {
@@ -67,11 +58,19 @@ export default class ruanganSaya extends Component {
 
   navigateRuangan = () => this.props.navigation.navigate('Ruangan')
 
-  navigateCreateRuangan = () => this.props.navigation.navigate("CreateRuangan")
+  navigateCreateBookingRoom = () => this.props.navigation.navigate("CreateBookingRoom")
+
+  renderSeparator = () => {
+    return (
+      <View
+        style={styles.separator}
+      />
+    );
+  }
 
   render() {
     return (
-      <View>
+      <View style={{ height: '100%', backgroundColor: defaultBackgroundColor }}>
 
         {/* HEADER - menu button drawer, title, icon sorting */}
         <Header style={styles.header}>
@@ -82,58 +81,42 @@ export default class ruanganSaya extends Component {
           </View>
         </Header>
 
-        {/* CONTENT */}
-        <View style={styles.container}>
-
-          {/* MENU ACARA */}
-          <View style={styles.title}>
-            <TouchableHighlight onPress={this.navigateRuangan} underlayColor="transparent">
-              <Text style={styles.textTitleInactive}> ruangan </Text>
-            </TouchableHighlight>
-            <Text style={styles.textTitleActive}> Pesanan Saya </Text>
-          </View>
-
-          {
-            this.state.loading
-              ? <Loading />
-              : <Tabs renderTabBar={() => <ScrollableTab tabsContainerStyle={styles.tabsContainerStyle} />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
-                <Tab heading="semua"
-                  tabStyle={styles.tab}
-                  textStyle={{ color: defaultColor }}
-                  activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
-                  activeTextStyle={styles.activeTextStyle}>
-                  <View style={styles.containerInTab}>
-                    <FlatList
-                      keyExtractor={(item) => item.room_id}
-                      style={styles.flatList}
-                      numColumns={3}
-                      data={this.state.data}
-                      renderItem={({ item }) => <CardRuangan data={item} myRoom='yes' navigation={this.props.navigation} />}
-                    />
-                  </View>
-                </Tab>
-                <Tab heading="P40"
-                  tabStyle={styles.tab}
-                  textStyle={{ color: defaultColor }}
-                  activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
-                  activeTextStyle={styles.activeTextStyle}>
-                  <View style={styles.containerInTab}>
-                    <FlatList
-                      keyExtractor={(item) => item.room_id}
-                      style={styles.flatList}
-                      numColumns={3}
-                      data={this.state.roomsP40}
-                      renderItem={({ item }) => <CardRuangan data={item} myRoom='yes' navigation={this.props.navigation} />}
-                    />
-                  </View>
-                </Tab>
-              </Tabs>
-          }
-
+        <View style={styles.title}>
+          <TouchableHighlight onPress={this.navigateRuangan} underlayColor="transparent">
+            <Text style={styles.textTitleInactive}> ruangan </Text>
+          </TouchableHighlight>
+          <Text style={styles.textTitleActive}> Pesanan Saya </Text>
         </View>
+        {/* CONTENT */}
+        {/* <View style={styles.container}> */}
+
+        {/* MENU ACARA */}
+
+        {
+          this.state.loading
+            ? <Loading />
+            : <>
+              {
+                this.state.data.length === 0
+                  ? <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={{ uri: "asset:/ruang_kosong.png" }} style={{ height: 200, width: 200 }} />
+                    <Text style={{ color: 'gray' }}>Belum ada ruangan yang dibooking!</Text>
+                  </View>
+                  : <FlatList
+                    contentContainerStyle={{ paddingBottom: 15 }}
+                    keyExtractor={(item) => String(item.room_booking_id)}
+                    style={{ paddingTop: 15, backgroundColor: 'white', marginEnd: 15, width: '100%' }}
+                    data={this.state.data}
+                    ItemSeparatorComponent={this.renderSeparator}
+                    renderItem={({ item }) => <CardBookingRuangan navigation={this.props.navigation} data={item} deleteRoom={this.fetchData} myRoom={true} />} />
+              }
+            </>
+        }
+
+        {/* </View> */}
 
         {/* BUTTON ADD */}
-        <TouchableOpacity style={styles.buttonAdd} onPress={this.navigateCreateRuangan}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={this.navigateCreateBookingRoom}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>
@@ -148,12 +131,12 @@ ruanganSaya.navigationOptions = {
 const { width } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: defaultBackgroundColor,
-    padding: 5,
-    height: '100%',
-    marginBottom: 60
-  },
+  // container: {
+  //   backgroundColor: 'red',
+  //   padding: 5,
+  //   height: '100%',
+  //   marginBottom: 60
+  // },
   header: {
     backgroundColor: defaultColor,
     flexDirection: 'row',
@@ -186,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 100,
     position: 'absolute',
-    bottom: 60,
+    bottom: -60,
     right: 1 / 2 * width - 50,
     height: 100,
     backgroundColor: defaultColor,
@@ -223,5 +206,13 @@ const styles = StyleSheet.create({
     backgroundColor: defaultBackgroundColor,
     paddingTop: 10,
     height: '100%'
-  }
+  },
+  separator: {
+    height: 1,
+    width: "90%",
+    backgroundColor: "#CED0CE",
+    marginTop: 8,
+    marginBottom: 8,
+    alignSelf: 'center'
+  },
 })

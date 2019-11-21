@@ -1,6 +1,12 @@
 const defaultState = {
   user_id: null,
   token: '',
+  sisaCuti: 0,
+  adminContactCategori: null,
+  isRoomMaster: false,
+  isAssistantRoomMaster: false,
+  isEvaluator: false,
+  position_id: null,
   loading: false,
   error: {},
   dataAllEvent: [],
@@ -11,7 +17,17 @@ const defaultState = {
   myEvents: [],
   eventsMengikuti: [],
   eventsDiajukan: [],
-  eventsDitolak: []
+  eventsDitolak: [],
+  allContactUs: [],
+  myTaskButuhTindakan: [],
+  myTaskPengajuan: [],
+  myTaskDisetujui: [],
+  myTaskDitolak: [],
+  questionForMe: [],
+  requestForMe: [],
+  myPengajuanIjin: [],
+  myPermintaan: [],
+  myPertanyaan: [],
 }
 
 function reducer(state = defaultState, action) {
@@ -43,18 +59,51 @@ function reducer(state = defaultState, action) {
         eventsDitolak: action.payload.eventsDitolak
       }
     }
+    case 'FETCH_DATA_MY_TASK_SUCCESS': {
+      return {
+        ...state,
+        loading: false,
+        allContactUs: action.payload.allContactUs,
+        myTaskButuhTindakan: [...action.payload.myTaskButuhTindakan],
+        myTaskPengajuan: action.payload.myTaskPengajuan,
+        myTaskDisetujui: action.payload.myTaskDisetujui,
+        myTaskDitolak: action.payload.myTaskDitolak,
+        questionForMe: action.payload.questionForMe,
+        requestForMe: [...action.payload.requestForMe],
+        isEvaluator: action.payload.isEvaluator
+      }
+    }
+    case 'FETCH_DATA_MY_CONTACT_US_SUCCESS': {
+      return {
+        ...state,
+        loading: false,
+        myPengajuanIjin: action.payload.myPengajuanIjin,
+        myPermintaan: action.payload.myPermintaan,
+        myPertanyaan: action.payload.myPertanyaan
+      }
+    }
+    case 'FETCH_DATA_ALL_USER_SUCCESS': {
+      return {
+        ...state,
+        dataAllUser: action.payload.dataAllUser,
+      }
+    }
+    case 'SET_DATA_USER': {
+      return {
+        ...state,
+        user_id: action.payload.user_id,
+        isRoomMaster: action.payload.isRoomMaster,
+        token: action.payload.token,
+        position_id: action.payload.position_id,
+        sisaCuti: action.payload.sisaCuti,
+        adminContactCategori: action.payload.adminContactCategori,
+      }
+    }
     case 'FETCH_DATA_ERROR': {
       return {
         ...state,
         loading: false,
         error: action.payload
-      }
-    }
-    case 'SET_DATA_USER':{
-      return {
-        ...state,
-        user_id: action.payload.user_id,
-        token: action.payload.token
       }
     }
     default:

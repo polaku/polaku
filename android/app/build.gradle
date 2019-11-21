@@ -131,8 +131,8 @@ android {
         applicationId "com.polaku"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "1.0"
+        versionCode 25
+        versionName "1.0.25"
     }
     splits {
         abi {
@@ -143,12 +143,12 @@ android {
         }
     }
     signingConfigs {
-        // debug {
-        //     storeFile file('debug.keystore')
-        //     storePassword 'android'
-        //     keyAlias 'androiddebugkey'
-        //     keyPassword 'android'
-        // }
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
         // release {
         //     if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
         //         storeFile file(MYAPP_UPLOAD_STORE_FILE)
@@ -157,21 +157,25 @@ android {
         //         keyPassword MYAPP_UPLOAD_KEY_PASSWORD
         //     }
         // }
-        release {
-            storeFile file(MYAPP_RELEASE_STORE_FILE)
-            storePassword MYAPP_RELEASE_STORE_PASSWORD
-            keyAlias MYAPP_RELEASE_KEY_ALIAS
-            keyPassword MYAPP_RELEASE_KEY_PASSWORD
-        }
+        //release {
+            // storeFile file(MYAPP_RELEASE_STORE_FILE)
+            // storePassword MYAPP_RELEASE_STORE_PASSWORD
+            // keyAlias MYAPP_RELEASE_KEY_ALIAS
+            // keyPassword MYAPP_RELEASE_KEY_PASSWORD
+        //}
     }
     buildTypes {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            // signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
+            // signingConfig signingConfigs.release
+
+            // minifyEnabled true
+            // shrinkResources true
+            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     // applicationVariants are e.g. debug, release
@@ -208,7 +212,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     if (enableHermes) {
-      def hermesPath = "../../node_modules/hermesvm/android/";
+      def hermesPath = "../../node_modules/hermesvm/android/"
       debugImplementation files(hermesPath + "hermes-debug.aar")
       releaseImplementation files(hermesPath + "hermes-release.aar")
     } else {
@@ -224,3 +228,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+
+project.ext.vectoricons = [
+    iconFontNames: [ 'MaterialIcons.ttf', 'FontAwesome5.ttf', 'FontAwesome.ttf', 'MaterialCommunityIcons.ttf', 'SimpleLineIcons.ttf', 'Entypo.ttf' ] // Name of the font files you want to copy
+]
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

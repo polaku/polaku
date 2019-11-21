@@ -4,10 +4,18 @@ import { defaultColor, defaultBackgroundColor } from '../defaultColor';
 import { API } from '../../config/API'
 import AsyncStorage from '@react-native-community/async-storage';
 
-export default class cardAcara extends Component {
+export default class cardPermintaan extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      ongoing: false
+    }
   }
+
+  componentDidMount() {
+    if (this.props.ongoing) this.setState({ ongoing: true })
+  }
+
 
   done = async () => {
     let token = await AsyncStorage.getItem('token')
@@ -21,9 +29,17 @@ export default class cardAcara extends Component {
   }
 
   navigateDetailPermintaan = () => {
-    this.props.navigation.navigate("DetailHubungiKami", {
-      data: this.props.data
-    })
+    if (this.props.data.date_imp !== null || this.props.data.leave_date !== null || this.props.data.date_ijin_absen_start !== null) {
+      this.props.navigation.navigate("DetailPermintaan", { //ke DetaiPermintaanHRD.js
+        task: this.props.data,
+        ongoing: this.state.ongoing
+      })
+    } else {
+      this.props.navigation.navigate("DetailHubungiKami", { //ke DetaiTugas.js
+        data: this.props.data,
+        ongoing: this.state.ongoing
+      })
+    }
   }
 
   render() {

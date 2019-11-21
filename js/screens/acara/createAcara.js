@@ -74,7 +74,7 @@ class createAcara extends Component {
       proses: true,
       editableInput: false
     })
-    
+
     let token = await AsyncStorage.getItem('token')
 
     let startDate, endDate
@@ -104,7 +104,7 @@ class createAcara extends Component {
     formData.append("start_date", startDate)
     formData.append("end_date", endDate)
     formData.append("location", this.state.location)
-    
+
     this.state.thumbnail && formData.append("thumbnail", {
       name: this.state.thumbnail.fileName,
       type: 'image/jpeg',
@@ -135,7 +135,7 @@ class createAcara extends Component {
           alert('Waktu login telah habis, silahkan login kembali')
           this.props.navigation.navigate('Login')
           AsyncStorage.clear()
-        }else{
+        } else {
           alert(err)
         }
         this.resetForm()
@@ -159,7 +159,7 @@ class createAcara extends Component {
 
   render() {
     return (
-      <>
+      <View style={{ height: '100%', backgroundColor: defaultBackgroundColor }}>
         {/* HEADER - menu button drawer, title, icon sorting */}
         <Header style={styles.header}>
           <MenuButton navigation={this.props.navigation} />
@@ -169,7 +169,7 @@ class createAcara extends Component {
           </View>
         </Header>
 
-        <ScrollView style={{ height: height}} >
+        <ScrollView style={{ height: '100%' }} >
           <View style={styles.container}>
             <View style={styles.form}>
               <Item stackedLabel style={{ marginTop: 10 }}>
@@ -179,8 +179,8 @@ class createAcara extends Component {
                   style={styles.input}
                   onChangeText={(text) => this.setState({
                     event_name: text
-                  })} 
-                  editable={this.state.editableInput}/>
+                  })}
+                  editable={this.state.editableInput} />
               </Item>
               <Item stackedLabel style={{ marginTop: 10 }}>
                 <Label style={{ color: defaultColor }}>Keterangan</Label>
@@ -190,7 +190,7 @@ class createAcara extends Component {
                   onChangeText={(text) => this.setState({
                     description: text
                   })}
-                  editable={this.state.editableInput}/>
+                  editable={this.state.editableInput} />
               </Item>
               <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
                 <Label style={{ color: defaultColor }}>Tanggal</Label>
@@ -204,7 +204,7 @@ class createAcara extends Component {
                     modalTransparent={false}
                     animationType={"fade"}
                     androidMode={"default"}
-                    placeHolderText="dd/MM/yyyy"
+                    placeHolderText={`${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`}
                     placeHolderTextStyle={{ textAlign: 'left', color: '#535759' }}
                     onDateChange={(text) => this.setStartDate(text)}
                     disabled={false}
@@ -220,7 +220,7 @@ class createAcara extends Component {
                     modalTransparent={false}
                     animationType={"fade"}
                     androidMode={"default"}
-                    placeHolderText="dd/MM/yyyy"
+                    placeHolderText={`${new Date().getDate() + 1}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`}
                     placeHolderTextStyle={{ textAlign: 'left', color: '#535759' }}
                     onDateChange={(text) => this.setEndDate(text)}
                     disabled={false}
@@ -236,7 +236,7 @@ class createAcara extends Component {
                   onChangeText={(text) => this.setState({
                     location: text
                   })}
-                  editable={this.state.editableInput}/>
+                  editable={this.state.editableInput} />
               </Item>
               <Item>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -254,15 +254,15 @@ class createAcara extends Component {
               }} resizeMode={'stretch'} />
             </View>
           </View>
-          <TouchableHighlight onPress={this.createAcara} style={styles.buttonCreateAcara} underlayColor="transparent">
-            {
-              this.state.proses
-                ? <ActivityIndicator size="small" color="#fff" />
-                : <Text style={styles.textButton}>Send</Text>
-            }
-          </TouchableHighlight>
         </ScrollView>
-      </>
+        <TouchableHighlight onPress={this.createAcara} style={styles.buttonCreateAcara} underlayColor="transparent">
+          {
+            this.state.proses
+              ? <ActivityIndicator size="small" color="#fff" />
+              : <Text style={styles.textButton}>Send</Text>
+          }
+        </TouchableHighlight>
+      </View>
     )
   }
 }

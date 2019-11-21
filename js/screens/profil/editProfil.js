@@ -22,7 +22,7 @@ export default class profil extends Component {
     })
 
     await AsyncStorage.clear()
-    
+
     this.props.navigation.navigate('Login')
 
     this.setState({
@@ -45,10 +45,10 @@ export default class profil extends Component {
           alert('Waktu login telah habis, silahkan login kembali')
           this.props.navigation.navigate('Login')
           AsyncStorage.clear()
-        }else{
+        } else {
           alert(err)
         }
-        
+
       })
   }
 
@@ -107,7 +107,6 @@ export default class profil extends Component {
               : <Text style={styles.textButton}>Logout</Text>
           }
         </TouchableHighlight>
-
       </View>
     )
   }

@@ -5,7 +5,7 @@ export default class loading extends Component {
   render() {
     return (
       <View style={styles.container}>
-      <Image source={require('../../assest/loading.gif')} style={{ height: 80, width: 80 }} />
+      <Image source={{ uri: "asset:/loading.gif" }} style={{ height: 80, width: 80 }} />
     </View>
     )
   }

@@ -22,8 +22,7 @@ export default class detailRuangan extends Component {
     let years = new Date().getFullYear()
     let month = new Date().getMonth() + 1
 
-    if (this.props.navigation.getParam('myRoom')) this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'), 'myRoom')
-    else this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'))
+    this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'))
 
   }
 
@@ -31,7 +30,7 @@ export default class detailRuangan extends Component {
     title: `${navigation.getParam('room')}`
   });
 
-  fetchDataPerMonth = async (years, month, idRoom, myRoom) => {
+  fetchDataPerMonth = async (years, month, idRoom) => {
     let token = await AsyncStorage.getItem('token')
 
     let getData, data = [], batasAwalTanggal = 1
@@ -42,17 +41,10 @@ export default class detailRuangan extends Component {
     })
 
     try {
-      if (myRoom) {
-        getData = await API.get(`/bookingRoom/${idRoom}/${month}/myRoom`,
-          {
-            headers: { token }
-          })
-      } else {
-        getData = await API.get(`/bookingRoom/${idRoom}/${month}`,
-          {
-            headers: { token }
-          })
-      }
+      getData = await API.get(`/bookingRoom/${idRoom}/${month}`,
+        {
+          headers: { token }
+        })
 
       if (month === new Date().getMonth() + 1) batasAwalTanggal = new Date().getDate()
 
@@ -84,6 +76,13 @@ export default class detailRuangan extends Component {
         alert(err)
       }
     }
+  }
+
+  refresh() {
+    let years = new Date().getFullYear()
+    let month = new Date().getMonth() + 1
+
+    this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'))
   }
 
   prevMonth = () => {
@@ -160,7 +159,8 @@ export default class detailRuangan extends Component {
                       {
                         el.data.length === 0
                           ? <View style={{ height: '90%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={require('../../../assest/ruang_kosong.png')} style={{ height: 200, width: 200 }} />
+                            <Image source={{ uri: "asset:/ruang_kosong.png" }} style={{ height: 200, width: 200 }} />
+
                             <Text style={{ color: 'gray' }}>Hore! Ruang rapat masih kosong</Text>
                           </View>
                           : <FlatList
@@ -176,7 +176,10 @@ export default class detailRuangan extends Component {
               }
             </Tabs>
         }
-        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateRuangan")}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateBookingRoom", {
+          room_id: this.props.navigation.getParam('room_id'),
+          refresh: () => this.refresh()
+        })}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View >

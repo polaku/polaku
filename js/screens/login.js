@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator, Linking } from 'react-native';
+import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator, Linking, BackHandler } from 'react-native';
 import { Item, Input, Text } from 'native-base';
 import { defaultTextColor, defaultColor } from '../defaultColor';
 import { API } from '../../config/API';
@@ -9,6 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import { setDataUser } from '../store/action';
+import { withNavigationFocus } from 'react-navigation';
 
 class login extends Component {
   constructor(props) {
@@ -22,23 +23,21 @@ class login extends Component {
     };
   }
 
-  async componentDidMount() {
-
-    let token = await AsyncStorage.getItem('token')
-
-    if (token) {
-      API.get('/users/checktoken', { headers: { token } })
-        .then(data => {
-          this.props.navigation.navigate("Home")
-        })
-        .catch(err => {
-          if (err.message === 'Request failed with status code 403') {
-            console.log("benar")
-          }
-        })
-    }
+  componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('backPress', this.handleBackPress);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('backPress', this.handleBackPress);
   }
 
+  handleBackPress = () => {
+    // BackHandler.exitApp()
+    if (this.props.isFocused === true && this.props.navigation.state.routeName === 'Login') {
+      //   this.handleBackPress()
+      BackHandler.exitApp()
+    }
+  }
 
   login = async () => {
     this.setState({
@@ -61,22 +60,26 @@ class login extends Component {
           username: '',
           password: ''
         })
-      }
 
-      let dataUser = {
-        user_id: data.data.user_id,
-        token: data.data.token
-      }
-
-      this.props.setDataUser(dataUser)
-
-      AsyncStorage.multiSet([['token', data.data.token], ['user_id', String(data.data.user_id)]], () => {
-        if (data.data.status === 0) {
-          this.props.navigation.navigate("FirstLogin")
-        } else {
-          this.props.navigation.navigate("Home")
+        let dataUser = {
+          user_id: data.data.user_id,
+          token: data.data.token,
+          position_id: data.data.position,
+          isRoomMaster: data.data.isRoomMaster,
+          adminContactCategori: data.data.adminContactCategori,
+          sisaCuti: data.data.sisaCuti,
         }
-      })
+        await this.props.setDataUser(dataUser)
+
+        AsyncStorage.multiSet([['token', data.data.token], ['user_id', String(data.data.user_id)]], () => {
+          if (data.data.status === 0) {
+            this.props.navigation.navigate("FirstLogin")
+          } else {
+            this.props.navigation.navigate("Home")
+          }
+        })
+
+      }
     } catch (err) {
       if (err.message === 'Request failed with status code 403') {
         alert('Waktu login telah habis, silahkan login kembali')
@@ -102,6 +105,10 @@ class login extends Component {
     Linking.openURL('whatsapp://send?phone=6287886270183')
   }
 
+  forgetPassword = () => {
+    this.props.navigation.navigate('ForgetPassword')
+  }
+
   render() {
     return (
       <ScrollView style={{ height: '100%', backgroundColor: defaultColor }} >
@@ -110,7 +117,11 @@ class login extends Component {
 
             {/* LOGO POLAGROUP */}
             <View style={styles.logo}>
-              <Image source={require('../../assest/logo_polagroup.png')} />
+              <Image source={{ uri: "asset:/polagroup.png" }} style={{
+                height: 48,
+                width: 250,
+                resizeMode: 'stretch'
+              }} />
             </View>
 
             {/* FORM LOGIN */}
@@ -158,12 +169,13 @@ class login extends Component {
                     : <Text style={styles.textLogin}>Login</Text>
                 }
               </TouchableHighlight>
-              {/* <Text style={{ color: defaultTextColor }} >Forget Password?</Text> */}
+              <Text onPress={this.forgetPassword} style={{ color: defaultTextColor }} >Lupa Password?</Text>
             </View>
 
             {/* HUBUNGI KAMI */}
             <View style={styles.center}>
               <Text onPress={this.klikwa} style={{ color: defaultTextColor }} >Kesulitan masuk? Hubungi Kami</Text>
+              <Text style={{ color: defaultTextColor, fontSize: 10, marginTop: 5 }} >Version 1.0.25</Text>
             </View>
           </View>
         </View>
@@ -187,7 +199,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    height: height - 25,
+    height: height-25,
     width: '80%',
     flexDirection: 'column',
     justifyContent: 'space-around'
@@ -215,6 +227,7 @@ const styles = StyleSheet.create({
     marginTop: 70,
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center'
   },
   textLogin: {
     textAlign: 'center',
@@ -230,4 +243,4 @@ const mapDispatchToProps = {
   setDataUser
 }
 
-export default connect(null, mapDispatchToProps)(login)
+export default connect(null, mapDispatchToProps)(withNavigationFocus(login))

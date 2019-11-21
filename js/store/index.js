@@ -35,7 +35,7 @@ const api = store => next => async action => {
           today.push(el)
         }
         if ((Number(startDate[2]) === date + 1 && Number(startDate[1]) === month && Number(startDate[0]) === years) ||
-          ((Number(startDate[2]) < date + 1 && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) > date + 1 && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) || (Number(startDate[2]) <= date + 1 && Number(endDate[2]) >= date + 1 && Number(endDate[1]) === month && Number(endDate[0]) === years) ) {
+          ((Number(startDate[2]) < date + 1 && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) > date + 1 && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) || (Number(startDate[2]) <= date + 1 && Number(endDate[2]) >= date + 1 && Number(endDate[1]) === month && Number(endDate[0]) === years)) {
           tomorrow.push(el)
         }
         if ((Number(startDate[2]) >= date && Number(startDate[1]) <= month && Number(startDate[0]) <= years) && Number((endDate[2]) >= date && Number(endDate[1]) >= month && Number(startDate[0]) <= years)) {
@@ -110,6 +110,191 @@ const api = store => next => async action => {
           eventsMengikuti: mengikuti,
           eventsDiajukan: diajukan,
           eventsDitolak: ditolak
+        }
+      })
+
+    } catch (err) {
+      next({
+        type: 'FETCH_DATA_ERROR',
+        payload: err
+      })
+    }
+  } else if (action.type === 'FETCH_DATA_MY_TASK') {
+    next({
+      type: 'FETCH_DATA_LOADING'
+    })
+
+    let getData, tempButuhTindakan = [], tempPengajuan = [], tempDisetujui = [], tempDitolak = [], tempQuestionForMe = [], tempRequestForMe = [], evaluator = false, arrayAdminContactCategori = []
+
+    if (action.payload.adminContactCategori) arrayAdminContactCategori = action.payload.adminContactCategori.split(',')
+
+    try {
+      getData = await API.get('/contactUs/allContactUs',
+        {
+          headers: { token }
+        })
+
+      await getData.data.data.forEach(el => {
+        if (
+          (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+          el.type === 'request' &&
+          ((el.status === 'new' && el.evaluator_1 === action.payload.user_id) || (el.status === 'new2' && el.evaluator_2 === action.payload.user_id))) {
+          tempButuhTindakan.push(el)
+        }
+      })
+
+      if (tempButuhTindakan.length !== 0) evaluator = true
+
+      console.log(evaluator);
+      await getData.data.data.forEach(el => {
+        if (action.payload.adminContactCategori) {
+          arrayAdminContactCategori.forEach(idAdminContactCategori => {
+            // if (
+            //   (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+            //   el.type === 'request' &&
+            //   ((el.status === 'new' && el.evaluator_1 === action.payload.user_id) || (el.status === 'new2' && el.evaluator_2 === action.payload.user_id))) {
+            //   tempButuhTindakan.push(el)
+            // } else if (
+            //   (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+            //   el.type === 'request' && el.status === 'approved' &&
+            //   (el.evaluator_1 === action.payload.user_id || el.evaluator_2 === action.payload.user_id)) {
+            //   tempDisetujui.push(el)
+            // } else if (
+            //   (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+            //   el.type === 'request' && el.status === 'rejected' &&
+            //   (el.evaluator_1 === action.payload.user_id || el.evaluator_2 === action.payload.user_id)) {
+            //   tempDitolak.push(el)
+            // }
+
+            if (
+              (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+              el.type === 'request' && el.status === 'approved') {
+              tempDisetujui.push(el)
+            } else if (
+              (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+              el.type === 'request' && el.status === 'rejected') {
+              tempDitolak.push(el)
+            }
+
+            if (
+              (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+              el.type === 'request' && (el.status === 'new' || el.status === 'new2')) {
+              tempPengajuan.push(el)
+            }
+
+            // KHUSUS ADMIN
+            if (el.contact_categories_id === Number(idAdminContactCategori) && el.type === 'contact_us' && el.status === 'new') {
+              tempQuestionForMe.push(el)
+            } else if (Number(idAdminContactCategori) === 4 && el.contact_categories_id === 4 && el.type === 'request' && (el.status === 'new' || el.status === 'new2')) {  //Khusus HRD
+              console.log("MASUK HRD");
+              tempRequestForMe.push(el)
+            } else if (el.contact_categories_id === Number(idAdminContactCategori) && el.type === 'request' && el.status === 'new') {
+              console.log("MASUK ADMIN SELAIN HRD");
+              tempRequestForMe.push(el)
+
+            }
+
+          })
+        }
+        // else {
+        //   console.log("MASUK EVALUATOR RESPON PERMINTAAN");
+
+        //   if (
+        //     (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+        //     el.type === 'request' &&
+        //     ((el.status === 'new' && el.evaluator_1 === action.payload.user_id) || (el.status === 'new2' && el.evaluator_2 === action.payload.user_id))) {
+        //     tempButuhTindakan.push(el)
+        //   }
+        // }
+      });
+      console.log(tempRequestForMe);
+      next({
+        type: 'FETCH_DATA_MY_TASK_SUCCESS',
+        payload: {
+          allContactUs: getData.data.data,
+          myTaskButuhTindakan: tempButuhTindakan,
+          myTaskPengajuan: tempPengajuan,
+          myTaskDisetujui: tempDisetujui,
+          myTaskDitolak: tempDitolak,
+          questionForMe: tempQuestionForMe,
+          requestForMe: tempRequestForMe,
+          isEvaluator: evaluator
+        }
+      })
+
+    } catch (err) {
+      next({
+        type: 'FETCH_DATA_ERROR',
+        payload: err
+      })
+    }
+  } else if (action.type === 'FETCH_DATA_MY_CONTACT_US') {
+    next({
+      type: 'FETCH_DATA_LOADING'
+    })
+
+    let getData, tempPengajuan = [], tempPertanyaan = [], tempPermintaan = []
+
+    try {
+      getData = await API.get('/contactUs',
+        {
+          headers: { token }
+        })
+
+      await getData.data.data.forEach(el => {
+        if (
+          (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+          el.type === 'request' &&
+          (new Date(el.date_imp) <= new Date() || new Date(el.leave_date) <= new Date() || new Date(el.date_ijin_absen_start) <= new Date())) {
+          tempPengajuan.push(el)
+        }
+        else if (
+          el.date_imp === null && el.leave_date === null && el.date_ijin_absen_start === null &&
+          el.type === 'request') {
+          tempPermintaan.push(el)
+        }
+        else if (
+          (el.type === 'contact_us' && el.status !== 'done' && el.status !== 'confirmation') || (el.type === 'contact_us' && new Date(el.done_expired_date).setDate(new Date(el.done_expired_date).getDate() + 1) > new Date())) {
+          tempPertanyaan.push(el)
+        }
+        //else if (
+        //   (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
+        //   el.type === 'request' && el.status === 'rejected' &&
+        //   (el.evaluator_1 === action.payload.user_id || el.evaluator_2 === action.payload.user_id)) {
+        //   tempDitolak.push(el)
+        // }
+      });
+
+      next({
+        type: 'FETCH_DATA_MY_CONTACT_US_SUCCESS',
+        payload: {
+          myPengajuanIjin: tempPengajuan,
+          myPermintaan: tempPermintaan,
+          myPertanyaan: tempPertanyaan
+        }
+      })
+
+    } catch (err) {
+      next({
+        type: 'FETCH_DATA_ERROR',
+        payload: err
+      })
+    }
+  } else if (action.type === 'FETCH_DATA_ALL_USER') {
+    next({
+      type: 'FETCH_DATA_LOADING'
+    })
+
+    try {
+      getData = await API.get('/users',
+        {
+          headers: { token }
+        })
+
+      next({
+        type: 'FETCH_DATA_ALL_USER_SUCCESS',
+        payload: {
+          dataAllUser: getData.data.data,
         }
       })
 

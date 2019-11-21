@@ -34,6 +34,27 @@
 		6D9B5437675C422EAE3D6DBD /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4B574A108E44E93BA713CA0 /* SimpleLineIcons.ttf */; };
 		2BA86E1C862848F0B19ACB32 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 17000EA9ADE84286BEE5C27D /* Zocial.ttf */; };
 		E99830197BCD4BE9BCC57274 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82A2B4F06E444BE689784373 /* Fontisto.ttf */; };
+		A167CD4A914C4FED8C46320E /* acara_kosong.png in Resources */ = {isa = PBXBuildFile; fileRef = 803562637F9747A3AB3515DB /* acara_kosong.png */; };
+		8A32A865C4D94310AF481DE5 /* cuti.png in Resources */ = {isa = PBXBuildFile; fileRef = B94CF4BB425F4DD9923C4716 /* cuti.png */; };
+		DA25A9C0D27449978E0162ED /* design.png in Resources */ = {isa = PBXBuildFile; fileRef = A215A56F657346118FB6C676 /* design.png */; };
+		C6CD2E765D3E4D79885272E3 /* Group.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F20AF3EAEF947ED9E1FD813 /* Group.png */; };
+		E84157B50E9342ED939E76D6 /* hrd.png in Resources */ = {isa = PBXBuildFile; fileRef = 707907BF2B0644009E74F0E5 /* hrd.png */; };
+		BFA8EB27324D44F5BB7DD0A4 /* icon_user.png in Resources */ = {isa = PBXBuildFile; fileRef = DD26B94AE9724B869DF5BDFC /* icon_user.png */; };
+		EAD7E7EBC2C04263A4DF0F74 /* ijin.png in Resources */ = {isa = PBXBuildFile; fileRef = B7D8C06C8E8745418819096F /* ijin.png */; };
+		09A2CD8A627B437AB7E9DE0B /* imp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1D4862F9F72348458D886F78 /* imp.png */; };
+		0CEEC326FBCB450C9B340044 /* index.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 07B553ED9E244A79BAE3DC26 /* index.jpeg */; };
+		E17728630AB846D4B9313E2C /* it.png in Resources */ = {isa = PBXBuildFile; fileRef = 486802DE64414CD786070C12 /* it.png */; };
+		FB22B3A62EC04D20900AC2CE /* loading_proses.gif in Resources */ = {isa = PBXBuildFile; fileRef = FFAF5AB4F85440EC815B0A35 /* loading_proses.gif */; };
+		F6AF68F05E8D48829529DBBA /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = D3DB54F451994D85A6A63AFF /* loading.gif */; };
+		A70B95BDCE6E4C6399DE9625 /* logo_polagroup.png in Resources */ = {isa = PBXBuildFile; fileRef = DD4BC5846C35400A95BC8920 /* logo_polagroup.png */; };
+		B0DC881BA9144047885B6673 /* other.png in Resources */ = {isa = PBXBuildFile; fileRef = 9FF1652F50504F7C9FDF3A1C /* other.png */; };
+		49653B8E33AC47DC8F5E34FD /* permintaan_kosong.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B9B82F2A134640B57F358F /* permintaan_kosong.png */; };
+		A5B1C0BB52FD44E99B1748D7 /* placeholder.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 177F430DF0754E79866A5737 /* placeholder.jpeg */; };
+		0D1BAD6F05434CB1A530E900 /* polaku.png in Resources */ = {isa = PBXBuildFile; fileRef = DF55B16CFB4D4CD1B2037827 /* polaku.png */; };
+		83BAB83E06AC47DA9F706F40 /* ruang_kosong.png in Resources */ = {isa = PBXBuildFile; fileRef = 87B5B02E1D9A48A8A2AE0B83 /* ruang_kosong.png */; };
+		BF4C6A5CB32244668236878D /* tulip_besar.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = BE13CD61DF864BA19EA1A0AE /* tulip_besar.jpeg */; };
+		7AD8D109273B4C219AC2B224 /* tulip_kecil_a.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C4F81B308EFE4BC39A2CF767 /* tulip_kecil_a.jpeg */; };
+		41A1C59B238841AAB808A455 /* tulip_kecil_b.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 0A8830DCE9B7472DB10D3BA1 /* tulip_kecil_b.jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +109,27 @@
 		A4B574A108E44E93BA713CA0 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		17000EA9ADE84286BEE5C27D /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		82A2B4F06E444BE689784373 /* Fontisto.ttf */ = {isa = PBXFileReference; name = "Fontisto.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		803562637F9747A3AB3515DB /* acara_kosong.png */ = {isa = PBXFileReference; name = "acara_kosong.png"; path = "../assest/acara_kosong.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B94CF4BB425F4DD9923C4716 /* cuti.png */ = {isa = PBXFileReference; name = "cuti.png"; path = "../assest/cuti.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A215A56F657346118FB6C676 /* design.png */ = {isa = PBXFileReference; name = "design.png"; path = "../assest/design.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5F20AF3EAEF947ED9E1FD813 /* Group.png */ = {isa = PBXFileReference; name = "Group.png"; path = "../assest/Group.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		707907BF2B0644009E74F0E5 /* hrd.png */ = {isa = PBXFileReference; name = "hrd.png"; path = "../assest/hrd.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DD26B94AE9724B869DF5BDFC /* icon_user.png */ = {isa = PBXFileReference; name = "icon_user.png"; path = "../assest/icon_user.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B7D8C06C8E8745418819096F /* ijin.png */ = {isa = PBXFileReference; name = "ijin.png"; path = "../assest/ijin.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1D4862F9F72348458D886F78 /* imp.png */ = {isa = PBXFileReference; name = "imp.png"; path = "../assest/imp.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		07B553ED9E244A79BAE3DC26 /* index.jpeg */ = {isa = PBXFileReference; name = "index.jpeg"; path = "../assest/index.jpeg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		486802DE64414CD786070C12 /* it.png */ = {isa = PBXFileReference; name = "it.png"; path = "../assest/it.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FFAF5AB4F85440EC815B0A35 /* loading_proses.gif */ = {isa = PBXFileReference; name = "loading_proses.gif"; path = "../assest/loading_proses.gif"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D3DB54F451994D85A6A63AFF /* loading.gif */ = {isa = PBXFileReference; name = "loading.gif"; path = "../assest/loading.gif"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DD4BC5846C35400A95BC8920 /* logo_polagroup.png */ = {isa = PBXFileReference; name = "logo_polagroup.png"; path = "../assest/logo_polagroup.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9FF1652F50504F7C9FDF3A1C /* other.png */ = {isa = PBXFileReference; name = "other.png"; path = "../assest/other.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E2B9B82F2A134640B57F358F /* permintaan_kosong.png */ = {isa = PBXFileReference; name = "permintaan_kosong.png"; path = "../assest/permintaan_kosong.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		177F430DF0754E79866A5737 /* placeholder.jpeg */ = {isa = PBXFileReference; name = "placeholder.jpeg"; path = "../assest/placeholder.jpeg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DF55B16CFB4D4CD1B2037827 /* polaku.png */ = {isa = PBXFileReference; name = "polaku.png"; path = "../assest/polaku.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		87B5B02E1D9A48A8A2AE0B83 /* ruang_kosong.png */ = {isa = PBXFileReference; name = "ruang_kosong.png"; path = "../assest/ruang_kosong.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BE13CD61DF864BA19EA1A0AE /* tulip_besar.jpeg */ = {isa = PBXFileReference; name = "tulip_besar.jpeg"; path = "../assest/tulip_besar.jpeg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C4F81B308EFE4BC39A2CF767 /* tulip_kecil_a.jpeg */ = {isa = PBXFileReference; name = "tulip_kecil_a.jpeg"; path = "../assest/tulip_kecil_a.jpeg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0A8830DCE9B7472DB10D3BA1 /* tulip_kecil_b.jpeg */ = {isa = PBXFileReference; name = "tulip_kecil_b.jpeg"; path = "../assest/tulip_kecil_b.jpeg"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +259,27 @@
 				A4B574A108E44E93BA713CA0 /* SimpleLineIcons.ttf */,
 				17000EA9ADE84286BEE5C27D /* Zocial.ttf */,
 				82A2B4F06E444BE689784373 /* Fontisto.ttf */,
+				803562637F9747A3AB3515DB /* acara_kosong.png */,
+				B94CF4BB425F4DD9923C4716 /* cuti.png */,
+				A215A56F657346118FB6C676 /* design.png */,
+				5F20AF3EAEF947ED9E1FD813 /* Group.png */,
+				707907BF2B0644009E74F0E5 /* hrd.png */,
+				DD26B94AE9724B869DF5BDFC /* icon_user.png */,
+				B7D8C06C8E8745418819096F /* ijin.png */,
+				1D4862F9F72348458D886F78 /* imp.png */,
+				07B553ED9E244A79BAE3DC26 /* index.jpeg */,
+				486802DE64414CD786070C12 /* it.png */,
+				FFAF5AB4F85440EC815B0A35 /* loading_proses.gif */,
+				D3DB54F451994D85A6A63AFF /* loading.gif */,
+				DD4BC5846C35400A95BC8920 /* logo_polagroup.png */,
+				9FF1652F50504F7C9FDF3A1C /* other.png */,
+				E2B9B82F2A134640B57F358F /* permintaan_kosong.png */,
+				177F430DF0754E79866A5737 /* placeholder.jpeg */,
+				DF55B16CFB4D4CD1B2037827 /* polaku.png */,
+				87B5B02E1D9A48A8A2AE0B83 /* ruang_kosong.png */,
+				BE13CD61DF864BA19EA1A0AE /* tulip_besar.jpeg */,
+				C4F81B308EFE4BC39A2CF767 /* tulip_kecil_a.jpeg */,
+				0A8830DCE9B7472DB10D3BA1 /* tulip_kecil_b.jpeg */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -377,6 +440,27 @@
 				6D9B5437675C422EAE3D6DBD /* SimpleLineIcons.ttf in Resources */,
 				2BA86E1C862848F0B19ACB32 /* Zocial.ttf in Resources */,
 				E99830197BCD4BE9BCC57274 /* Fontisto.ttf in Resources */,
+				A167CD4A914C4FED8C46320E /* acara_kosong.png in Resources */,
+				8A32A865C4D94310AF481DE5 /* cuti.png in Resources */,
+				DA25A9C0D27449978E0162ED /* design.png in Resources */,
+				C6CD2E765D3E4D79885272E3 /* Group.png in Resources */,
+				E84157B50E9342ED939E76D6 /* hrd.png in Resources */,
+				BFA8EB27324D44F5BB7DD0A4 /* icon_user.png in Resources */,
+				EAD7E7EBC2C04263A4DF0F74 /* ijin.png in Resources */,
+				09A2CD8A627B437AB7E9DE0B /* imp.png in Resources */,
+				0CEEC326FBCB450C9B340044 /* index.jpeg in Resources */,
+				E17728630AB846D4B9313E2C /* it.png in Resources */,
+				FB22B3A62EC04D20900AC2CE /* loading_proses.gif in Resources */,
+				F6AF68F05E8D48829529DBBA /* loading.gif in Resources */,
+				A70B95BDCE6E4C6399DE9625 /* logo_polagroup.png in Resources */,
+				B0DC881BA9144047885B6673 /* other.png in Resources */,
+				49653B8E33AC47DC8F5E34FD /* permintaan_kosong.png in Resources */,
+				A5B1C0BB52FD44E99B1748D7 /* placeholder.jpeg in Resources */,
+				0D1BAD6F05434CB1A530E900 /* polaku.png in Resources */,
+				83BAB83E06AC47DA9F706F40 /* ruang_kosong.png in Resources */,
+				BF4C6A5CB32244668236878D /* tulip_besar.jpeg in Resources */,
+				7AD8D109273B4C219AC2B224 /* tulip_kecil_a.jpeg in Resources */,
+				41A1C59B238841AAB808A455 /* tulip_kecil_b.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

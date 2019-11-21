@@ -79,7 +79,7 @@ class acaraSaya extends Component {
                       {
                         this.props.eventsMengikuti.length === 0
                           ? <View style={styles.placeImageAcaraKosong}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara yang diikuti</Text>
                           </View>
                           : <View>
@@ -114,7 +114,7 @@ class acaraSaya extends Component {
                       {
                         this.props.myEvents.length === 0
                           ? <View style={styles.placeImageAcaraKosong}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara</Text>
                           </View>
                           : <View>
@@ -149,7 +149,7 @@ class acaraSaya extends Component {
                       {
                         this.props.eventsDiajukan.length === 0
                           ? <View style={styles.placeImageAcaraKosong}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara yang diajukan</Text>
                           </View>
                           : <View>
@@ -184,7 +184,7 @@ class acaraSaya extends Component {
                       {
                         this.props.eventsDitolak.length === 0
                           ? <View style={styles.placeImageAcaraKosong}>
-                            <Image source={require('../../../assest/acara_kosong.png')} style={styles.imageAcaraKosong} />
+                            <Image source={{ uri: "asset:/acara_kosong.png" }} style={styles.imageAcaraKosong} />
                             <Text style={{ color: 'gray' }}>Tidak ada acara yang ditolak</Text>
                           </View>
                           : <View>

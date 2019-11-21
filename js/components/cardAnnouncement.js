@@ -29,44 +29,42 @@ export default class cardAnnouncement extends Component {
     }
 
     return (
-      <TouchableHighlight onPress={this.navigateDetailAnnouncement} underlayColor="transparent">
-        <View>
-          {
-            this.props.data && <View style={styles.container} >
-              <View style={styles.header}>
-                <Image source={{ uri: this.props.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUser} />
-                <View style={styles.headerRight}>
-                  {
-                    this.props.data.tbl_user && <View>
-                      <Text style={styles.userPost}>{this.props.data.tbl_user.tbl_account_detail.fullname}</Text>
-                      <Text style={styles.datePost}>{getDate(this.props.data.created_at)}</Text>
-                    </View>
-                  }
-
-                  <View>
-                    {/* <FontAwesome name='bookmark' style={{ color: defaultColor }} size={32} /> */}
-                    {/* <FontAwesome name='bookmark-o' style={{ color: defaultColor }} size={32} /> */}
+      <TouchableHighlight onPress={this.navigateDetailAnnouncement} underlayColor="transparent" >
+        {
+          this.props.data && <View style={styles.container} >
+            <View style={styles.header}>
+              <Image source={{ uri: this.props.data.tbl_user.tbl_account_detail.avatar }} style={styles.iconUser} />
+              <View style={styles.headerRight}>
+                {
+                  this.props.data.tbl_user && <View>
+                    <Text style={styles.userPost}>{this.props.data.tbl_user.tbl_account_detail.fullname}</Text>
+                    <Text style={styles.datePost}>{getDate(this.props.data.created_at)}</Text>
                   </View>
-                </View>
-              </View>
-              <Text style={styles.title}>{this.props.data.title}</Text>
+                }
 
-              <View>
-                <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
-              </View>
-              <View style={styles.footer}>
                 <View>
-                  <Text style={styles.footerItem}>Baca lebih lanjut</Text>
+                  {/* <FontAwesome name='bookmark' style={{ color: defaultColor }} size={32} /> */}
+                  {/* <FontAwesome name='bookmark-o' style={{ color: defaultColor }} size={32} /> */}
                 </View>
-                {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              </View>
+            </View>
+            <Text style={styles.title}>{this.props.data.title}</Text>
+
+            <View>
+              <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
+            </View>
+            <View style={styles.footer}>
+              <View>
+                <Text style={styles.footerItem}>Baca lebih lanjut</Text>
+              </View>
+              {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={styles.footerItem}>2</Text>
                   <MaterialCommunityIcons name='heart' style={{ color: defaultColor }} size={20} />
                   // <MaterialCommunityIcons name='heart-outline' style={{ color: defaultColor }} size={20} /> 
                  </View> */}
-              </View>
             </View>
-          }
-        </View>
+          </View>
+        }
       </TouchableHighlight>
     )
   }
@@ -79,7 +77,12 @@ const styles = StyleSheet.create({
     width: width,
     backgroundColor: 'white',
     marginTop: 5,
-    marginBottom: 5
+    marginBottom: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,  
+    elevation: 10
   },
   header: {
     flexDirection: 'row',

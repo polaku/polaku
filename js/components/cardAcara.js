@@ -168,7 +168,7 @@ class cardAcara extends Component {
                   ? <Text>{new Date(this.props.data.start_date).getDate()} {getMonth(this.props.data.start_date)}</Text>
                   : <Text>{new Date(this.props.data.start_date).getDate()} - {new Date(this.props.data.end_date).getDate()} {getMonth(this.props.data.start_date)}</Text>
               }
-              { this.state.creator.tbl_account_detail && <Text>{this.state.creator.tbl_account_detail.fullname}</Text> }
+              {this.state.creator.tbl_account_detail && <Text>{this.state.creator.tbl_account_detail.fullname}</Text>}
             </View>
           </View>
 
@@ -187,8 +187,7 @@ class cardAcara extends Component {
                   {
                     this.state.proses
                       ? <ActivityIndicator size="small" color="#fff" />
-                      :
-                      <Text style={styles.textButton}> Batal Ikuti </Text>
+                      : <Text style={styles.textButton}> Batal Ikuti </Text>
                   }
                 </TouchableHighlight>
             }

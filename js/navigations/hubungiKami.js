@@ -1,16 +1,15 @@
-import HubungiKami from '../screens/hubungiKami/hubungiKami';
-import HubungiKamiDivisi1 from '../screens/hubungiKami/hubungiKamiDivisi1';
-import HubungiKamiDivisi2 from '../screens/hubungiKami/hubungiKamiDivisi2';
-import hubungiKamiFormQuestion from '../screens/hubungiKami/hubungiKamiFormQuestion';
-import hubungiKamiFormRequest from '../screens/hubungiKami/hubungiKamiFormRequest';
+import HubungiKamiPertanyaan from '../screens/hubungiKami/menuPertanyaan';
+import HubungiKamiPermintaan from '../screens/hubungiKami/menuPermintaan';
+import DashboardPertanyaan from '../screens/hubungiKami/dashboardHubungiKami';
+import FormQuestion from '../screens/hubungiKami/formQuestion';
+import FormRequest from '../screens/hubungiKami/formRequest';
 import { createStackNavigator } from 'react-navigation';
 import { defaultTextColor, defaultColor } from '../defaultColor';
 
 export default HubungiKamiNav = createStackNavigator({
-  HubungiKami: { screen: HubungiKami },
-  
-  HubungiKamiDivisi1: {
-    screen: HubungiKamiDivisi1,
+  HubungiKami: { screen: DashboardPertanyaan },
+  Pertanyaan: {
+    screen: HubungiKamiPertanyaan,
     navigationOptions: {
       title: 'HUBUNGI KAMI',
       headerTintColor: defaultTextColor,
@@ -19,8 +18,8 @@ export default HubungiKamiNav = createStackNavigator({
       },
     }
   },
-  hubungiKamiFormQuestion: {
-    screen: hubungiKamiFormQuestion,
+  FormQuestion: {
+    screen: FormQuestion,
     navigationOptions: {
       title: 'HUBUNGI KAMI',
       headerTintColor: defaultTextColor,
@@ -29,8 +28,8 @@ export default HubungiKamiNav = createStackNavigator({
       },
     }
   },
-  HubungiKamiDivisi2: {
-    screen: HubungiKamiDivisi2,
+  Permintaan: {
+    screen: HubungiKamiPermintaan,
     navigationOptions: {
       title: 'HUBUNGI KAMI',
       headerTintColor: defaultTextColor,
@@ -39,8 +38,8 @@ export default HubungiKamiNav = createStackNavigator({
       },
     }
   },
-  hubungiKamiFormRequest: {
-    screen: hubungiKamiFormRequest,
+  FormRequest: {
+    screen: FormRequest,
     navigationOptions: {
       title: 'HUBUNGI KAMI',
       headerTintColor: defaultTextColor,

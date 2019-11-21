@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList } from 'react-native';
+import { connect } from 'react-redux';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList, Image } from 'react-native';
 import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardRuangan from '../../components/cardRuangan';
@@ -9,10 +10,13 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loading from '../../components/loading';
 
-export default class ruangan extends Component {
+import { fetchDataAllUser } from '../../store/action';
+
+class ruangan extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      allRoom: [],
       data: [],
       roomsP40: [],
       dataImage: [],
@@ -22,12 +26,13 @@ export default class ruangan extends Component {
 
   componentDidMount() {
     this.fetchData()
+    this.props.fetchDataAllUser()
   }
 
   fetchData = async () => {
     let token = await AsyncStorage.getItem('token')
 
-    let getData
+    let getData, room, building
     let P40 = []
 
     this.setState({
@@ -35,24 +40,28 @@ export default class ruangan extends Component {
     })
 
     try {
-      getData = await API.get('/bookingRoom/rooms',
+      room = await API.get('/bookingRoom/rooms',
         {
           headers: { token }
         })
 
-      getData.data.data.forEach(el => {
-        if (el.company_building_id === 1) {
-          P40.push(el)
-        }
+      building = await API.get('/bookingRoom/building',
+        {
+          headers: { token }
+        })
+
+      building.data.data.forEach(building => {
+        building.room = room.data.data.filter(room => room.building_id === building.building_id)
       })
 
       this.setState({
-        data: getData.data.data,
+        data: building.data.data,
         loading: false,
-        roomsP40: P40,
+        allRoom: room.data.data,
       })
 
     } catch (err) {
+      console.log(err)
       this.setState({
         loading: false
       })
@@ -60,7 +69,7 @@ export default class ruangan extends Component {
         alert('Waktu login telah habis, silahkan login kembali')
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
-      }else{
+      } else {
         alert(err)
       }
     }
@@ -70,7 +79,7 @@ export default class ruangan extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ backgroundColor: defaultBackgroundColor }}>
 
         {/* HEADER - menu button drawer, title, icon sorting */}
         <Header style={styles.header}>
@@ -106,35 +115,42 @@ export default class ruangan extends Component {
                       keyExtractor={(item) => item.room_id}
                       style={styles.flatList}
                       numColumns={3}
-                      data={this.state.data}
+                      data={this.state.allRoom}
+                      contentContainerStyle={{ paddingBottom: 10 }}
                       renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} />}
                     />
                   </View>
                 </Tab>
-                <Tab heading="P40"
-                  actived
-                  tabStyle={styles.tab}
-                  textStyle={{ color: defaultColor }}
-                  activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
-                  activeTextStyle={styles.activeTextStyle}>
-                  <View style={styles.containerInTab}>
-                    <FlatList
-                      keyExtractor={(item) => item.room_id}
-                      style={styles.flatList}
-                      numColumns={3}
-                      data={this.state.roomsP40}
-                      renderItem={({ item, }) => <CardRuangan data={item} navigation={this.props.navigation} />}
-                    />
-                  </View>
-                </Tab>
+                {
+                  this.state.data.map((el, index) => (
+
+                    el.room.length !== 0 && <Tab heading={el.building}
+                      key={index}
+                      actived
+                      tabStyle={styles.tab}
+                      textStyle={{ color: defaultColor }}
+                      activeTabStyle={{ backgroundColor: defaultBackgroundColor }}
+                      activeTextStyle={styles.activeTextStyle}>
+                      <View style={styles.containerInTab}>
+                        <FlatList
+                          keyExtractor={(item) => item.room_id}
+                          style={styles.flatList}
+                          numColumns={3}
+                          data={el.room}
+                          contentContainerStyle={{ paddingBottom: 10 }}
+                          renderItem={({ item, }) => <CardRuangan data={item} navigation={this.props.navigation} />}
+                        />
+                      </View>
+                    </Tab>
+                  ))
+                }
+
               </Tabs>
           }
-
-
         </View>
 
         {/* BUTTON ADD */}
-        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateRuangan")}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateBookingRoom")}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>
@@ -220,9 +236,19 @@ const styles = StyleSheet.create({
     backgroundColor: defaultBackgroundColor,
     justifyContent: 'flex-start',
   },
+  containerInTab: {
+    backgroundColor: defaultBackgroundColor,
+    paddingBottom: 5
+  },
   flatList: {
     backgroundColor: defaultBackgroundColor,
     paddingTop: 10,
-    height: '100%'
+    height: '75%',
   }
 })
+
+const mapDispatchToProps = {
+  fetchDataAllUser
+}
+
+export default connect(null, mapDispatchToProps)(ruangan)
