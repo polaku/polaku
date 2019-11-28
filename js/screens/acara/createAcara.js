@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, TouchableHighlight, Image, ActivityIndicator, ScrollView, Dimensions } from 'react-native'
+import { Text, View, StyleSheet, TouchableHighlight, Image, ActivityIndicator, ScrollView, Dimensions, Alert } from 'react-native'
 import { Input, Header, Item, DatePicker, Label } from 'native-base';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -123,7 +123,8 @@ class createAcara extends Component {
         this.props.fetchDataEvent()
         this.props.fetchDataMyEvent()
         this.props.navigation.goBack(null);
-        alert(`Create event success`)
+        Alert.alert('', 'Create event success')
+
         this.setState({
           proses: false,
           editableInput: true
@@ -132,11 +133,13 @@ class createAcara extends Component {
       })
       .catch(err => {
         if (err.message === 'Request failed with status code 403') {
-          alert('Waktu login telah habis, silahkan login kembali')
+          Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
+          
           this.props.navigation.navigate('Login')
           AsyncStorage.clear()
         } else {
-          alert(err)
+          Alert.alert('Error', `${err}`)
+
         }
         this.resetForm()
         this.setState({

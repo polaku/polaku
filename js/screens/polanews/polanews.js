@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, FlatList, TouchableHighlight, Image, RefreshControl } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, FlatList, TouchableHighlight, Image, RefreshControl, Alert } from 'react-native';
 import { Header, Icon, CheckBox } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardPolanews from '../../components/cardPolanews';
@@ -45,11 +45,11 @@ export default class polanews extends Component {
         loading: false
       })
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       }else{
-        alert('Fetch data failed')
+        Alert.alert('Error', 'fetch data failed')
       }
     }
   }

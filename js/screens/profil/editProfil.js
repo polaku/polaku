@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import { Header } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MenuButton from '../../components/menuButton';
@@ -42,11 +42,12 @@ export default class profil extends Component {
       })
       .catch(err => {
         if (err.message === 'Request failed with status code 403') {
-          alert('Waktu login telah habis, silahkan login kembali')
+          Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
           this.props.navigation.navigate('Login')
           AsyncStorage.clear()
         } else {
-          alert(err)
+          Alert.alert('Error', `${err}`)
+
         }
 
       })

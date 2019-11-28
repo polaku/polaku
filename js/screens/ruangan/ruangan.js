@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList, Image } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList, Image, Alert } from 'react-native';
 import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardRuangan from '../../components/cardRuangan';
@@ -18,9 +18,10 @@ class ruangan extends Component {
     this.state = {
       allRoom: [],
       data: [],
-      roomsP40: [],
       dataImage: [],
-      loading: false
+      loading: false,
+      statusDisplay: false,
+      refreshing: false
     }
   }
 
@@ -31,9 +32,9 @@ class ruangan extends Component {
 
   fetchData = async () => {
     let token = await AsyncStorage.getItem('token')
+    let month = new Date().getMonth() + 1
 
-    let getData, room, building
-    let P40 = []
+    let room, building, dataRuangan
 
     this.setState({
       loading: true
@@ -50,8 +51,45 @@ class ruangan extends Component {
           headers: { token }
         })
 
-      building.data.data.forEach(building => {
+      await building.data.data.forEach(async building => {
+        let counter = 0
         building.room = room.data.data.filter(room => room.building_id === building.building_id)
+
+        if (building.room) {
+          await building.room.forEach(async el => {
+
+            dataRuangan = await API.get(`/bookingRoom/${el.room_id}/${month}`,
+              {
+                headers: { token }
+              })
+
+            let currentBookingRoom = await dataRuangan.data.data.find(bookingRoom =>
+              new Date(bookingRoom.date_in).getDate() === new Date().getDate() &&
+              new Date(bookingRoom.date_in).getMonth() === new Date().getMonth() &&
+              new Date(bookingRoom.date_in).getFullYear() === new Date().getFullYear() &&
+              Number(bookingRoom.time_in.slice(0, 2)) <= new Date().getHours() &&
+              Number(bookingRoom.time_out.slice(0, 2)) > new Date().getHours()
+            )
+
+
+            if (currentBookingRoom) statusRuangan = 'sedang digunakan'
+
+            if (!currentBookingRoom) statusRuangan = 'tersedia sekarang'
+            if (new Date().getHours() >= 17 || new Date().getHours() < 8) {
+              statusRuangan = 'tutup'
+            }
+
+            el.statusRuangan = statusRuangan
+
+            counter++
+            if (counter === building.room.length) {
+              this.setState({
+                statusDisplay: true,
+
+              })
+            }
+          })
+        }
       })
 
       this.setState({
@@ -66,13 +104,20 @@ class ruangan extends Component {
         loading: false
       })
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       } else {
-        alert(err)
+        Alert.alert('Error', `${err}`)
+
       }
     }
+  }
+
+  refresh = async () => {
+    this.setState({ refreshing: true })
+    await this.fetchData()
+    this.setState({ refreshing: false })
   }
 
   navigateRuanganSaya = () => this.props.navigation.navigate('RuanganSaya')
@@ -102,7 +147,7 @@ class ruangan extends Component {
           </View>
 
           {
-            this.state.loading
+            (this.state.loading && this.state.statusDisplay)
               ? <Loading />
               : <Tabs renderTabBar={() => <ScrollableTab tabsContainerStyle={styles.tabsContainerStyle} />} tabBarUnderlineStyle={{ backgroundColor: defaultColor }}>
                 <Tab heading="semua"
@@ -116,8 +161,10 @@ class ruangan extends Component {
                       style={styles.flatList}
                       numColumns={3}
                       data={this.state.allRoom}
+                      refreshing={this.state.refreshing}
+                      onRefresh={() => this.refresh()}
                       contentContainerStyle={{ paddingBottom: 10 }}
-                      renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} />}
+                      renderItem={({ item }) => <CardRuangan data={item} navigation={this.props.navigation} refresh={this.fetchData} />}
                     />
                   </View>
                 </Tab>
@@ -137,8 +184,10 @@ class ruangan extends Component {
                           style={styles.flatList}
                           numColumns={3}
                           data={el.room}
+                          refreshing={this.state.refreshing}
+                          onRefresh={() => this.refresh()}
                           contentContainerStyle={{ paddingBottom: 10 }}
-                          renderItem={({ item, }) => <CardRuangan data={item} navigation={this.props.navigation} />}
+                          renderItem={({ item, }) => <CardRuangan data={item} navigation={this.props.navigation} refresh={this.fetchData} />}
                         />
                       </View>
                     </Tab>
@@ -150,7 +199,9 @@ class ruangan extends Component {
         </View>
 
         {/* BUTTON ADD */}
-        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateBookingRoom")}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.navigation.navigate("CreateBookingRoom", {
+          refresh: () => this.fetchData()
+        })}>
           <Icon name="add" size={30} style={{ color: defaultTextColor }} />
         </TouchableOpacity>
       </View>

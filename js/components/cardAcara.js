@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import { API } from '../../config/API'
 import { connect } from 'react-redux'
 import { fetchDataEvent, fetchDataMyEvent } from '../store/action';
@@ -109,18 +109,20 @@ class cardAcara extends Component {
         this.props.fetchDataEvent()
         this.props.fetchDataMyEvent()
 
-        alert(`${args} Success`)
+        Alert.alert("", `${args} Success`);
         this.setState({
           proses: false
         })
       }
     } catch (err) {
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert("Error", 'waktu login telah habis, silahkan login kembali');
+        
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       } else {
-        alert(err)
+        Alert.alert("Error", `${err}`);
+
       }
       this.setState({
         proses: false

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableHighlight, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableHighlight, ActivityIndicator, Dimensions, ScrollView, Alert } from 'react-native';
 import { Header, Input, Item, Icon, Button } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MenuButton from '../../components/menuButton';
@@ -58,18 +58,16 @@ export default class profil extends Component {
       })
       .catch(err => {
         if (err.message === 'Request failed with status code 403') {
-          alert('Waktu login telah habis, silahkan login kembali')
+          Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
           this.props.navigation.navigate('Login')
           AsyncStorage.clear()
         } else {
           this.setState({
             loading: false
           })
-          alert(err)
+          Alert.alert('Error', `${err}`)
         }
-
       })
-    console.log("TESSSSS", this.state.isEdit);
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -105,7 +103,8 @@ export default class profil extends Component {
         }
       )
         .then(() => {
-          alert(`Avatar has change`)
+          Alert.alert('', 'Avatar has change')
+
         })
         .catch(err => {
           console.log(err)
@@ -174,7 +173,8 @@ export default class profil extends Component {
         })
       })
       .catch(err => {
-        alert(err)
+        Alert.alert('Error', `${err}`)
+
       })
     this.setState({
       isEdit: !this.state.isEdit
@@ -190,7 +190,7 @@ export default class profil extends Component {
     let token = await AsyncStorage.getItem('token')
 
     if (this.state.passwordBaru !== this.state.konfirmasiPasswordBaru) {
-      alert("Konfirmasi password baru tidak benar")
+      Alert.alert('Alert', 'Konfirmasi password baru tidak benar')
     } else {
       newData = {
         passwordLama: this.state.passwordLama,
@@ -202,7 +202,8 @@ export default class profil extends Component {
         }
       })
         .then(() => {
-          alert('Password berhasil diubah')
+          Alert.alert('', 'Password berhasil diubah')
+
           this.setState({
             proses: false,
             editableInput: true,
@@ -218,9 +219,10 @@ export default class profil extends Component {
             editableInput: true
           })
           if (err.message === 'Request failed with status code 400') {
-            alert('Password lama yang anda masukan salah')
+            Alert.alert('Alert', 'Password lama yang anda masukan salah')
           } else {
-            alert(err)
+            Alert.alert('Error', `${err}`)
+
           }
         })
     }

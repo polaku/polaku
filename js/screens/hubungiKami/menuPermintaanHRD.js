@@ -31,7 +31,6 @@ class menuPermintaanHRD extends Component {
 
   fetchData = async () => {
     let newMyPengajuanIjin = []
-
     await this.props.fetchDataMyContactUs()
 
     newMyPengajuanIjin = this.props.myPengajuanIjin

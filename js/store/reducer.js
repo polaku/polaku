@@ -38,6 +38,13 @@ function reducer(state = defaultState, action) {
         loading: true
       }
     }
+    case 'FETCH_DATA_LOADING_MY_CONTACT_US': {
+      return {
+        ...state,
+        loading: true,
+        myPengajuanIjin: []
+      }
+    }
     case 'FETCH_DATA_EVENT_SUCCESS': {
       return {
         ...state,

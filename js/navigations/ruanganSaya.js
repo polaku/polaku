@@ -18,7 +18,6 @@ export default RuanganSayaNav = createStackNavigator({
   DetailBookingRoom: {
     screen: DetailBookingRoom,
     navigationOptions: {
-      title: 'Detail',
       headerTintColor: defaultTextColor,
       headerStyle: {
         backgroundColor: defaultColor,

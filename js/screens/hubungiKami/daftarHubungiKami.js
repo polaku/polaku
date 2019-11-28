@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, Image, RefreshControl, TouchableHighlight, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, Image, RefreshControl, TouchableHighlight, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Header, Icon, Tab, Tabs, ScrollableTab } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardPermintaan from '../../components/cardPermintaan';
@@ -83,11 +83,12 @@ export default class daftarPermintaan extends Component {
         loading: false
       })
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       } else {
-        alert(err)
+        Alert.alert('Error', `${err}`)
+
       }
     }
   }

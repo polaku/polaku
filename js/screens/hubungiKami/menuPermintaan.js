@@ -49,7 +49,6 @@ class hubungiKamiPermintaan extends Component {
     let adminContactCategori
     if (this.props.adminContactCategori) adminContactCategori = this.props.adminContactCategori.split(',')
 
-    // console.log(adminContactCategori);
     if (adminContactCategori && adminContactCategori.length > 1) {
       // Admin lebih dari satu categori
       adminContactCategori.forEach(element => {
@@ -90,12 +89,6 @@ class hubungiKamiPermintaan extends Component {
     } else if (args === 'it') {
       this.props.navigation.navigate('DaftarTugas', { permintaan: true, status: 2 })
     }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // if (prevProps.myTaskButuhTindakan != this.props.myTaskButuhTindakan) {
-    //   console.log("baru", this.props.myTaskButuhTindakan);
-    // }
   }
 
   render() {

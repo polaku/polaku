@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, ScrollView, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, ScrollView, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import { Text, Icon, Input } from 'native-base';
 import { defaultColor } from '../../defaultColor';
 import { API } from '../../../config/API';
@@ -48,7 +48,8 @@ class detailAcara extends Component {
       if (getData) {
         this.props.fetchDataEvent()
         this.props.fetchDataMyEvent()
-        alert(`${args} Success`)
+        Alert.alert('', `${args} Success`)
+
         this.setState({
           proses: false
         })
@@ -58,11 +59,12 @@ class detailAcara extends Component {
         proses: false
       })
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
+
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       } else {
-        alert(err)
+        Alert.alert('Error', `${err}`)
       }
     }
   }

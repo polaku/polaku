@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView, Dimensions } from 'react-native'
+import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView, Dimensions, Alert } from 'react-native'
 import { Input, Header, Item, DatePicker, Label, Picker } from 'native-base';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -34,7 +34,6 @@ class createBookingRoom extends Component {
   }
 
   async componentDidMount() {
-    console.log(this.props.navigation.getParam('room_id'));
     let token = await AsyncStorage.getItem('token')
     let newDataUser = this.props.dataAllUser
 
@@ -50,15 +49,16 @@ class createBookingRoom extends Component {
       })
       .catch(err => {
         if (err.message === 'Request failed with status code 403') {
-          alert('Waktu login telah habis, silahkan login kembali')
+          Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
           this.props.navigation.navigate('Login')
           AsyncStorage.clear()
         } else {
-          alert(err)
+          Alert.alert('Error', `${err}`)
+
         }
       })
     await newDataUser.forEach(el => {
-      el.name = el.tbl_account_detail.fullname
+      if (el.tbl_account_detail) el.name = el.tbl_account_detail.fullname
     })
   }
 
@@ -95,37 +95,41 @@ class createBookingRoom extends Component {
     if (!this.state.endHour) this.setState({ endHour: `${new Date().getHours() + 1}` })
 
     if (!this.state.room_id || !this.state.date_in || !this.state.subject) {
-      alert('Data incomplete!')
+      Alert.alert('Alert', 'Data incomplete!')
       this.setState({
         proses: false,
         editableInput: true
       })
     } else if (Number(this.state.startHour) < 8) {
-      alert('Time in must higher than 8')
+      Alert.alert('Alert', 'Time in must higher than 8')
       this.setState({
         proses: false,
         editableInput: true
       })
     } else if (Number(this.state.startHour) > 17) {
-      alert('Time in must smaller than 17')
+      Alert.alert('Alert', 'Time in must smaller than 17')
+
       this.setState({
         proses: false,
         editableInput: true
       })
     } else if (Number(this.state.endHour) < 8) {
-      alert(`Time out must higher than ${Number(timeIn[0])}`)
+      Alert.alert('Alert', `Time out must higher than ${Number(timeIn[0])}`)
+
       this.setState({
         proses: false,
         editableInput: true
       })
     } else if (Number(this.state.endHour) > 17) {
-      alert('Limit time out is 17')
+      Alert.alert('Alert', 'Limit time out is 17')
+
       this.setState({
         proses: false,
         editableInput: true
       })
     } else if (Number(this.state.startHour) > Number(this.state.endHour)) {
-      alert('Time out must be higher than time in')
+      Alert.alert('Alert', 'Time out must be higher than time in')
+
       this.setState({
         proses: false,
         editableInput: true
@@ -145,51 +149,62 @@ class createBookingRoom extends Component {
 
       dateIn = dateIn.join('-')
 
-      let newData = {
-        room_id: this.state.room_id,
-        date_in: dateIn,
-        time_in: `${this.state.startHour}:${this.state.startMinute}`,
-        time_out: `${this.state.endHour}:${this.state.endMinute}`,
-        subject: this.state.subject,
-        count: this.state.selectedItems.length
-      }
 
-      if (this.state.selectedItems.length !== 0) {
-        newData.partisipan = this.state.selectedItems
-      }
-
-      API.post('/bookingRoom', newData,
-        {
-          headers: {
-            token
-          }
+      if (Number(this.state.startHour) < new Date().getHours() && new Date(dateIn).getDate() === new Date().getDate()) {
+        Alert.alert('Alert', 'Time in must greater than equals time now')
+        this.setState({
+          proses: false,
+          editableInput: true
+        })
+      } else {
+        let newData = {
+          room_id: this.state.room_id,
+          date_in: dateIn,
+          time_in: `${this.state.startHour}:${this.state.startMinute}`,
+          time_out: `${this.state.endHour}:${this.state.endMinute}`,
+          subject: this.state.subject,
+          count: this.state.selectedItems.length
         }
-      )
-        .then(() => {
-          alert(`Create booking room success`)
-          this.props.navigation.state.params && this.props.navigation.state.params.refresh()
-          this.props.navigation.goBack();
-          this.setState({
-            proses: true,
-            editableInput: true
-          })
-          this.resetForm()
-        })
-        .catch((err) => {
-          if (err == 'Error: Request failed with status code 400') {
-            alert("Waktu yang dipesan sudah terpesan oleh orang lain, harap menentukan waktu yang lain")
-          } else if (err.message === 'Request failed with status code 403') {
-            alert('Waktu login telah habis, silahkan login kembali')
-            this.props.navigation.navigate('Login')
-            AsyncStorage.clear()
-          } else {
-            alert(err)
+
+        if (this.state.selectedItems.length !== 0) {
+          newData.partisipan = this.state.selectedItems
+        }
+
+        API.post('/bookingRoom', newData,
+          {
+            headers: {
+              token
+            }
           }
-          this.setState({
-            proses: false,
-            editableInput: true
+        )
+          .then(() => {
+            Alert.alert('', 'Create booking room success')
+
+            this.props.navigation.state.params.refresh && this.props.navigation.state.params.refresh()
+            this.props.navigation.goBack();
+            this.setState({
+              proses: true,
+              editableInput: true
+            })
+            this.resetForm()
           })
-        })
+          .catch((err) => {
+            if (err == 'Error: Request failed with status code 400') {
+              Alert.alert('Error', 'Waktu yang dipesan sudah terpesan oleh orang lain, harap menentukan waktu yang lain')
+            } else if (err.message === 'Request failed with status code 403') {
+              Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
+              this.props.navigation.navigate('Login')
+              AsyncStorage.clear()
+            } else {
+              Alert.alert('Error', `${err}`)
+
+            }
+            this.setState({
+              proses: false,
+              editableInput: true
+            })
+          })
+      }
     }
   }
 
@@ -201,7 +216,7 @@ class createBookingRoom extends Component {
             count: text
           })
         } else {
-          alert(`Jumlah orang melebihi batas ruangan, ${el.max} >= ${text}`)
+          Alert.alert('Error', `Jumlah orang melebihi batas ruangan, ${el.max} >= ${text}`)
         }
       }
     })
@@ -219,7 +234,6 @@ class createBookingRoom extends Component {
   }
 
   onSelectedItemsChange = selectedItems => {
-    console.log(selectedItems);
     this.setState({ selectedItems });
   };
 

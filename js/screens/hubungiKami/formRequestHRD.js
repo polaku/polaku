@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator, ScrollView, Alert } from 'react-native';
 import { Item, Input, Label, Textarea, DatePicker } from 'native-base';
 import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
@@ -54,6 +54,8 @@ export default class formRequestHRD extends Component {
     let newData, token = await AsyncStorage.getItem('token')
 
     if (this.state.forIMP) {
+      if (!this.state.startHour) this.setState({ startHour: `${new Date().getHours()}` })
+      if (!this.state.endHour) this.setState({ endHour: `${new Date().getHours()+1}` })
       if (!this.state.startMinute) this.setState({ startMinute: '00' })
       if (!this.state.endMinute) this.setState({ endMinute: '00' })
 
@@ -62,11 +64,13 @@ export default class formRequestHRD extends Component {
           proses: false,
           editableInput: true
         })
-        return alert("waktu selesai harus lebih besar dari waktu mulai")
+        return Alert.alert('Alert', 'waktu selesai harus lebih besar dari waktu mulai')
+        
       }
 
       newData = {
-        date_imp: this.normalitationDate(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`),
+        date_imp: this.normalitationDate(this.state.start_date) ||
+          `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
         start_time_imp: `${this.state.startHour}:${this.state.startMinute}`,
         end_time_imp: `${this.state.endHour}:${this.state.endMinute}`,
         message: this.state.textarea,
@@ -74,15 +78,18 @@ export default class formRequestHRD extends Component {
       }
     } else if (this.state.forCuti) {
       newData = {
-        leave_date: this.normalitationDate(this.state.start_date),
+        leave_date: this.normalitationDate(this.state.start_date) ||
+          `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
         leave_request: this.state.lamaCuti,
         message: this.state.textarea,
         categoriId: 6
       }
     } else if (this.state.forIA) {
       newData = {
-        date_ijin_absen_start: this.normalitationDate(this.state.start_date),
-        date_ijin_absen_end: this.normalitationDate(this.state.end_date),
+        date_ijin_absen_start: this.normalitationDate(this.state.start_date) ||
+          `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+        date_ijin_absen_end: this.normalitationDate(this.state.end_date) ||
+          `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate() + 1}`,
         message: this.state.textarea,
         categoriId: 8
       }
@@ -90,16 +97,19 @@ export default class formRequestHRD extends Component {
 
     newData.type = 'request'
     newData.contactCategoriesId = 4
-    console.log(newData);
+
     API.post('/contactUs', newData, {
       headers: {
         token
       }
     })
       .then(() => {
-        alert("Terima kasih. Mohon menunggu untuk direspon")
+        Alert.alert('', 'Terima kasih. Mohon menunggu untuk direspon')
+
+        
         this.props.navigation.state.params.fetchData && this.props.navigation.state.params.fetchData()
         this.props.navigation.goBack()
+
         this.setState({
           proses: false,
           editableInput: true
@@ -107,14 +117,16 @@ export default class formRequestHRD extends Component {
       })
       .catch(err => {
         this.setState({
+          proses: false,
           editableInput: true
         })
         if (err.message === 'Request failed with status code 403') {
-          alert('Waktu login telah habis, silahkan login kembali')
+          Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
           this.props.navigation.navigate('Login')
           AsyncStorage.clear()
         } else {
-          alert('Error. Please try again')
+          Alert.alert('Error', 'please try again')
+
         }
         console.log(err);
       })
@@ -172,7 +184,7 @@ export default class formRequestHRD extends Component {
   render() {
     return (
       <View style={styles.container} >
-        <View style={{ padding: 10 }}>
+        <ScrollView style={{ padding: 10 }}>
           <View style={{ margin: 10 }}>
             <Text style={styles.title}>Permintaan untuk {this.props.navigation.getParam('data')}</Text>
           </View>
@@ -183,8 +195,8 @@ export default class formRequestHRD extends Component {
                 <View style={{ height: 'auto', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', width: '100%' }} >
                   <DatePicker
                     defaultDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())}
-                    minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7)}
-                    maximumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7)}
+                    // minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7)}
+                    // maximumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7)}
                     locale={"id"}
                     timeZoneOffsetInMinutes={undefined}
                     modalTransparent={false}
@@ -200,7 +212,7 @@ export default class formRequestHRD extends Component {
                   <DatePicker
                     defaultDate={new Date(this.state.limitYear, this.state.limitMonth, this.state.limitDate)}
                     minimumDate={new Date(this.state.limitYear, this.state.limitMonth, this.state.limitDate)}
-                    maximumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7)}
+                    // maximumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7)}
                     locale={"id"}
                     timeZoneOffsetInMinutes={undefined}
                     modalTransparent={false}
@@ -238,7 +250,7 @@ export default class formRequestHRD extends Component {
                 <DatePicker
                   defaultDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7)}
                   minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7)}
-                  maximumDate={new Date(new Date().getFullYear(), new Date().getMonth() + 2, 31)}
+                  // maximumDate={new Date(new Date().getFullYear(), new Date().getMonth() + 2, 31)}
                   locale={"id"}
                   timeZoneOffsetInMinutes={undefined}
                   modalTransparent={false}
@@ -261,11 +273,29 @@ export default class formRequestHRD extends Component {
           }
           {
             this.state.forIMP && <>
-              <View stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
+              {/* <View stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
                 <Label style={{ color: defaultColor, marginBottom: 5 }}>Tanggal IMP</Label>
                 <Text style={{ marginLeft: 10, fontSize: 16, marginBottom: 10 }}>{JSON.stringify(new Date()).slice(1, 11)}</Text>
-              </View>
-              <Item stackedLabel>
+              </View> */}
+              <Item stackedLabel style={{ marginTop: 10, alignItems: 'flex-start' }}>
+                <Label style={{ color: defaultColor }}>Tanggal IMP</Label>
+                <DatePicker
+                  defaultDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())}
+                  minimumDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())}
+                  // maximumDate={new Date(new Date().getFullYear(), new Date().getMonth() + 2, 31)}
+                  locale={"id"}
+                  timeZoneOffsetInMinutes={undefined}
+                  modalTransparent={false}
+                  animationType={"fade"}
+                  androidMode={"default"}
+                  placeHolderText={`${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`}
+                  placeHolderTextStyle={{ textAlign: 'left', color: '#535759' }}
+                  onDateChange={(text) => this.setStartDate(text)}
+                  disabled={false}
+                  editable={this.state.editableInput}
+                />
+              </Item>
+              <Item stackedLabel style={{ marginTop: 10 }}>
                 <Label style={{ color: defaultColor }}>Waktu IMP</Label>
                 <View style={{ height: 'auto', flexDirection: 'row', alignItems: 'center' }} >
                   <Input id="startHour"
@@ -323,7 +353,7 @@ export default class formRequestHRD extends Component {
                     editable={this.state.editableInput} />
                 </View>
               </Item>
-              <Item stackedLabel style={{ marginTop: 10 }}>
+              <Item stackedLabel style={{ marginTop: 5 }}>
                 <Label style={{ color: defaultColor, margin: 0 }}>Alasannya</Label>
                 <Textarea rowSpan={5} bordered style={{ width: '100%' }}
                   onChangeText={(text) => this.setState({ textarea: text })}
@@ -331,7 +361,7 @@ export default class formRequestHRD extends Component {
               </Item>
             </>
           }
-        </View>
+        </ScrollView>
         <TouchableHighlight onPress={this.createContactUs} style={{ width: "100%", height: 50, backgroundColor: defaultColor, alignItems: "center", justifyContent: "center" }} underlayColor="transparent">
           {
             this.state.proses

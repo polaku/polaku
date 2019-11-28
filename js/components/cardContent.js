@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, TouchableHighlight } from 'react-native';
+import { Text, View, TouchableHighlight, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { defaultColor } from '../defaultColor';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -27,7 +27,7 @@ class cardContent extends Component {
         await this.props.fetchDataMyTask(newData)
       })
       .catch(err => {
-        alert(err)
+        Alert.alert('Error', `${err}`)
       })
   }
 
@@ -48,7 +48,7 @@ class cardContent extends Component {
         await this.props.fetchDataMyTask(newData)
       })
       .catch(err => {
-        alert(err)
+        Alert.alert('Error', `${err}`)
       })
   }
 
@@ -105,7 +105,6 @@ class cardContent extends Component {
         keterangan: 'dibatalkan'
       })
     }
-    console.log(this.props.data);
   }
 
   getWaktu = args => {

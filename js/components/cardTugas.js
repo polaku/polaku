@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, Alert } from 'react-native';
 import { Thumbnail } from 'native-base';
 import { defaultColor, defaultBackgroundColor } from '../defaultColor';
 import { API } from '../../config/API'
@@ -46,7 +46,6 @@ class cardTugas extends Component {
 
   navigateDetailTugas = () => {
     this.props.navigation.navigate("DetailTugas", { data: this.props.data })
-    // console.log(this.props)
   }
 
   assign = async () => {
@@ -57,7 +56,7 @@ class cardTugas extends Component {
 
       this.props.fetchData()
     } catch (err) {
-      alert('please try again')
+      Alert.alert("Error", "please try again");
       console.log(err);
     }
   }
@@ -70,7 +69,7 @@ class cardTugas extends Component {
 
       this.props.fetchData()
     } catch (err) {
-      alert('please try again')
+      Alert.alert("Error", "please try again");
       console.log(err);
     }
   }
@@ -83,7 +82,7 @@ class cardTugas extends Component {
 
       this.props.fetchData()
     } catch (err) {
-      alert('please try again')
+      Alert.alert("Error", "please try again");
       console.log(err);
     }
   }

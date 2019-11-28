@@ -14,7 +14,7 @@ class splashScreen extends Component {
   async componentDidMount() {
     let token = await AsyncStorage.getItem('token')
 
-    if (token) {
+    // if (token) {
       API.get('/users/checktoken', { headers: { token } })
         .then(async ({ data }) => {
           let dataUser = {
@@ -31,9 +31,9 @@ class splashScreen extends Component {
         .catch(err => {
           this.props.navigation.navigate("Login")
         })
-    } else {
-      this.props.navigation.navigate("Login")
-    }
+    // } else {
+    //   this.props.navigation.navigate("Login")
+    // }
   }
 
   render() {

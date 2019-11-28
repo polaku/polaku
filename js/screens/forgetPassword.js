@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator, Linking } from 'react-native';
+import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator, Linking, Alert } from 'react-native';
 import { Icon, Item, Input, Label } from 'native-base';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../defaultColor';
 import { API } from '../../config/API';
@@ -38,7 +38,8 @@ export default class forgetPassword extends Component {
         })
       }
     } catch (err) {
-      alert("Error. Please try again")
+      Alert.alert('Error', "please try again")
+
       this.setState({
         proses: false,
       })

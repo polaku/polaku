@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight, ScrollView, ActivityIndicator, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, ScrollView, ActivityIndicator, Dimensions, Alert } from 'react-native';
 import { Item, Input, Icon, Header, DatePicker, Label } from 'native-base';
 import { defaultColor, defaultBackgroundColor, defaultTextColor } from '../defaultColor';
 import { API } from '../../config/API';
@@ -45,7 +45,7 @@ export default class firstLogin extends Component {
     let token = await AsyncStorage.getItem('token')
 
     if (this.state.passwordBaru !== this.state.konfirmasiPasswordBaru) {
-      alert("Konfirmasi password baru tidak benar")
+      Alert.alert('Error', "konfirmasi password baru tidak benar")
     } else {
       if (this.state.isForgotPassword) {
         newData = {
@@ -71,9 +71,9 @@ export default class firstLogin extends Component {
               editableInput: true
             })
             if (err.message === 'Request failed with status code 400') {
-              alert('Password lama yang anda masukan salah')
+              Alert.alert('Error', "password lama yang anda masukan salah")
             } else {
-              alert(err)
+              Alert.alert('Error', `${err}`)
             }
           })
       } else {
@@ -101,9 +101,9 @@ export default class firstLogin extends Component {
               editableInput: true
             })
             if (err.message === 'Request failed with status code 400') {
-              alert('Password lama yang anda masukan salah')
+              Alert.alert('Error', "password lama yang anda masukan salah")              
             } else {
-              alert(err)
+              Alert.alert('Error', `${err}`)
             }
           })
       }

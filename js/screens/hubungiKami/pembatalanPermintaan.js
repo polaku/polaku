@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import { Button, Input } from 'native-base';
 import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,16 +23,17 @@ export default class pembatalanPermintaan extends Component {
       API.put(`/contactUs/cancel/${this.props.navigation.getParam('data').contact_id}`, { reason: this.state.reason }, { headers: { token } })
         .then(() => {
           this.setState({ proses: false })
-          alert("Berhasil dibatalkan")
+          Alert.alert('', 'Berhasil dibatalkan')
+
           this.props.navigation.goBack()
         })
         .catch(err => {
           this.setState({ proses: false })
 
-          alert('please try again')
+          Alert.alert("Error", "please try again");
         })
     } else {
-      alert("Harap di isi alasan pembatalan")
+      Alert.alert("Alert", "harap di isi alasan pembatalan");
     }
   }
 

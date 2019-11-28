@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Dimensions, Image, View } from 'react-native';
+import { Dimensions, Image, View, ScrollView } from 'react-native';
 import { Provider } from 'react-redux'
 import store from './js/store'
 import { createStackNavigator, createAppContainer, createDrawerNavigator, DrawerItems } from 'react-navigation';
@@ -15,6 +15,7 @@ import { defaultColor, defaultTextColor } from './js/defaultColor';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Login from './js/screens/login';
 import Announcement from './js/navigations/announcement';
@@ -39,6 +40,7 @@ import EditProfil from './js/screens/profil/editProfil';
 import FirstLogin from './js/screens/firstLogin';
 import ForgetPassword from './js/screens/forgetPassword';
 import SplashScreen from './js/screens/splashScreen';
+import KritikSaranScreen from './js/screens/kritiksaran';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -246,15 +248,25 @@ HRNav.navigationOptions = {
   )
 }
 
+const KritikSaranNav = createStackNavigator({
+  'Kritik Saran': { screen: KritikSaranScreen }
+})
+
+KritikSaranNav.navigationOptions = {
+  drawerIcon: () => (
+    <MaterialCommunityIcons name="message-draw" style={{ color: 'white' }} size={25} />
+  )
+}
+
 const CustomDrawerComponent = (props) => {
   return <View style={{ flex: 1 }}>
     <View style={{ height: 150, alignItems: 'center', justifyContent: 'center', marginTop: 30 }}>
       <Image source={{ uri: "asset:/polagroup_polaku_icon.png" }} style={{ height: 90, width: 90 }} />
       <Image source={{ uri: "asset:/polagroup_polaku.png" }} style={{ height: 27, width: 90, marginTop: 10 }} />
     </View>
-    <View style={{ margin: 20 }}>
+    <ScrollView style={{ margin: 20 }}>
       <DrawerItems {...props} />
-    </View>
+    </ScrollView>
   </View>
 }
 
@@ -264,6 +276,7 @@ const DrawerNav = createDrawerNavigator({
   Ruangan: RuanganNav,
   'Hubungi Kami': HubungiKamiNav,
   HR: HRNav,
+  'Kritik Saran': KritikSaranNav,
   Profil: ProfilNav
 }, {
   initialRouteName: 'Berita',

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight, Image, Dimensions } from 'react-native';
+import { defaultColor } from '../defaultColor'
 
 export default class cardAcara extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataImage: [],
-      myRoom: ''
+      myRoom: '',
+      statusRuangan: 'tutup',
+      isDisplay: false
     }
   }
 
@@ -15,6 +18,15 @@ export default class cardAcara extends Component {
       this.setState({ myRoom: 'yes' })
     }
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.data.statusRuangan != this.props.data.statusRuangan) {
+      this.setState({
+        isDisplay: true
+      })
+    }
+  }
+
 
   navigateDetailRuangan = () => {
     this.props.navigation.navigate('DetailRuangan', {
@@ -26,9 +38,23 @@ export default class cardAcara extends Component {
     return (
       <TouchableHighlight onPress={this.navigateDetailRuangan} style={styles.container} underlayColor="transparent">
         <View>
+          {/* {
+            this.state.isDisplay && <> */}
           <Image source={{ uri: this.props.data.thumbnail }} style={styles.image} />
           <Text>{this.props.data.room} </Text>
+          {
+            this.props.data.statusRuangan === 'tersedia sekarang'
+              ? <View style={{ borderRadius: 10, backgroundColor: '#EEBBC3', paddingLeft: 5, paddingRight: 5, }}>
+                <Text style={{ margin: 3, fontSize: 11, color: defaultColor, alignSelf: 'center' }}>{this.props.data.statusRuangan}</Text>
+              </View>
+              : <View style={{ borderRadius: 10, backgroundColor: defaultColor, paddingLeft: 5, paddingRight: 5, }}>
+                <Text style={{ margin: 3, fontSize: 11, color: 'white', alignSelf: 'center' }}>{this.props.data.statusRuangan}</Text>
+              </View>
+          }
+          {/* </>
+          } */}
         </View>
+
       </TouchableHighlight>
     )
   }

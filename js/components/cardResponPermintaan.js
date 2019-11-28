@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import { Thumbnail } from 'native-base';
 import { defaultColor } from '../defaultColor';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -27,7 +27,7 @@ class cardResponPermintaan extends Component {
         category: 'IA',
         keterangan: `${selisih} hari`,
         // waktu: `${this.getWaktu(this.props.data.date_ijin_absen_start)} - ${this.getWaktu(this.props.data.date_ijin_absen_end)}`
-        waktu: `${tthis.props.data.date_ijin_absen_start} - ${this.props.data.date_ijin_absen_end}`
+        waktu: `${this.props.data.date_ijin_absen_start} - ${this.props.data.date_ijin_absen_end}`
       })
     } else if (this.props.data.leave_request) {
       this.setState({
@@ -55,18 +55,14 @@ class cardResponPermintaan extends Component {
         status: 'Menunggu approval evaluator 2'
       })
     }
-
-    console.log("MASUK");
   }
 
   getWaktu = args => {
-    console.log(args);
     let newArgs = args.split(',')
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     let date = new Date(newArgs[0]).getDate()
     let month = months[new Date(newArgs[0]).getMonth()]
     let years = new Date(newArgs[0]).getFullYear()
-    console.log(date, month, years)
     return `${date} ${month} ${years}`
   }
 
@@ -95,7 +91,7 @@ class cardResponPermintaan extends Component {
         this.setState({
           proses: false
         })
-        alert(err)
+        Alert.alert('Error', `${err}`)
       })
   }
 
@@ -126,7 +122,7 @@ class cardResponPermintaan extends Component {
         this.setState({
           proses: false
         })
-        alert(err)
+        Alert.alert('Error', `${err}`)
       })
   }
 

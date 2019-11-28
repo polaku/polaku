@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator, Dimensions, ScrollView, Alert } from 'react-native';
 import { Item, Input, Label, Textarea, Picker, Icon } from 'native-base';
 import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 import { API } from '../../../config/API';
@@ -55,7 +55,8 @@ export default class formQuestion extends Component {
     let token = await AsyncStorage.getItem('token')
 
     if (this.state.subject !== '' || this.state.message !== '') {
-      alert('Data incomplete')
+      Alert.alert("Alert", "Data belum lengkap");
+
       this.setState({
         proses: false,
         editableInput: true
@@ -75,7 +76,8 @@ export default class formQuestion extends Component {
         }
       })
         .then(() => {
-          alert("Terima kasih. Mohon menunggu untuk dibantu")
+          Alert.alert("", "Terima kasih. Mohon menunggu untuk dibantu");
+
           this.props.navigation.goBack()
           this.setState({
             proses: false,
@@ -85,11 +87,11 @@ export default class formQuestion extends Component {
         })
         .catch(err => {
           if (err.message === 'Request failed with status code 403') {
-            alert('Waktu login telah habis, silahkan login kembali')
+            Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
             this.props.navigation.navigate('Login')
             AsyncStorage.clear()
           } else {
-            alert('Error. Please try again')
+            Alert.alert('Error', 'please try again')
           }
           this.setState({
             proses: false,

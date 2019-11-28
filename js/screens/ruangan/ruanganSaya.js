@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList, Image } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, FlatList, Image, Alert } from 'react-native';
 import { Header, Icon } from 'native-base';
 import MenuButton from '../../components/menuButton';
 import CardBookingRuangan from '../../components/cardBookingRuangan';
@@ -47,11 +47,12 @@ export default class ruanganSaya extends Component {
         loading: false
       })
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       } else {
-        alert(err)
+        Alert.alert('Error', `${err}`)
+
       }
     }
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableHighlight, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableHighlight, FlatList, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Text, Tabs, Tab, ScrollableTab, Icon } from 'native-base';
 import CardBookingRuangan from '../../components/cardBookingRuangan';
 import { defaultTextColor, defaultColor, defaultBackgroundColor } from '../../defaultColor';
@@ -23,7 +23,6 @@ export default class detailRuangan extends Component {
     let month = new Date().getMonth() + 1
 
     this.fetchDataPerMonth(years, month, this.props.navigation.getParam('room_id'))
-
   }
 
   static navigationOptions = ({ navigation }) => ({
@@ -69,11 +68,12 @@ export default class detailRuangan extends Component {
         loading: false
       })
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       } else {
-        alert(err)
+        Alert.alert('Error', `${err}`)
+
       }
     }
   }
@@ -165,7 +165,6 @@ export default class detailRuangan extends Component {
                           </View>
                           : <FlatList
                             keyExtractor={(item) => String(item.room_booking_id)}
-                            style={{ paddingTop: 15 }}
                             data={el.data}
                             ItemSeparatorComponent={this.renderSeparator}
                             renderItem={({ item }) => <CardBookingRuangan navigation={this.props.navigation} data={item} deleteRoom={this.deleteRoom} />} />
@@ -219,10 +218,8 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    width: "80%",
-    backgroundColor: "#CED0CE",
-    marginTop: 8,
-    marginBottom: 8,
+    width: '90%',
+    backgroundColor: '#CED0CE',
     alignSelf: 'center'
   },
   activeTextStyle: {

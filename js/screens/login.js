@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator, Linking, BackHandler } from 'react-native';
+import { StyleSheet, TouchableHighlight, Image, View, Dimensions, ScrollView, ActivityIndicator, Linking, BackHandler, Alert } from 'react-native';
 import { Item, Input, Text } from 'native-base';
 import { defaultTextColor, defaultColor } from '../defaultColor';
 import { API } from '../../config/API';
@@ -26,7 +26,7 @@ class login extends Component {
   componentDidMount() {
     this.backHandler = BackHandler.addEventListener('backPress', this.handleBackPress);
   }
-  
+
   componentWillUnmount() {
     BackHandler.removeEventListener('backPress', this.handleBackPress);
   }
@@ -82,11 +82,11 @@ class login extends Component {
       }
     } catch (err) {
       if (err.message === 'Request failed with status code 403') {
-        alert('Waktu login telah habis, silahkan login kembali')
+        Alert.alert('Error', 'waktu login telah habis, silahkan login kembali')
         this.props.navigation.navigate('Login')
         AsyncStorage.clear()
       } else {
-        alert("Username/password salah. Silahkan coba lagi.")
+        Alert.alert('Error', 'username/password salah, silahkan coba lagi.')
       }
       this.setState({
         proses: false,
@@ -174,8 +174,11 @@ class login extends Component {
 
             {/* HUBUNGI KAMI */}
             <View style={styles.center}>
-              <Text onPress={this.klikwa} style={{ color: defaultTextColor }} >Kesulitan masuk? Hubungi Kami</Text>
-              <Text style={{ color: defaultTextColor, fontSize: 10, marginTop: 5 }} >Version 1.0.25</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: defaultTextColor }} >Kesulitan masuk? </Text>
+                <Text onPress={this.klikwa} style={{ color: defaultTextColor, textDecorationLine: 'underline' }} >Hubungi Kami</Text>
+              </View>
+              <Text style={{ color: defaultTextColor, fontSize: 10, marginTop: 5 }} >Version 1.0.26</Text>
             </View>
           </View>
         </View>
@@ -199,7 +202,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    height: height-25,
+    height: height - 25,
     width: '80%',
     flexDirection: 'column',
     justifyContent: 'space-around'

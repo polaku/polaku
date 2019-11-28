@@ -145,7 +145,6 @@ const api = store => next => async action => {
 
       if (tempButuhTindakan.length !== 0) evaluator = true
 
-      console.log(evaluator);
       await getData.data.data.forEach(el => {
         if (action.payload.adminContactCategori) {
           arrayAdminContactCategori.forEach(idAdminContactCategori => {
@@ -186,18 +185,14 @@ const api = store => next => async action => {
             if (el.contact_categories_id === Number(idAdminContactCategori) && el.type === 'contact_us' && el.status === 'new') {
               tempQuestionForMe.push(el)
             } else if (Number(idAdminContactCategori) === 4 && el.contact_categories_id === 4 && el.type === 'request' && (el.status === 'new' || el.status === 'new2')) {  //Khusus HRD
-              console.log("MASUK HRD");
               tempRequestForMe.push(el)
             } else if (el.contact_categories_id === Number(idAdminContactCategori) && el.type === 'request' && el.status === 'new') {
-              console.log("MASUK ADMIN SELAIN HRD");
               tempRequestForMe.push(el)
-
             }
 
           })
         }
         // else {
-        //   console.log("MASUK EVALUATOR RESPON PERMINTAAN");
 
         //   if (
         //     (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
@@ -207,7 +202,7 @@ const api = store => next => async action => {
         //   }
         // }
       });
-      console.log(tempRequestForMe);
+      
       next({
         type: 'FETCH_DATA_MY_TASK_SUCCESS',
         payload: {
@@ -230,7 +225,7 @@ const api = store => next => async action => {
     }
   } else if (action.type === 'FETCH_DATA_MY_CONTACT_US') {
     next({
-      type: 'FETCH_DATA_LOADING'
+      type: 'FETCH_DATA_LOADING_MY_CONTACT_US'
     })
 
     let getData, tempPengajuan = [], tempPertanyaan = [], tempPermintaan = []
@@ -244,8 +239,7 @@ const api = store => next => async action => {
       await getData.data.data.forEach(el => {
         if (
           (el.date_imp !== null || el.leave_date !== null || el.date_ijin_absen_start !== null) &&
-          el.type === 'request' &&
-          (new Date(el.date_imp) <= new Date() || new Date(el.leave_date) <= new Date() || new Date(el.date_ijin_absen_start) <= new Date())) {
+          el.type === 'request') {
           tempPengajuan.push(el)
         }
         else if (

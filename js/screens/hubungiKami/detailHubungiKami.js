@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, StyleSheet, ScrollView, FlatList, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, FlatList, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import { Tab, Tabs, ScrollableTab, Thumbnail, Input, Icon, Button } from 'native-base';
 import { defaultColor, defaultBackgroundColor } from '../../defaultColor';
 
@@ -57,7 +57,7 @@ class detailTugas extends Component {
         })
       })
       .catch(err => {
-        alert('please try again')
+        Alert.alert("Error", "please try again");
       })
   }
 
@@ -71,14 +71,13 @@ class detailTugas extends Component {
 
     API.post(`/contactUs/discussion`, newData, { headers: { token } })
       .then(async ({ data }) => {
-        console.log(data);
         this.setState({
           chat: '',
         })
         await this.fetchDiscussion()
       })
       .catch(err => {
-        alert('please try again')
+        Alert.alert("Error", "please try again");
       })
   }
 
@@ -91,13 +90,14 @@ class detailTugas extends Component {
       API.put(`/contactUs/cancel/${this.state.data.contact_id}`, {}, { headers: { token } })
         .then(() => {
           this.setState({ proses: false })
-          alert("Berhasil dibatalkan")
+          Alert.alert("", "Berhasil dibatalkan");
+
           this.props.navigation.goBack()
         })
         .catch(err => {
           this.setState({ proses: false })
 
-          alert('please try again')
+          Alert.alert("Error", "please try again");
         })
     }
   }
